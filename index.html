@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WEMBA 51 Pathway Planner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Cohort Selection Screen -->
+  <div id="cohort-selection" class="screen active">
+    <div class="cohort-container">
+      <div class="landing-header">
+        <div class="penn-shield"></div>
+        <h1>WEMBA 51 Pathway Planner</h1>
+        <p class="subtitle">Plan your path to graduation</p>
+      </div>
+
+      <div class="landing-instructions">
+        <p class="instruction-text">Select your cohort below to begin planning your academic journey. You'll be able to:</p>
+        <ul class="instruction-list">
+          <li>Explore majors and browse available elective courses</li>
+          <li>Build a personalized pathway to meet the 19.0 CU graduation requirement</li>
+          <li>Track your progress toward completing a major concentration</li>
+          <li>Visualize your plan with the interactive Graph Builder</li>
+        </ul>
+      </div>
+
+      <div class="cohort-cards">
+        <button class="cohort-card" data-cohort="philadelphia">
+          <div class="cohort-icon">PHL</div>
+          <h2>Philadelphia</h2>
+          <p>East Coast | In-Person</p>
+          <span class="cohort-detail">22.0 CU available</span>
+        </button>
+
+        <button class="cohort-card" data-cohort="san_francisco">
+          <div class="cohort-icon">SF</div>
+          <h2>San Francisco</h2>
+          <p>West Coast | In-Person</p>
+          <span class="cohort-detail">19.5 CU available</span>
+        </button>
+
+        <button class="cohort-card" data-cohort="global">
+          <div class="cohort-icon">GLO</div>
+          <h2>Global</h2>
+          <p>Virtual | WAVE</p>
+          <span class="cohort-detail">16.0 CU available</span>
+        </button>
+      </div>
+
+      <p class="note">Minimum 19.0 CU required for graduation</p>
+      <p class="disclaimer">This tool is for planning purposes only. Consult your academic advisor for official guidance.</p>
+    </div>
+  </div>
+
+  <!-- Main Application -->
+  <div id="main-app" class="screen">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <h1>WEMBA 51 Pathway Planner</h1>
+        <button id="cohort-switcher" class="cohort-badge">
+          <span id="current-cohort-name">Philadelphia</span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+            <path d="M3 5l3 3 3-3H3z"/>
+          </svg>
+        </button>
+      </div>
+      <div class="header-right">
+        <div class="cu-summary">
+          <span class="cu-label">Plan Total:</span>
+          <span id="total-cu" class="cu-value">9.5</span>
+          <span class="cu-label">/ 19.0 CU</span>
+        </div>
+        <button class="clear-plan-btn" onclick="clearElectives()" title="Clear all planned electives">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+          </svg>
+          Clear Plan
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+      <button class="nav-tab active" data-view="dashboard">Dashboard</button>
+      <button class="nav-tab" data-view="explorer">Explorer</button>
+      <button class="nav-tab" data-view="pathway">My Pathway</button>
+      <button class="nav-tab" data-view="graph">Graph Builder</button>
+    </nav>
+
+    <!-- Dashboard View -->
+    <main id="dashboard-view" class="view active">
+      <div class="dashboard-grid">
+        <!-- Progress Card -->
+        <div class="card progress-card">
+          <h3>Graduation Progress</h3>
+          <div class="progress-bar-container">
+            <div id="progress-bar" class="progress-bar" style="width: 50%"></div>
+          </div>
+          <div class="progress-stats">
+            <span id="progress-cu">9.5</span> / 19.0 CU
+            <span id="progress-percent" class="progress-percent">(50%)</span>
+          </div>
+          <div id="graduation-status" class="status-badge pending">Need 9.5 more CU</div>
+        </div>
+
+        <!-- Major Progress Card -->
+        <div class="card major-card">
+          <h3>Major Progress</h3>
+          <div id="major-progress-content">
+            <p class="empty-state">No major selected</p>
+            <button class="btn-secondary" onclick="switchView('explorer')">Explore Majors</button>
+          </div>
+        </div>
+
+        <!-- Finance Decision Card (for PHL/SF only) -->
+        <div id="finance-decision-card" class="card alert-card">
+          <h3>Term 3 Decision Required</h3>
+          <p>Choose your Corporate Finance option:</p>
+          <div class="decision-options">
+            <button class="decision-btn" data-choice="FNCE-6110">
+              <strong>FNCE 6110</strong> (1.0 CU)
+              <span>Required for Finance major</span>
+            </button>
+            <button class="decision-btn" data-choice="FNCE-6210">
+              <strong>FNCE 6210</strong> (0.5 CU)
+              <span>Shorter option, cannot pursue Finance major</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Alerts Section -->
+        <div class="card alerts-card">
+          <h3>Alerts & Recommendations</h3>
+          <ul id="alerts-list" class="alerts-list">
+            <li class="alert-item info">Select a major to see personalized recommendations</li>
+          </ul>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card actions-card">
+          <h3>Quick Actions</h3>
+          <div class="action-buttons">
+            <button class="btn-primary" onclick="switchView('explorer')">Explore Courses</button>
+            <button class="btn-secondary" onclick="switchView('pathway')">View My Plan</button>
+            <button class="btn-secondary" onclick="exportPlan()">Export Plan</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Explorer View -->
+    <main id="explorer-view" class="view">
+      <div class="explorer-layout">
+        <!-- Sidebar -->
+        <aside class="explorer-sidebar">
+          <div class="browse-toggle">
+            <button class="toggle-btn active" data-browse="majors">Majors</button>
+            <button class="toggle-btn" data-browse="departments">Departments</button>
+          </div>
+
+          <div class="search-box">
+            <input type="text" id="course-search" placeholder="Search courses...">
+          </div>
+
+          <!-- Majors List -->
+          <ul id="majors-list" class="sidebar-list">
+            <!-- Populated by JS -->
+          </ul>
+
+          <!-- Departments List -->
+          <ul id="departments-list" class="sidebar-list hidden">
+            <!-- Populated by JS -->
+          </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="explorer-content">
+          <div id="explorer-header" class="explorer-header">
+            <h2 id="explorer-title">Select a Major or Department</h2>
+            <p id="explorer-subtitle">Browse courses and add them to your plan</p>
+          </div>
+
+          <div id="explorer-courses" class="course-grid">
+            <p class="empty-state">Select a major or department from the sidebar to view available courses.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Pathway View -->
+    <main id="pathway-view" class="view">
+      <div class="pathway-header">
+        <div class="pathway-summary">
+          <h2>Your Graduation Pathway</h2>
+          <div class="pathway-stats">
+            <div class="stat">
+              <span class="stat-value" id="pathway-total-cu">9.5</span>
+              <span class="stat-label">Total CU</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value" id="pathway-status">In Progress</span>
+              <span class="stat-label">Status</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value" id="pathway-majors">None</span>
+              <span class="stat-label">Major(s)</span>
+            </div>
+          </div>
+        </div>
+        <div class="pathway-actions">
+          <button class="btn-secondary" onclick="clearElectives()">Clear Electives</button>
+          <button class="btn-primary" onclick="exportPlan()">Export Plan</button>
+        </div>
+      </div>
+
+      <div class="pathway-timeline">
+        <!-- Year 1 -->
+        <div class="year-section">
+          <h3 class="year-label">Year 1 - Core Curriculum</h3>
+          <div class="terms-row">
+            <div class="term-card" id="term-T1">
+              <div class="term-header">
+                <h4>Term 1</h4>
+                <span class="term-season">Summer</span>
+                <span class="term-cu" id="T1-cu">3.5 CU</span>
+              </div>
+              <ul class="term-courses" id="T1-courses">
+                <!-- Populated by JS -->
+              </ul>
+            </div>
+
+            <div class="term-card" id="term-T2">
+              <div class="term-header">
+                <h4>Term 2</h4>
+                <span class="term-season">Fall</span>
+                <span class="term-cu" id="T2-cu">3.0 CU</span>
+              </div>
+              <ul class="term-courses" id="T2-courses">
+                <!-- Populated by JS -->
+              </ul>
+            </div>
+
+            <div class="term-card" id="term-T3">
+              <div class="term-header">
+                <h4>Term 3</h4>
+                <span class="term-season">Spring</span>
+                <span class="term-cu" id="T3-cu">2.5 CU</span>
+              </div>
+              <ul class="term-courses" id="T3-courses">
+                <!-- Populated by JS -->
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Year 2 -->
+        <div class="year-section">
+          <h3 class="year-label">Year 2 - Electives</h3>
+          <div class="terms-row">
+            <div class="term-card" id="term-T4">
+              <div class="term-header">
+                <h4>Term 4</h4>
+                <span class="term-season">Summer 2026</span>
+                <span class="term-cu" id="T4-cu">0 CU</span>
+              </div>
+              <ul class="term-courses" id="T4-courses">
+                <li class="empty-slot">No courses planned</li>
+              </ul>
+              <button class="add-course-btn" onclick="addCourseToTerm('T4')">+ Add Course</button>
+            </div>
+
+            <div class="term-card" id="term-T5">
+              <div class="term-header">
+                <h4>Term 5</h4>
+                <span class="term-season">Fall 2026</span>
+                <span class="term-cu" id="T5-cu">0 CU</span>
+              </div>
+              <ul class="term-courses" id="T5-courses">
+                <li class="empty-slot">No courses planned</li>
+              </ul>
+              <button class="add-course-btn" onclick="addCourseToTerm('T5')">+ Add Course</button>
+            </div>
+
+            <div class="term-card" id="term-T6">
+              <div class="term-header">
+                <h4>Term 6</h4>
+                <span class="term-season">Spring 2027</span>
+                <span class="term-cu" id="T6-cu">0 CU</span>
+              </div>
+              <ul class="term-courses" id="T6-courses">
+                <li class="empty-slot">No courses planned</li>
+              </ul>
+              <button class="add-course-btn" onclick="addCourseToTerm('T6')">+ Add Course</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Block Weeks -->
+        <div class="year-section">
+          <h3 class="year-label">Block Weeks (Optional)</h3>
+          <div class="terms-row">
+            <div class="term-card block-week-card" id="term-BW">
+              <div class="term-header">
+                <h4>Block Weeks</h4>
+                <span class="term-season">Various Dates</span>
+                <span class="term-cu" id="BW-cu">0 CU</span>
+              </div>
+              <ul class="term-courses" id="BW-courses">
+                <li class="empty-slot">No block weeks planned</li>
+              </ul>
+              <button class="add-course-btn" onclick="addCourseToTerm('BW')">+ Add Block Week</button>
+              <p class="block-week-note">Up to 1.0 CU covered by tuition</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Validation Messages -->
+      <div id="validation-messages" class="validation-section">
+        <!-- Populated by JS -->
+      </div>
+    </main>
+
+    <!-- Graph Builder View -->
+    <main id="graph-view" class="view">
+      <div class="graph-layout">
+        <!-- Course Catalog Panel -->
+        <aside class="graph-catalog">
+          <div class="catalog-header">
+            <h3>Course Catalog</h3>
+            <p class="catalog-subtitle">Drag courses to your plan</p>
+          </div>
+          <div id="catalog-majors" class="catalog-sections">
+            <!-- Populated by JS: collapsible major sections -->
+          </div>
+          <div class="catalog-empty-state" id="catalog-empty">
+            <p>Select target majors in Explorer to see relevant courses here</p>
+          </div>
+        </aside>
+
+        <!-- Graph Canvas Panel -->
+        <div class="graph-panel">
+          <!-- Core Curriculum Summary Bar -->
+          <div class="core-summary" id="core-summary">
+            <div class="core-summary-collapsed" id="core-collapsed">
+              <span class="core-label">Core Curriculum: <strong id="core-cu-total">9.0 CU</strong></span>
+              <span class="core-cohort" id="core-cohort-name">Philadelphia</span>
+              <span class="finance-indicator" id="finance-indicator"></span>
+              <button class="core-expand-btn" id="core-expand-btn">Expand</button>
+            </div>
+            <div class="core-summary-expanded hidden" id="core-expanded">
+              <div class="core-terms">
+                <div class="core-term" id="core-T1"></div>
+                <div class="core-term" id="core-T2"></div>
+                <div class="core-term" id="core-T3"></div>
+              </div>
+              <button class="core-collapse-btn" id="core-collapse-btn">Collapse</button>
+            </div>
+          </div>
+
+          <!-- SVG Graph Canvas -->
+          <div class="graph-canvas-container" id="graph-canvas-container">
+            <svg id="pathway-graph" class="pathway-graph">
+              <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                  <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8" />
+                </marker>
+                <marker id="arrowhead-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                  <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6" />
+                </marker>
+                <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                  <polygon points="0 0, 10 3.5, 0 7" fill="#22c55e" />
+                </marker>
+              </defs>
+              <!-- Connection lines layer -->
+              <g id="connections-layer"></g>
+              <!-- Nodes layer -->
+              <g id="nodes-layer"></g>
+              <!-- Drop zone indicators -->
+              <g id="dropzones-layer"></g>
+            </svg>
+          </div>
+
+          <!-- Graph Controls -->
+          <div class="graph-controls">
+            <button class="graph-control-btn" id="zoom-in-btn" title="Zoom In">+</button>
+            <button class="graph-control-btn" id="zoom-out-btn" title="Zoom Out">−</button>
+            <button class="graph-control-btn" id="zoom-reset-btn" title="Reset View">⟲</button>
+            <span class="zoom-level" id="zoom-level">100%</span>
+          </div>
+
+          <!-- Graph Legend -->
+          <div class="graph-legend-box" id="graph-legend">
+            <h4>Legend</h4>
+            <div class="legend-row">
+              <div class="legend-section">
+                <h5>Departments</h5>
+                <div class="legend-items legend-depts">
+                  <span class="legend-dept" style="--dept-color: #2563eb">FNCE</span>
+                  <span class="legend-dept" style="--dept-color: #7c3aed">MGMT</span>
+                  <span class="legend-dept" style="--dept-color: #db2777">MKTG</span>
+                  <span class="legend-dept" style="--dept-color: #059669">OIDD</span>
+                  <span class="legend-dept" style="--dept-color: #d97706">ACCT</span>
+                  <span class="legend-dept" style="--dept-color: #0891b2">STAT</span>
+                </div>
+              </div>
+              <div class="legend-section">
+                <h5>Connections</h5>
+                <div class="legend-items">
+                  <div class="legend-item">
+                    <span class="legend-line legend-line-blue"></span>
+                    <span>Prerequisites</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-line legend-line-green"></span>
+                    <span>Unlocks</span>
+                  </div>
+                </div>
+              </div>
+              <div class="legend-section">
+                <h5>Warnings</h5>
+                <div class="legend-items">
+                  <div class="legend-item">
+                    <span class="legend-icon warning-prereq">⚠</span>
+                    <span>Missing prereq</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-icon warning-conflict">⚡</span>
+                    <span>Schedule conflict</span>
+                  </div>
+                </div>
+              </div>
+              <div class="legend-section">
+                <h5>Status</h5>
+                <div class="legend-items">
+                  <div class="legend-item">
+                    <span class="legend-icon status-added">✓</span>
+                    <span>In plan</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-icon status-locked">🔒</span>
+                    <span>Locked</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Graph Header Stats -->
+          <div class="graph-header-stats">
+            <div class="graph-stat">
+              <span class="graph-stat-value" id="graph-total-cu">9.0</span>
+              <span class="graph-stat-label">/ 19.0 CU</span>
+            </div>
+            <div class="graph-major-progress" id="graph-major-progress">
+              <!-- Mini progress bars for target majors -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trash Drop Zone (appears when dragging) -->
+      <div class="trash-dropzone hidden" id="trash-dropzone">
+        <span>Drop to remove</span>
+      </div>
+    </main>
+  </div>
+
+  <!-- Course Detail Modal -->
+  <div id="course-modal" class="modal hidden">
+    <div class="modal-backdrop" onclick="closeModal()"></div>
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <div id="modal-body">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Course Modal -->
+  <div id="add-course-modal" class="modal hidden">
+    <div class="modal-backdrop" onclick="closeAddCourseModal()"></div>
+    <div class="modal-content modal-large">
+      <button class="modal-close" onclick="closeAddCourseModal()">&times;</button>
+      <h2 id="add-course-title">Add Course to Term 4</h2>
+      <div id="add-course-list" class="add-course-grid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="pathway-graph.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

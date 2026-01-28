@@ -1,0 +1,1300 @@
+// WEMBA 51 Pathway Planner - Data
+// Generated from curriculum documents
+
+const COHORTS = {
+  philadelphia: {
+    id: 'philadelphia',
+    name: 'Philadelphia (East)',
+    shortName: 'PHL',
+    format: 'In-Person',
+    location: 'Philadelphia, PA'
+  },
+  san_francisco: {
+    id: 'san_francisco',
+    name: 'San Francisco (West)',
+    shortName: 'SF',
+    format: 'In-Person',
+    location: 'San Francisco, CA'
+  },
+  global: {
+    id: 'global',
+    name: 'Global (WAVE)',
+    shortName: 'GLO',
+    format: 'Virtual',
+    location: 'Online (7AM or 7PM sessions)'
+  }
+};
+
+const PROGRAM_RULES = {
+  graduationMinimum: 19.0,
+  maximumWithoutExtraTuition: 22.0,
+  programDuration: '22 months (6 terms)',
+  fullTimeMinimum: 3.0,
+  blockWeeksCovered: 1.0,
+  passFailMaxPerSemester: 1.0
+};
+
+const DEPARTMENTS = {
+  FNCE: { name: 'Finance', color: '#2563eb' },
+  MGMT: { name: 'Management', color: '#7c3aed' },
+  MKTG: { name: 'Marketing', color: '#db2777' },
+  OIDD: { name: 'Operations, Information & Decisions', color: '#059669' },
+  ACCT: { name: 'Accounting', color: '#d97706' },
+  STAT: { name: 'Statistics', color: '#0891b2' },
+  LGST: { name: 'Legal Studies & Business Ethics', color: '#4f46e5' },
+  HCMG: { name: 'Health Care Management', color: '#dc2626' },
+  REAL: { name: 'Real Estate', color: '#65a30d' },
+  BEPP: { name: 'Business Economics & Public Policy', color: '#ea580c' },
+  WHCP: { name: 'Wharton Communication Program', color: '#6366f1' }
+};
+
+// Core curriculum for all cohorts (Terms 1-3)
+const CORE_CURRICULUM = {
+  philadelphia: {
+    T1: [
+      { code: 'ACCT-6130', title: 'Fundamentals of Financial and Managerial Accounting', credits: 1.0, professor: 'TBD' },
+      { code: 'BEPP-6110', title: 'Microeconomics for Managers (Foundations + Advanced)', credits: 1.0, professor: 'TBD' },
+      { code: 'MGMT-6130', title: 'Managing the Enterprise', credits: 1.0, professor: 'TBD' },
+      { code: 'MGMT-6100', title: 'Foundations of Teamwork and Leadership', credits: 0.5, professor: 'TBD' }
+    ],
+    T2: [
+      { code: 'STAT-6130', title: 'Regression Analysis for Business', credits: 1.0, professor: 'TBD' },
+      { code: 'FNCE-6130', title: 'Macroeconomics and the Global Economic Environment', credits: 1.0, professor: 'TBD' },
+      { code: 'MKTG-6110', title: 'Marketing Management', credits: 0.5, professor: 'TBD' },
+      { code: 'OIDD-6110', title: 'Managing the Productive Core: Quality & Productivity', credits: 0.5, professor: 'TBD' }
+    ],
+    T3: [
+      { code: 'FNCE-6210', title: 'Corporate Finance (Short)', credits: 0.5, professor: 'TBD', alternative: 'FNCE-6110' },
+      { code: 'WHCP-6140', title: 'Management Communication', credits: 0.5, professor: 'TBD' },
+      { code: 'OIDD-6150', title: 'Operations Strategy', credits: 0.5, professor: 'TBD' },
+      { code: 'MKTG-6130', title: 'Strategic Marketing Simulation', credits: 0.5, professor: 'TBD' },
+      { code: 'LGST-6120', title: 'Responsibility in Business', credits: 0.5, professor: 'TBD' }
+    ],
+    T3_alternative: [
+      { code: 'FNCE-6110', title: 'Corporate Finance (Full)', credits: 1.0, professor: 'TBD', replaces: 'FNCE-6210', note: 'Required for Finance major' }
+    ]
+  },
+  san_francisco: {
+    T1: [
+      { code: 'ACCT-6130', title: 'Fundamentals of Financial and Managerial Accounting', credits: 1.0, professor: 'TBD' },
+      { code: 'BEPP-6110', title: 'Microeconomics for Managers (Foundations + Advanced)', credits: 1.0, professor: 'TBD' },
+      { code: 'MGMT-6130', title: 'Managing the Enterprise', credits: 1.0, professor: 'TBD' },
+      { code: 'MGMT-6100', title: 'Foundations of Teamwork and Leadership', credits: 0.5, professor: 'TBD' }
+    ],
+    T2: [
+      { code: 'STAT-6130', title: 'Regression Analysis for Business', credits: 1.0, professor: 'TBD' },
+      { code: 'FNCE-6130', title: 'Macroeconomics and the Global Economic Environment', credits: 1.0, professor: 'TBD' },
+      { code: 'MKTG-6110', title: 'Marketing Management', credits: 0.5, professor: 'TBD' },
+      { code: 'LGST-6120', title: 'Responsibility in Business', credits: 0.5, professor: 'TBD' }
+    ],
+    T3: [
+      { code: 'FNCE-6210', title: 'Corporate Finance (Short)', credits: 0.5, professor: 'TBD', alternative: 'FNCE-6110' },
+      { code: 'OIDD-6110', title: 'Managing the Productive Core: Quality & Productivity', credits: 0.5, professor: 'TBD' },
+      { code: 'OIDD-6150', title: 'Operations Strategy', credits: 0.5, professor: 'TBD' },
+      { code: 'MKTG-6130', title: 'Strategic Marketing Simulation', credits: 0.5, professor: 'TBD' },
+      { code: 'WHCP-6140', title: 'Management Communication', credits: 0.5, professor: 'TBD' }
+    ],
+    T3_alternative: [
+      { code: 'FNCE-6110', title: 'Corporate Finance (Full)', credits: 1.0, professor: 'TBD', replaces: 'FNCE-6210', note: 'Required for Finance major' }
+    ]
+  },
+  global: {
+    T1: [
+      { code: 'ACCT-6130', title: 'Fundamentals of Financial and Managerial Accounting', credits: 1.0, professor: 'TBD' },
+      { code: 'BEPP-6110', title: 'Microeconomics for Managers (Foundations + Advanced)', credits: 1.0, professor: 'TBD' },
+      { code: 'MGMT-6130', title: 'Managing the Enterprise', credits: 1.0, professor: 'TBD' },
+      { code: 'MGMT-6100', title: 'Foundations of Teamwork and Leadership', credits: 0.5, professor: 'TBD' }
+    ],
+    T2: [
+      { code: 'STAT-6130', title: 'Regression Analysis for Business', credits: 1.0, professor: 'TBD' },
+      { code: 'FNCE-6130', title: 'Macroeconomics and the Global Economic Environment', credits: 1.0, professor: 'TBD' },
+      { code: 'OIDD-6110', title: 'Managing the Productive Core: Quality & Productivity', credits: 0.5, professor: 'TBD' },
+      { code: 'WHCP-6140', title: 'Management Communication', credits: 0.5, professor: 'TBD' }
+    ],
+    T3: [
+      { code: 'FNCE-6110', title: 'Corporate Finance (Full)', credits: 1.0, professor: 'TBD', note: 'Required - no short option for Global' },
+      { code: 'OIDD-6150', title: 'Operations Strategy', credits: 0.5, professor: 'TBD' },
+      { code: 'LGST-6110', title: 'Responsibility in Global Management', credits: 0.5, professor: 'TBD' },
+      { code: 'MKTG-6110', title: 'Marketing Management', credits: 0.5, professor: 'TBD' },
+      { code: 'MKTG-6120', title: 'Dynamic Marketing Strategy', credits: 0.5, professor: 'TBD' }
+    ]
+  }
+};
+
+// All elective courses with availability by cohort
+const COURSES = {
+  // FINANCE
+  'FNCE-7030': {
+    code: 'FNCE 7030',
+    title: 'Advanced Corporate Finance',
+    description: 'Advanced study of corporate financial decisions including capital structure, payout policy, mergers and acquisitions, and risk management. Builds on foundations from core corporate finance.',
+    department: 'FNCE',
+    credits: 1.0,
+    prerequisites: ['FNCE-6110'],
+    offerings: {
+      san_francisco: { term: 'T4', professor: 'Christopher Parsons', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
+      global: { term: 'T5', professor: 'Itay Goldstein', weekends: [0, 1, 2, 3, 4, 5, 6] }
+    }
+  },
+  'FNCE-7050': {
+    code: 'FNCE 7050',
+    title: 'Investment Management',
+    description: 'Survey of investment strategies, portfolio management, and risk assessment. Covers asset allocation, equity valuation, fixed income, and alternative investments.',
+    department: 'FNCE',
+    credits: 1.0,
+    prerequisites: ['FNCE-6110'],
+    offerings: {
+      philadelphia: { term: 'T5', professor: 'Christopher Geczy', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
+      san_francisco: { term: 'T5', professor: 'Christopher Geczy', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
+      global: { term: 'T4', professor: 'Christopher Geczy', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+    }
+  },
+  'FNCE-7070': {
+    code: 'FNCE 7070',
+    title: 'Valuation',
+    description: 'Comprehensive framework for valuing companies, projects, and securities. Covers DCF analysis, comparable company analysis, LBO modeling, and merger analysis.',
+    department: 'FNCE',
+    credits: 1.0,
+    prerequisites: ['FNCE-6110', 'ACCT-6130'],
+    offerings: {
+      san_francisco: { term: 'T4', professor: 'Kevin Kaiser', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
+      global: { term: 'T5', professor: 'Kevin Kaiser', weekends: [0, 1, 2, 3, 4, 5, 6] }
+    }
+  },
+  'FNCE-7170': {
+    code: 'FNCE 7170',
+    title: 'Financial Derivatives',
+    description: 'Theory and application of derivative securities including options, futures, swaps, and structured products. Covers pricing, hedging strategies, and risk management.',
+    department: 'FNCE',
+    credits: 1.0,
+    prerequisites: ['FNCE-6110', 'STAT-6130'],
+    offerings: {
+      philadelphia: { term: 'T5', professor: 'Michael Gibbons', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
+      san_francisco: { term: 'T5', professor: 'Michael Gibbons', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+    }
+  },
+  'FNCE-7310': {
+    code: 'FNCE 7310',
+    title: 'Global Valuation and Risk Analysis',
+    description: 'Valuation and risk assessment in international contexts. Covers cross-border transactions, currency risk, country risk analysis, and emerging market valuations.',
+    department: 'FNCE',
+    credits: 1.0,
+    prerequisites: ['FNCE-6110'],
+    offerings: {
+      global: { term: 'T4', professor: 'Gordon Bodnar', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+    }
+  },
+  'FNCE-7320': {
+    code: 'FNCE 7320',
+    title: 'International Banking',
+    description: 'Analysis of global banking systems, international financial markets, and regulatory frameworks. Covers cross-border lending, trade finance, and banking crises.',
+    department: 'FNCE',
+    credits: 1.0,
+    prerequisites: ['FNCE-6110', 'FNCE-6130'],
+    offerings: {
+      philadelphia: { term: 'T4', professor: 'Itay Goldstein', weekends: [0, 1, 2, 3, 4, 5, 6] }
+    }
+  },
+  'FNCE-7380': {
+    code: 'FNCE 7380',
+    title: 'Capital Markets',
+    description: 'Structure and operation of capital markets including equity, debt, and money markets. Covers market microstructure, trading, and institutional investors.',
+    department: 'FNCE',
+    credits: 0.5,
+    prerequisites: ['FNCE-6110'],
+    offerings: {
+      san_francisco: { term: 'T4', professor: 'David Musto', weekends: [0, 1, 2, 3] },
+      global: { term: 'T5', professor: 'David Musto', weekends: [0, 1, 2] }
+    }
+  },
+  'FNCE-7500': {
+    code: 'FNCE 7500',
+    title: 'Venture Capital and the Finance of Innovation',
+    description: 'Financing entrepreneurial ventures from seed stage through exit. Covers deal structuring, valuation of early-stage companies, and the VC ecosystem.',
+    department: 'FNCE',
+    credits: 0.5,
+    prerequisites: ['FNCE-6110'],
+    offerings: {
+      philadelphia: { term: 'T4', professor: 'David Wessels', weekends: [4, 5, 6] },
+      san_francisco: { term: 'T6', professor: 'David Wessels', weekends: [0, 1, 2] },
+      global: { term: 'T6', professor: 'David Wessels', weekends: [0, 1, 2] }
+    }
+  },
+  'FNCE-7510': {
+    code: 'FNCE 7510',
+    title: 'Finance of Buyouts and Acquisitions',
+    description: 'Private equity transactions including leveraged buyouts, growth equity, and acquisition financing. Covers deal sourcing, due diligence, and value creation.',
+    department: 'FNCE',
+    credits: 0.5,
+    prerequisites: ['FNCE-6110'],
+    offerings: {
+      global: { term: 'T5', professor: 'Burcu Esmer', weekends: [4, 5, 6] }
+    }
+  },
+  'FNCE-7540': {
+    code: 'FNCE 7540',
+    title: 'ESG and Impact Investing',
+    description: 'Environmental, social, and governance factors in investment decisions. Covers sustainable finance, impact measurement, and stakeholder capitalism.',
+    department: 'FNCE',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'T6', professor: 'Christopher Geczy', weekends: [0, 1, 2] }
+    }
+  },
+  'FNCE-7910': {
+    code: 'FNCE 7910',
+    title: 'Corporate Restructuring',
+    description: 'Financial distress, bankruptcy, and corporate turnarounds. Covers debt restructuring, distressed investing, and value maximization in crisis situations.',
+    department: 'FNCE',
+    credits: 0.5,
+    prerequisites: ['FNCE-6110'],
+    offerings: {
+      san_francisco: { term: 'T6', professor: 'Kevin Kaiser', weekends: [3, 4] }
+    }
+  },
+  'FNCE-8010': {
+    code: 'FNCE 8010',
+    title: 'Advanced Private Equity',
+    description: 'Deep dive into private equity operations, portfolio management, and exit strategies. Case-based approach to PE value creation and fund management.',
+    department: 'FNCE',
+    credits: 0.5,
+    prerequisites: ['FNCE-6110'],
+    offerings: {
+      philadelphia: { term: 'BW', professor: 'Burcu Esmer', dates: 'May 3-6, 2027' }
+    }
+  },
+  'FNCE-7401': {
+    code: 'FNCE 7401',
+    title: 'Global Macro Investment Strategy',
+    description: 'Macro-driven investment approaches across asset classes and geographies. Covers economic analysis, policy impacts, and global portfolio construction.',
+    department: 'FNCE',
+    credits: 0.5,
+    prerequisites: ['FNCE-6110', 'FNCE-6130'],
+    offerings: {
+      san_francisco: { term: 'BW', professor: 'Anthony Landry', dates: 'Apr 26-29, 2027' }
+    }
+  },
+
+  // MANAGEMENT
+  'MGMT-6250': {
+    code: 'MGMT 6250',
+    title: 'Corporate Governance',
+    description: 'Role of boards, shareholders, and executives in corporate decision-making. Covers governance mechanisms, executive compensation, and stakeholder management.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'T6', professor: 'Mae McDonnell', weekends: [3, 4] },
+      san_francisco: { term: 'T4', professor: 'Mae McDonnell', weekends: [0, 1, 2] }
+    }
+  },
+  'MGMT-6910': {
+    code: 'MGMT 6910',
+    title: 'Negotiations',
+    description: 'Theory and practice of negotiation in business contexts. Develops skills in distributive and integrative bargaining, multiparty negotiations, and dispute resolution.',
+    department: 'MGMT',
+    credits: 1.0,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'T5', professor: 'Mae McDonnell', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
+      san_francisco: { term: 'T4', professor: 'Mae McDonnell', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+    }
+  },
+  'MGMT-7010': {
+    code: 'MGMT 7010',
+    title: 'Strategy and Competitive Advantage',
+    description: 'Analysis of competitive dynamics and strategic positioning. Covers industry analysis, competitive advantage sources, and strategic decision-making frameworks.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: ['MGMT-6130'],
+    offerings: {
+      philadelphia: { term: 'T5', professor: 'Sonia Marciano', weekends: [4, 5, 6] },
+      san_francisco: { term: 'T4', professor: 'Sonia Marciano', weekends: [4, 5, 6, 7] },
+      global: { term: 'T5', professor: 'Sonia Marciano', weekends: [4, 5, 6] }
+    }
+  },
+  'MGMT-7150': {
+    code: 'MGMT 7150',
+    title: 'Political and Social Environment of the Multinational Firm',
+    description: 'Managing political risk and stakeholder relationships across borders. Covers government relations, NGO engagement, and social license to operate.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'T6', professor: 'Vit Henisz', weekends: [0, 1, 2] },
+      san_francisco: { term: 'T5', professor: 'Vit Henisz', weekends: [0, 1, 2] }
+    }
+  },
+  'MGMT-7210': {
+    code: 'MGMT 7210',
+    title: 'Corporate Development, Mergers and Acquisitions',
+    description: 'Strategic and operational aspects of M&A transactions. Covers deal sourcing, valuation, due diligence, integration planning, and post-merger management.',
+    department: 'MGMT',
+    credits: 1.0,
+    prerequisites: ['FNCE-6110'],
+    offerings: {
+      philadelphia: { term: 'T4', professor: 'Emilie Feldman', weekends: [0, 1, 2, 3, 4, 5, 6] },
+      san_francisco: { term: 'T5', professor: 'Harbir Singh', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+    }
+  },
+  'MGMT-7310': {
+    code: 'MGMT 7310',
+    title: 'Technology Strategy',
+    description: 'Strategic management of technology and innovation. Covers technology adoption, platform strategy, intellectual property, and managing technological change.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: ['MGMT-6130'],
+    offerings: {
+      philadelphia: { term: 'T6', professor: 'Rahul Kapoor', weekends: [0, 1, 2] },
+      san_francisco: { term: 'T5', professor: 'Lori Rosenkopf', weekends: [4, 5, 6] },
+      global: { term: 'T5', professor: 'Rahul Kapoor', weekends: [0, 1, 2] }
+    }
+  },
+  'MGMT-7640': {
+    code: 'MGMT 7640',
+    title: 'Tech in the SF Bay Area',
+    description: 'Immersive exploration of Silicon Valley ecosystem including company visits, venture capital meetings, and discussions with tech leaders and entrepreneurs.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      san_francisco: { term: 'BW', professor: 'Lori Rosenkopf', dates: 'Mar 8-11, 2027' }
+    }
+  },
+  'MGMT-7720': {
+    code: 'MGMT 7720',
+    title: 'Power and Politics in Organizations',
+    description: 'Understanding and navigating organizational politics. Covers influence tactics, coalition building, power dynamics, and political skill development.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', professor: 'Samir Nurmohamed', dates: 'Jan 11-14, 2027' }
+    }
+  },
+  'MGMT-7820': {
+    code: 'MGMT 7820',
+    title: 'Strategic Implementation',
+    description: 'Executing strategy effectively through organizational design, change management, and performance systems. Bridges strategy formulation and execution.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: ['MGMT-6130'],
+    offerings: {
+      global: { term: 'T4', professor: 'Michael Christensen', weekends: [0, 1, 2, 3] }
+    }
+  },
+  'MGMT-7830': {
+    code: 'MGMT 7830',
+    title: 'Impact Measurement',
+    description: 'Frameworks for measuring and managing social and environmental impact. Covers impact metrics, theory of change, and data-driven impact management.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', professor: 'Vit Henisz', dates: 'May 3-6, 2027' }
+    }
+  },
+  'MGMT-7930': {
+    code: 'MGMT 7930',
+    title: 'People Analytics',
+    description: 'Data-driven approaches to human capital decisions. Covers workforce analytics, talent metrics, and evidence-based HR management.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: ['STAT-6130'],
+    offerings: {
+      philadelphia: { term: 'T5', professor: 'Matthew Bidwell', weekends: [0, 1, 2, 3] },
+      global: { term: 'T5', professor: 'Matthew Bidwell', weekends: [0, 1, 2, 3] }
+    }
+  },
+  'MGMT-7990': {
+    code: 'MGMT 7990',
+    title: 'Social Impact Consulting Practicum',
+    description: 'Hands-on consulting project with social enterprises or nonprofits. Apply business frameworks to address real organizational challenges.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'T6', professor: 'David Rhode', weekends: [0, 1, 2, 3, 4] },
+      san_francisco: { term: 'T6', professor: 'David Rhode', weekends: [0, 1, 2, 3, 4] },
+      global: { term: 'T6', professor: 'David Rhode', weekends: [0, 1, 2, 3, 4] }
+    }
+  },
+  'MGMT-8010': {
+    code: 'MGMT 8010',
+    title: 'Entrepreneurship',
+    description: 'Foundations of starting and growing new ventures. Covers opportunity recognition, business model design, fundraising, and scaling strategies.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'T4', professor: 'Henning Piezunka', weekends: [0, 1, 2, 3] },
+      san_francisco: { term: 'T5', professor: 'Karl Ulrich', weekends: [0, 1, 2, 3] },
+      global: { term: 'T4', professor: 'Karl Ulrich', weekends: [0, 1, 2, 3] }
+    }
+  },
+  'MGMT-8040': {
+    code: 'MGMT 8040',
+    title: 'Venture Capital and Entrepreneurial Management',
+    description: 'Understanding the VC-entrepreneur relationship. Covers fundraising strategy, term sheets, board dynamics, and managing venture-backed companies.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: ['MGMT-8010'],
+    offerings: {
+      philadelphia: { term: 'T5', professor: 'Raffi Amit', weekends: [4, 5, 6, 7] },
+      san_francisco: { term: 'T5', professor: 'Raffi Amit', weekends: [4, 5, 6, 7] },
+      global: { term: 'T5', professor: 'Raffi Amit', weekends: [4, 5, 6] }
+    }
+  },
+  'MGMT-8090': {
+    code: 'MGMT 8090',
+    title: 'Private Equity in Emerging Markets',
+    description: 'PE investment strategies in developing economies. Covers market entry, deal structuring, operational improvements, and exit challenges in emerging markets.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: ['FNCE-6110'],
+    offerings: {
+      san_francisco: { term: 'T4', professor: 'Stephen Sammut', weekends: [4, 5, 6, 7] },
+      global: { term: 'T5', professor: 'Stephen Sammut', weekends: [4, 5, 6] }
+    }
+  },
+  'MGMT-8110': {
+    code: 'MGMT 8110',
+    title: 'Entrepreneurship Through Acquisition',
+    description: 'Acquiring and operating small businesses as a path to entrepreneurship. Covers search funds, acquisition financing, and owner-operator strategies.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: ['FNCE-6110'],
+    offerings: {
+      san_francisco: { term: 'T6', professor: 'Robert Chalfin', weekends: [0, 1, 2] },
+      global: { term: 'T5', professor: 'Robert Chalfin', weekends: [0, 1, 2] }
+    }
+  },
+  'MGMT-8160': {
+    code: 'MGMT 8160',
+    title: 'Building Human Assets in Entrepreneurial Ventures',
+    description: 'Talent strategies for startups and high-growth companies. Covers recruiting, culture building, compensation, and organizational scaling.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: ['MGMT-8010'],
+    offerings: {
+      san_francisco: { term: 'BW', professor: 'Valery Yakubovich', dates: 'May 3-6, 2027' }
+    }
+  },
+  'MGMT-8310': {
+    code: 'MGMT 8310',
+    title: 'Venture Launchpad',
+    description: 'Intensive venture development program to launch or advance your startup. Covers customer discovery, MVP development, and investor pitch preparation.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: ['MGMT-8010'],
+    offerings: {
+      philadelphia: { term: 'T4', professor: 'Tyler Wry', weekends: [4, 5, 6] },
+      san_francisco: { term: 'T6', professor: 'Tyler Wry', weekends: [3, 4] },
+      global: { term: 'T4', professor: 'Tyler Wry', weekends: [4, 5, 6, 7] }
+    }
+  },
+  'MGMT-8320': {
+    code: 'MGMT 8320',
+    title: 'Business Model Innovation',
+    description: 'Designing and transforming business models. Covers business model canvas, value proposition design, and strategies for business model change.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: ['MGMT-6130'],
+    offerings: {
+      philadelphia: { term: 'T5', professor: 'Michael Christensen', weekends: [0, 1, 2, 3] },
+      san_francisco: { term: 'T4', professor: 'Michael Christensen', weekends: [0, 1, 2, 3] }
+    }
+  },
+  'MGMT-8710': {
+    code: 'MGMT 8710',
+    title: 'Advanced Global Strategy',
+    description: 'Strategic challenges of operating across borders. Covers market selection, entry modes, global integration vs. local adaptation, and managing global organizations.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: ['MGMT-6130'],
+    offerings: {
+      philadelphia: { term: 'T5', professor: 'Zeke Hernandez', weekends: [4, 5, 6, 7] },
+      san_francisco: { term: 'T6', professor: 'Zeke Hernandez', weekends: [0, 1, 2] },
+      global: { term: 'BW', professor: 'Zeke Hernandez', dates: 'Dec 7-10, 2026' }
+    }
+  },
+  'MGMT-XXXX': {
+    code: 'MGMT XXXX',
+    title: 'Finishing First: Motorsport Lessons on Competition',
+    description: 'Strategic lessons from Formula 1 and motorsport. Immersive experience in Bologna exploring technology, teamwork, and competitive dynamics in racing.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      global: { term: 'BW', professor: 'Henning Piezunka', dates: 'Jun 29 - Jul 3, 2026', location: 'Bologna' }
+    }
+  },
+
+  // MARKETING
+  'MKTG-7110': {
+    code: 'MKTG 7110',
+    title: 'Consumer Behavior',
+    description: 'Psychological foundations of consumer decision-making. Covers perception, motivation, attitudes, and social influences on purchasing behavior.',
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: ['MKTG-6110'],
+    offerings: {
+      philadelphia: { term: 'T4', professor: 'Annie Wilson', weekends: [0, 1, 2, 3] },
+      san_francisco: { term: 'T6', professor: 'Annie Wilson', weekends: [0, 1, 2] }
+    }
+  },
+  'MKTG-7120': {
+    code: 'MKTG 7120',
+    title: 'Marketing Research',
+    description: 'Design and analysis of marketing research studies. Covers survey methods, experimental design, conjoint analysis, and qualitative research techniques.',
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: ['MKTG-6110', 'STAT-6130'],
+    offerings: {
+      philadelphia: { term: 'T6', professor: 'Raghu Iyengar', weekends: [3, 4] },
+      san_francisco: { term: 'T4', professor: 'Raghu Iyengar', weekends: [4, 5, 6, 7] }
+    }
+  },
+  'MKTG-7340': {
+    code: 'MKTG 7340',
+    title: 'Creativity',
+    description: 'Science and practice of creativity in business. Covers creative thinking techniques, innovation processes, and fostering creativity in organizations.',
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      san_francisco: { term: 'BW', professor: 'Gideon Nave', dates: 'Oct 12-15, 2026' }
+    }
+  },
+  'MKTG-7540': {
+    code: 'MKTG 7540',
+    title: 'Pricing Policy',
+    description: 'Strategic approaches to pricing decisions. Covers price discrimination, bundling, dynamic pricing, and pricing in competitive markets.',
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: ['MKTG-6110', 'BEPP-6110'],
+    offerings: {
+      philadelphia: { term: 'T6', professor: 'Jagmohan S Raju', weekends: [0, 1, 2] },
+      san_francisco: { term: 'T6', professor: 'Jagmohan S Raju', weekends: [3, 4] }
+    }
+  },
+  'MKTG-7760': {
+    code: 'MKTG 7760',
+    title: 'Applied Probability Models in Marketing',
+    description: 'Quantitative models for customer analytics. Covers customer lifetime value, RFM analysis, buy-till-you-die models, and customer-base valuation.',
+    department: 'MKTG',
+    credits: 1.0,
+    prerequisites: ['STAT-6130'],
+    offerings: {
+      philadelphia: { term: 'T4', professor: 'Pete Fader', weekends: [0, 1, 2, 3, 4, 5, 6] },
+      san_francisco: { term: 'T5', professor: 'Pete Fader', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+    }
+  },
+  'MKTG-7770': {
+    code: 'MKTG 7770',
+    title: 'Marketing Strategy',
+    description: 'Framework for developing marketing strategy. Covers segmentation, targeting, positioning, competitive analysis, and go-to-market planning.',
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: ['MKTG-6110'],
+    offerings: {
+      philadelphia: { term: 'T4', professor: 'Pinar Yildirim', weekends: [4, 5, 6] },
+      global: { term: 'T6', professor: 'Pinar Yildirim', weekends: [0, 1, 2] }
+    }
+  },
+  'MKTG-7770-BW': {
+    code: 'MKTG 7770',
+    title: 'Marketing Strategy (Block Week)',
+    description: 'Intensive version of Marketing Strategy. Framework for developing marketing strategy including segmentation, targeting, and positioning.',
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: ['MKTG-6110'],
+    offerings: {
+      philadelphia: { term: 'BW', professor: 'Pinar Yildirim', dates: 'Jan 11-14, 2027' }
+    }
+  },
+  'MKTG-7780': {
+    code: 'MKTG 7780',
+    title: 'Strategic Brand Management',
+    description: 'Building and managing strong brands. Covers brand equity, brand architecture, brand extensions, and brand positioning strategies.',
+    department: 'MKTG',
+    credits: 1.0,
+    prerequisites: ['MKTG-6110'],
+    offerings: {
+      philadelphia: { term: 'T5', professor: 'Patti Williams', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
+      san_francisco: { term: 'T4', professor: 'Patti Williams', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+    }
+  },
+  'MKTG-7790': {
+    code: 'MKTG 7790',
+    title: 'AI in Our Lives: The Behavioral Science of Autonomous Technology',
+    description: 'Human interaction with AI and autonomous systems. Covers trust, adoption, ethical considerations, and designing human-centered AI applications.',
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      global: { term: 'T6', professor: 'Stefano Puntoni', weekends: [3, 4] }
+    }
+  },
+  'MKTG-8500': {
+    code: 'MKTG 8500',
+    title: 'Sales 3.0 and the Future of Revenue Growth',
+    description: 'Modern sales strategies and technology. Covers sales process optimization, CRM systems, sales analytics, and digital selling techniques.',
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      san_francisco: { term: 'BW', professor: 'Americus Reed', dates: 'Aug 3-6, 2026' }
+    }
+  },
+  'MKTG-8530': {
+    code: 'MKTG 8530',
+    title: 'Advertising Management',
+    description: 'Planning and executing advertising campaigns. Covers media planning, creative strategy, digital advertising, and measuring advertising effectiveness.',
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: ['MKTG-6110'],
+    offerings: {
+      philadelphia: { term: 'BW', professor: 'Annie Wilson', dates: 'Mar 8-11, 2027' }
+    }
+  },
+  'MKTG-8970': {
+    code: 'MKTG 8970',
+    title: 'Luxury Branding and Retailing in Paris',
+    description: 'Immersive study of luxury brand management in Paris. Company visits and case studies on heritage brands, craftsmanship, and luxury retail strategy.',
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: ['MKTG-6110'],
+    offerings: {
+      san_francisco: { term: 'BW', professor: 'Barbara Kahn', dates: 'May 3-7, 2027', location: 'Paris' }
+    }
+  },
+  'MKTG-XXXX': {
+    code: 'MKTG XXXX',
+    title: 'Designing and Deploying AI Agents',
+    description: 'Practical approach to building AI agents for business applications. Covers LLM prompting, agent architectures, and deployment strategies.',
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', professor: 'Sohiit Karol', dates: 'Oct 12-15, 2026' }
+    }
+  },
+
+  // OPERATIONS, INFORMATION & DECISIONS
+  'OIDD-6120': {
+    code: 'OIDD 6120',
+    title: 'Business Analytics',
+    description: 'Data-driven decision making in business. Covers optimization, simulation, decision analysis, and practical applications of analytics tools.',
+    department: 'OIDD',
+    credits: 0.5,
+    prerequisites: ['STAT-6130'],
+    offerings: {
+      philadelphia: { term: 'T6', professor: 'Sergei Savin', weekends: [0, 1, 2] },
+      san_francisco: { term: 'T5', professor: 'Ziv Katalan', weekends: [0, 1, 2, 3] },
+      global: { term: 'T6', professor: 'Sergei Savin', weekends: [0, 1, 2] }
+    }
+  },
+  'OIDD-6140': {
+    code: 'OIDD 6140',
+    title: 'Innovation',
+    description: 'Managing innovation processes from ideation to commercialization. Covers design thinking, prototyping, innovation metrics, and building innovative organizations.',
+    department: 'OIDD',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      san_francisco: { term: 'BW', professor: 'Serguei Netessine', dates: 'Nov 30 - Dec 3, 2026' }
+    }
+  },
+  'OIDD-6360': {
+    code: 'OIDD 6360',
+    title: 'Scaling Operations',
+    description: 'Managing growth and operational complexity. Covers capacity planning, process improvement, supply chain management, and service operations scaling.',
+    department: 'OIDD',
+    credits: 1.0,
+    prerequisites: ['OIDD-6110'],
+    offerings: {
+      philadelphia: { term: 'T4', professor: 'Gad Allon', weekends: [0, 1, 2, 3, 4, 5, 6] },
+      san_francisco: { term: 'T5', professor: 'Gad Allon', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
+      global: { term: 'T4', professor: 'Gad Allon', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+    }
+  },
+  'OIDD-6530': {
+    code: 'OIDD 6530',
+    title: 'Mathematical Modeling and its Applications in Finance',
+    description: 'Quantitative modeling techniques for financial applications. Covers stochastic processes, optimization in finance, and risk modeling.',
+    department: 'OIDD',
+    credits: 0.5,
+    prerequisites: ['STAT-6130', 'FNCE-6110'],
+    offerings: {
+      san_francisco: { term: 'BW', professor: 'Ziv Katalan', dates: 'Oct 12-15, 2026' }
+    }
+  },
+  'OIDD-6540': {
+    code: 'OIDD 6540',
+    title: 'Product Management',
+    description: 'End-to-end product management from concept to launch. Covers product strategy, roadmapping, user research, and cross-functional team leadership.',
+    department: 'OIDD',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      san_francisco: { term: 'T5', professor: 'Karl Ulrich', weekends: [4, 5, 6, 7] },
+      global: { term: 'BW', professor: 'Karl Ulrich', dates: 'Dec 7-10, 2026' }
+    }
+  },
+  'OIDD-6620': {
+    code: 'OIDD 6620',
+    title: 'Enabling Technologies',
+    description: 'Strategic implications of emerging technologies. Covers cloud computing, blockchain, IoT, and technology adoption decisions.',
+    department: 'OIDD',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      san_francisco: { term: 'T6', professor: 'Lynn Wu', weekends: [0, 1, 2] },
+      global: { term: 'T5', professor: 'Lynn Wu', weekends: [0, 1, 2] }
+    }
+  },
+  'OIDD-6670': {
+    code: 'OIDD 6670',
+    title: 'AI, Business, and Society',
+    description: 'Strategic and societal implications of AI. Covers AI applications, algorithmic decision-making, bias and fairness, and AI governance.',
+    department: 'OIDD',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', professor: 'Priyanka Vergadia', dates: 'May 3-6, 2027' },
+      san_francisco: { term: 'BW', professor: 'Kartik Hosanagar', dates: 'Mar 8-11, 2027' }
+    }
+  },
+  'OIDD-6920': {
+    code: 'OIDD 6920',
+    title: 'Advanced Topics in Negotiation',
+    description: 'Complex negotiation scenarios and advanced techniques. Covers multi-party negotiations, cross-cultural negotiations, and mediation.',
+    department: 'OIDD',
+    credits: 0.5,
+    prerequisites: ['MGMT-6910'],
+    offerings: {
+      philadelphia: { term: 'BW', professor: 'Maurice Schweitzer', dates: 'Mar 8-11, 2027' }
+    }
+  },
+  'OIDD-6930': {
+    code: 'OIDD 6930',
+    title: 'Influence',
+    description: 'Science of persuasion and influence. Covers psychological principles of influence, ethical persuasion tactics, and organizational influence.',
+    department: 'OIDD',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'T5', professor: 'Cade Massey', weekends: [0, 1, 2, 3] },
+      san_francisco: { term: 'BW', professor: 'Cade Massey', dates: 'Feb 15-18, 2027' },
+      global: { term: 'T4', professor: 'Cade Massey', weekends: [0, 1, 2, 3] }
+    }
+  },
+  'OIDD-6990': {
+    code: 'OIDD 6990',
+    title: 'AI in Seattle',
+    description: 'Immersive exploration of AI innovation in Seattle. Visits to Microsoft, Amazon, and AI startups examining real-world AI applications.',
+    department: 'OIDD',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      san_francisco: { term: 'BW', professor: 'Serguei Netessine', dates: 'Mar 8-11, 2027', location: 'Seattle' }
+    }
+  },
+
+  // LEGAL STUDIES
+  'LGST-6420': {
+    code: 'LGST 6420',
+    title: 'Big Data, Big Responsibilities, Toward Accountable AI',
+    description: 'Legal and ethical frameworks for AI and big data. Covers privacy, algorithmic accountability, AI regulation, and responsible innovation.',
+    department: 'LGST',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      san_francisco: { term: 'BW', professor: 'Kevin Werbach', dates: 'Fall 2026 (TBD)' }
+    }
+  },
+  'LGST-7500': {
+    code: 'LGST 7500',
+    title: 'Global (Anti-)Money Laundering',
+    description: 'Financial crime and compliance frameworks. Covers AML regulations, sanctions, financial intelligence, and compliance program design.',
+    department: 'LGST',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'T6', professor: 'Peter Conti-Brown', weekends: [0, 1, 2] }
+    }
+  },
+  'LGST-7500-BW': {
+    code: 'LGST 7500',
+    title: 'Global (Anti-)Money Laundering (Block Week)',
+    description: 'Intensive version covering financial crime and compliance frameworks, AML regulations, sanctions, and compliance program design.',
+    department: 'LGST',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', professor: 'Peter Conti-Brown', dates: 'Oct 12-15, 2026' }
+    }
+  },
+  'LGST-7820': {
+    code: 'LGST 7820',
+    title: 'Corrupted Information',
+    description: 'Misinformation, disinformation, and their business impacts. Covers information integrity, social media dynamics, and organizational responses.',
+    department: 'LGST',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', professor: 'Nina Strohminger', dates: 'Jun 15-18, 2026' }
+    }
+  },
+  'LGST-8060': {
+    code: 'LGST 8060',
+    title: 'Negotiations',
+    description: 'Comprehensive negotiation course covering theory and practice. Includes simulations, deal-making, dispute resolution, and cross-cultural negotiations.',
+    department: 'LGST',
+    credits: 1.0,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'T6', professor: 'Nazli Bhatia', weekends: [0, 1, 2, 3, 4] },
+      san_francisco: { term: 'T6', professor: 'Mori Taheripour', weekends: [0, 1, 2, 3, 4] },
+      global: { term: 'T4', professor: 'Nazli Bhatia', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+    }
+  },
+  'LGST-8090': {
+    code: 'LGST 8090',
+    title: 'Sports Business Management',
+    description: 'Business of professional and collegiate sports. Covers league economics, media rights, franchise valuations, and sports marketing.',
+    department: 'LGST',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      san_francisco: { term: 'BW', professor: 'Rob DiGisi', dates: 'Aug 3-6, 2026' }
+    }
+  },
+  'LGST-8130': {
+    code: 'LGST 8130',
+    title: 'Legal and Transactional Aspects of Entrepreneurship',
+    description: 'Legal considerations for entrepreneurs. Covers entity formation, IP protection, employment law, contracts, and regulatory compliance.',
+    department: 'LGST',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'T4', professor: 'Bob Borghese', weekends: [0, 1, 2, 3] }
+    }
+  },
+
+  // HEALTH CARE MANAGEMENT
+  'HCMG-8410': {
+    code: 'HCMG 8410',
+    title: 'Healthcare Services System',
+    description: 'Overview of the US healthcare system. Covers providers, payers, regulators, and the economic and policy forces shaping healthcare delivery.',
+    department: 'HCMG',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', professor: 'Robert Burns', dates: 'Jun 15-18, 2026' }
+    }
+  },
+  'HCMG-8450': {
+    code: 'HCMG 8450',
+    title: 'US Payer Provider Strategy',
+    description: 'Strategic dynamics between healthcare payers and providers. Covers reimbursement models, network strategies, and value-based care.',
+    department: 'HCMG',
+    credits: 0.5,
+    prerequisites: ['HCMG-8410'],
+    offerings: {
+      philadelphia: { term: 'T6', professor: 'Robert Burns', weekends: [3, 4] }
+    }
+  },
+  'HCMG-8500': {
+    code: 'HCMG 8500',
+    title: 'Health Care Reform',
+    description: 'Policy analysis of healthcare reform efforts. Covers ACA, Medicare/Medicaid policy, single-payer proposals, and international comparisons.',
+    department: 'HCMG',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      san_francisco: { term: 'BW', professor: 'Ezekiel Emanuel', dates: 'Spring 2027 (TBD)' }
+    }
+  },
+  'HCMG-8520': {
+    code: 'HCMG 8520',
+    title: 'Health Care Services Delivery',
+    description: 'Operations and management of healthcare delivery organizations. Covers hospital management, physician practices, and care coordination.',
+    department: 'HCMG',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'T4', professor: 'Guy David', weekends: [0, 1, 2, 3] },
+      san_francisco: { term: 'T4', professor: 'Guy David', weekends: [0, 1, 2, 3] }
+    }
+  },
+  'HCMG-8590': {
+    code: 'HCMG 8590',
+    title: 'Comparative Health Care Systems',
+    description: 'Analysis of healthcare systems across countries. Covers universal coverage models, cost containment approaches, and lessons for the US.',
+    department: 'HCMG',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'T4', professor: 'Claudio Lucarelli', weekends: [4, 5, 6] }
+    }
+  },
+  'HCMG-8600': {
+    code: 'HCMG 8600',
+    title: 'Leading Healthcare Organizations',
+    description: 'Leadership challenges specific to healthcare. Covers change management, quality improvement, and leading healthcare professionals.',
+    department: 'HCMG',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', professor: 'Ingrid Nembhard', dates: 'Nov 30 - Dec 3, 2026' }
+    }
+  },
+  'HCMG-8670': {
+    code: 'HCMG 8670',
+    title: 'Healthcare Entrepreneurship',
+    description: 'Starting and growing healthcare ventures. Covers digital health, medical devices, healthcare services startups, and regulatory pathways.',
+    department: 'HCMG',
+    credits: 0.5,
+    prerequisites: ['MGMT-8010'],
+    offerings: {
+      philadelphia: { term: 'T5', professor: 'Stephen Sammut', weekends: [0, 1, 2, 3] }
+    }
+  },
+
+  // STATISTICS
+  'STAT-7220': {
+    code: 'STAT 7220',
+    title: 'Predictive Analytics',
+    description: 'Building predictive models for business applications. Covers supervised learning, model selection, validation, and interpretation of predictions.',
+    department: 'STAT',
+    credits: 0.5,
+    prerequisites: ['STAT-6130'],
+    offerings: {
+      san_francisco: { term: 'T5', professor: 'Bob Stine', weekends: [4, 5, 6, 7] }
+    }
+  },
+  'STAT-7230': {
+    code: 'STAT 7230',
+    title: 'Applied Machine Learning in Business',
+    description: 'Comprehensive machine learning for business problems. Covers classification, regression, clustering, NLP basics, and ML deployment.',
+    department: 'STAT',
+    credits: 1.0,
+    prerequisites: ['STAT-6130'],
+    offerings: {
+      global: { term: 'T6', professor: 'Bob Stine', weekends: [0, 1, 2, 3, 4] }
+    }
+  },
+  'STAT-7250': {
+    code: 'STAT 7250',
+    title: 'Sports and Gaming Analytics',
+    description: 'Statistical analysis in sports and gaming contexts. Covers player evaluation, game theory, sports betting markets, and esports analytics.',
+    department: 'STAT',
+    credits: 0.5,
+    prerequisites: ['STAT-6130'],
+    offerings: {
+      philadelphia: { term: 'BW', professor: 'Adi Wyner', dates: 'May 3-6, 2027' }
+    }
+  },
+
+  // REAL ESTATE
+  'REAL-7210': {
+    code: 'REAL 7210',
+    title: 'Real Estate Investments',
+    description: 'Analysis of real estate as an investment asset. Covers property valuation, REITs, commercial real estate, and real estate finance.',
+    department: 'REAL',
+    credits: 0.5,
+    prerequisites: ['FNCE-6110'],
+    offerings: {
+      philadelphia: { term: 'T5', professor: 'Todd Sinai', weekends: [4, 5, 6, 7] },
+      san_francisco: { term: 'T6', professor: 'Todd Sinai', weekends: [0, 1, 2] }
+    }
+  },
+  'REAL-8910': {
+    code: 'REAL 8910',
+    title: 'Real Estate Entrepreneurship',
+    description: 'Starting and growing real estate ventures. Covers development, property management, real estate technology, and raising capital.',
+    department: 'REAL',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', professor: 'Bob Chalfin', dates: 'Jun 15-18, 2026' }
+    }
+  },
+
+  // ACCOUNTING
+  'ACCT-7471': {
+    code: 'ACCT 7471',
+    title: 'Financial Disclosure Analytics',
+    description: 'Analyzing financial statements and disclosures. Covers earnings quality, accounting red flags, and using financial data for investment decisions.',
+    department: 'ACCT',
+    credits: 0.5,
+    prerequisites: ['ACCT-6130'],
+    offerings: {
+      philadelphia: { term: 'T4', professor: 'Brian Bushee', weekends: [0, 1, 2, 3] },
+      san_francisco: { term: 'T5', professor: 'Brian Bushee', weekends: [0, 1, 2, 3] }
+    }
+  }
+};
+
+// Majors with requirements
+const MAJORS = {
+  finance: {
+    id: 'finance',
+    name: 'Finance',
+    department: 'FNCE',
+    requiredCUs: 6.0,
+    stemCertified: true,
+    description: 'Comprehensive study of corporate finance, investments, and financial markets.',
+    coreRequirements: ['FNCE-6110', 'FNCE-6130'],
+    electiveCUs: 4.0,
+    electiveCourses: ['FNCE-7030', 'FNCE-7050', 'FNCE-7070', 'FNCE-7170', 'FNCE-7310', 'FNCE-7320', 'FNCE-7380', 'FNCE-7500', 'FNCE-7510', 'FNCE-7540', 'FNCE-7910', 'FNCE-8010'],
+    warnings: ['Must take FNCE 6110 (1.0 CU) in Term 3 - the 0.5 CU option (FNCE 6210) does not qualify'],
+    restrictions: ['Cannot declare both Finance and Quantitative Finance majors']
+  },
+  marketing: {
+    id: 'marketing',
+    name: 'Marketing',
+    department: 'MKTG',
+    requiredCUs: 5.0,
+    stemCertified: false,
+    description: 'Develop expertise in marketing strategy, consumer behavior, and brand management.',
+    coreRequirements: ['MKTG-6110'],
+    electiveCUs: 4.0,
+    electiveCourses: ['MKTG-7110', 'MKTG-7120', 'MKTG-7340', 'MKTG-7540', 'MKTG-7760', 'MKTG-7770', 'MKTG-7780', 'MKTG-7790', 'MKTG-8500', 'MKTG-8530'],
+    warnings: [],
+    restrictions: []
+  },
+  management: {
+    id: 'management',
+    name: 'Management',
+    department: 'MGMT',
+    requiredCUs: 4.0,
+    stemCertified: false,
+    description: 'Focus on leadership, organizational behavior, and strategic management.',
+    coreRequirements: ['MGMT-6100', 'MGMT-6130'],
+    electiveCUs: 3.0,
+    electiveCourses: ['MGMT-6250', 'MGMT-6910', 'MGMT-7010', 'MGMT-7150', 'MGMT-7210', 'MGMT-7310', 'MGMT-7720', 'MGMT-7820', 'MGMT-7930', 'MGMT-7990', 'MGMT-8010', 'MGMT-8040', 'MGMT-8090', 'MGMT-8110', 'MGMT-8310', 'MGMT-8320', 'MGMT-8710'],
+    warnings: [],
+    restrictions: []
+  },
+  strategic_management: {
+    id: 'strategic_management',
+    name: 'Strategic Management',
+    department: 'MGMT',
+    requiredCUs: 4.0,
+    stemCertified: false,
+    description: 'Develop skills in competitive strategy, corporate development, and technology strategy.',
+    coreRequirements: ['MGMT-6100', 'MGMT-6130'],
+    electiveCUs: 3.0,
+    primaryCourses: ['MGMT-7010', 'MGMT-7210', 'MGMT-7310', 'MGMT-7820', 'MGMT-8010', 'MGMT-8710'],
+    secondaryCourses: ['MGMT-6250', 'MGMT-7150', 'MGMT-8110', 'MGMT-8320'],
+    warnings: [],
+    restrictions: ['Max 1 CU from secondary electives']
+  },
+  entrepreneurship: {
+    id: 'entrepreneurship',
+    name: 'Entrepreneurship & Innovation',
+    department: 'MGMT',
+    requiredCUs: 4.0,
+    stemCertified: false,
+    description: 'Learn to start and grow new ventures.',
+    coreRequirements: ['MGMT-8010'],
+    electiveCUs: 3.5,
+    electiveCourses: ['FNCE-7500', 'FNCE-7510', 'LGST-8060', 'LGST-8130', 'MGMT-6910', 'MGMT-7210', 'MGMT-7310', 'MGMT-8040', 'MGMT-8090', 'MGMT-8110', 'MGMT-8310', 'MGMT-8320', 'OIDD-6360', 'OIDD-6540', 'OIDD-6620', 'REAL-8910'],
+    warnings: ['MGMT 8010 (Entrepreneurship) is required and cannot be waived or substituted'],
+    restrictions: []
+  },
+  operations: {
+    id: 'operations',
+    name: 'Operations, Information & Decisions',
+    department: 'OIDD',
+    requiredCUs: 5.0,
+    stemCertified: true,
+    description: 'Master operations management, analytics, and decision-making.',
+    coreRequirements: [],
+    electiveCUs: 5.0,
+    electiveCourses: ['OIDD-6120', 'OIDD-6140', 'OIDD-6360', 'OIDD-6530', 'OIDD-6540', 'OIDD-6620', 'OIDD-6670', 'OIDD-6920', 'OIDD-6930', 'OIDD-6990'],
+    warnings: [],
+    restrictions: []
+  },
+  healthcare: {
+    id: 'healthcare',
+    name: 'Health Care Management',
+    department: 'HCMG',
+    requiredCUs: 4.0,
+    stemCertified: false,
+    description: 'Prepare for leadership roles in the healthcare industry.',
+    coreRequirements: [],
+    electiveCUs: 4.0,
+    electiveCourses: ['HCMG-8410', 'HCMG-8450', 'HCMG-8500', 'HCMG-8520', 'HCMG-8590', 'HCMG-8600', 'HCMG-8670'],
+    warnings: ['Special application required at time of Wharton MBA application'],
+    restrictions: []
+  },
+  real_estate: {
+    id: 'real_estate',
+    name: 'Real Estate',
+    department: 'REAL',
+    requiredCUs: 5.0,
+    stemCertified: false,
+    description: 'Develop expertise in real estate investment, development, and finance.',
+    coreRequirements: ['REAL-7210'],
+    electiveCUs: 4.0,
+    electiveCourses: ['REAL-7210', 'REAL-8910'],
+    warnings: [],
+    restrictions: []
+  },
+  business_analytics: {
+    id: 'business_analytics',
+    name: 'Business Analytics',
+    department: 'STAT',
+    requiredCUs: 4.0,
+    stemCertified: true,
+    description: 'Master data analysis and quantitative decision-making.',
+    coreRequirements: ['STAT-6130', 'OIDD-6120'],
+    electiveCUs: 4.0,
+    electiveCourses: ['OIDD-6120', 'STAT-7220', 'STAT-7230', 'STAT-7250', 'ACCT-7471', 'MKTG-7760'],
+    warnings: [],
+    restrictions: []
+  },
+  statistics: {
+    id: 'statistics',
+    name: 'Statistics and Data Science',
+    department: 'STAT',
+    requiredCUs: 4.0,
+    stemCertified: true,
+    description: 'Develop advanced statistical and data science skills.',
+    coreRequirements: ['STAT-6130'],
+    electiveCUs: 4.0,
+    electiveCourses: ['STAT-7220', 'STAT-7230', 'STAT-7250'],
+    warnings: [],
+    restrictions: []
+  }
+};
+
+// Schedule data
+const SCHEDULE = {
+  philadelphia: {
+    T4: {
+      name: 'Summer 2026',
+      weekends: [
+        'Apr 16-18, 2026',
+        'May 22-23, 2026',
+        'Jun 5-6, 2026',
+        'Jun 19-20, 2026',
+        'Jul 16-18, 2026',
+        'Jul 30-Aug 1, 2026',
+        'Aug 14-15, 2026'
+      ]
+    },
+    T5: {
+      name: 'Fall 2026',
+      weekends: [
+        'Aug 27-29, 2026',
+        'Sep 25-26, 2026',
+        'Oct 9-10, 2026',
+        'Oct 23-24, 2026',
+        'Nov 6-7, 2026',
+        'Nov 20-21, 2026',
+        'Dec 4-5, 2026',
+        'Dec 18-19, 2026'
+      ]
+    },
+    T6: {
+      name: 'Spring 2027',
+      weekends: [
+        'Jan 7-9, 2027',
+        'Jan 29-30, 2027',
+        'Feb 12-13, 2027',
+        'Feb 26-27, 2027',
+        'Mar 19-20, 2027'
+      ]
+    }
+  },
+  san_francisco: {
+    T4: {
+      name: 'Summer 2026',
+      weekends: [
+        'May 1-2, 2026',
+        'May 15-16, 2026',
+        'May 29-30, 2026',
+        'Jun 11-13, 2026',
+        'Jun 26-27, 2026',
+        'Jul 10-11, 2026',
+        'Jul 24-25, 2026',
+        'Aug 7-8, 2026'
+      ]
+    },
+    T5: {
+      name: 'Fall 2026',
+      weekends: [
+        'Aug 21-22, 2026',
+        'Sep 4-5, 2026',
+        'Oct 1-3, 2026',
+        'Oct 16-17, 2026',
+        'Oct 30-31, 2026',
+        'Nov 13-14, 2026',
+        'Nov 20-21, 2026',
+        'Dec 11-12, 2026'
+      ]
+    },
+    T6: {
+      name: 'Spring 2027',
+      weekends: [
+        'Jan 22-23, 2027',
+        'Feb 5-6, 2027',
+        'Feb 18-20, 2027',
+        'Mar 5-6, 2027',
+        'Mar 19-20, 2027'
+      ]
+    }
+  },
+  global: {
+    T4: {
+      name: 'Summer 2026',
+      weekends: [
+        'Apr 30-May 2, 2026',
+        'May 14-16, 2026',
+        'May 28-30, 2026',
+        'Jun 11-13, 2026',
+        'Jun 25-27, 2026',
+        'Jul 9-11, 2026',
+        'Jul 23-25, 2026',
+        'Aug 6-8, 2026'
+      ]
+    },
+    T5: {
+      name: 'Fall 2026',
+      weekends: [
+        'Aug 20-22, 2026',
+        'Sep 3-5, 2026',
+        'Oct 1-3, 2026',
+        'Oct 15-17, 2026',
+        'Oct 29-31, 2026',
+        'Nov 12-14, 2026',
+        'Nov 19-21, 2026'
+      ]
+    },
+    T6: {
+      name: 'Spring 2027',
+      weekends: [
+        'Jan 21-23, 2027',
+        'Feb 4-6, 2027',
+        'Feb 18-20, 2027',
+        'Mar 4-6, 2027',
+        'Mar 18-20, 2027'
+      ]
+    }
+  }
+};
+
+// Waiver options
+const WAIVERS = [
+  { code: 'FNCE-6110', title: 'Corporate Finance', method: 'Credentials only' },
+  { code: 'ACCT-6130', title: 'Financial Accounting', method: 'Credentials or Exam' },
+  { code: 'MKTG-6110', title: 'Marketing Management', method: 'Credentials only' },
+  { code: 'MKTG-6130', title: 'Marketing Strategy', method: 'Credentials only' },
+  { code: 'STAT-6130', title: 'Regression Analysis', method: 'Credentials or Exam' }
+];
