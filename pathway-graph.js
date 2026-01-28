@@ -1279,6 +1279,33 @@ class PathwayGraph {
       g.appendChild(majorDots);
     }
 
+    // Remove button (X) in top-right corner
+    const removeBtn = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    removeBtn.setAttribute('class', 'node-remove-btn');
+    removeBtn.setAttribute('transform', `translate(${width - 18}, 8)`);
+
+    const removeBg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    removeBg.setAttribute('cx', 0);
+    removeBg.setAttribute('cy', 0);
+    removeBg.setAttribute('r', 8);
+    removeBg.setAttribute('class', 'remove-btn-bg');
+    removeBtn.appendChild(removeBg);
+
+    const removeX = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    removeX.setAttribute('x', 0);
+    removeX.setAttribute('y', 4);
+    removeX.setAttribute('text-anchor', 'middle');
+    removeX.setAttribute('class', 'remove-btn-x');
+    removeX.textContent = '×';
+    removeBtn.appendChild(removeX);
+
+    removeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      removeCourse(courseCode);
+    });
+
+    g.appendChild(removeBtn);
+
     // Event listeners
     g.addEventListener('click', (e) => {
       e.stopPropagation();

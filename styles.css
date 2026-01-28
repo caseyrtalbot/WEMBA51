@@ -2415,3 +2415,30 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Node Remove Button */
+.node-remove-btn {
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.course-node:hover .node-remove-btn {
+  opacity: 1;
+}
+
+.remove-btn-bg {
+  fill: #dc2626;
+  transition: fill 0.15s ease;
+}
+
+.node-remove-btn:hover .remove-btn-bg {
+  fill: #b91c1c;
+}
+
+.remove-btn-x {
+  fill: white;
+  font-size: 14px;
+  font-weight: bold;
+  pointer-events: none;
+}
