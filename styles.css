@@ -1584,11 +1584,59 @@ body {
 
 .course-node.warning-conflict .node-border {
   stroke: var(--warning);
+  stroke-width: 2;
+  animation: warning-pulse 2s ease-in-out infinite;
+}
+
+@keyframes warning-pulse {
+  0%, 100% { stroke-opacity: 0.6; stroke-width: 2; }
+  50% { stroke-opacity: 1; stroke-width: 2.5; }
+}
+
+.course-node.conflict-highlighted .node-border {
+  stroke: #dc2626;
+  stroke-width: 2.5;
+  animation: conflict-node-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes conflict-node-pulse {
+  0%, 100% { stroke-opacity: 0.7; }
+  50% { stroke-opacity: 1; stroke-width: 3; }
 }
 
 .node-warning-icon {
   font-size: 12px;
   cursor: help;
+}
+
+/* Prerequisite Status Badges */
+.prereq-badge {
+  pointer-events: none;
+}
+
+.prereq-badge-bg {
+  stroke: none;
+}
+
+.prereq-badge-bg-success {
+  fill: #dcfce7;
+}
+
+.prereq-badge-bg-warning {
+  fill: #fef3c7;
+}
+
+.prereq-badge-text {
+  font-size: 8px;
+  font-weight: 500;
+}
+
+.prereq-badge-text-success {
+  fill: #166534;
+}
+
+.prereq-badge-text-warning {
+  fill: #92400e;
 }
 
 /* Connection Lines */
@@ -1598,25 +1646,101 @@ body {
   stroke-width: 1.5;
   opacity: 0.4;
   marker-end: url(#arrowhead);
-  transition: opacity 0.2s, stroke 0.2s;
+  transition: opacity 0.2s, stroke 0.2s, stroke-width 0.2s;
+  pointer-events: stroke;
 }
 
+.connection-line:hover {
+  stroke-width: 3;
+  opacity: 0.8;
+}
+
+/* Prerequisite connections (upstream - blue) */
 .connection-line.highlighted-upstream {
   stroke: #3b82f6;
-  stroke-width: 2;
+  stroke-width: 2.5;
   opacity: 1;
   marker-end: url(#arrowhead-blue);
 }
 
+/* Unlock connections (downstream - green) */
 .connection-line.highlighted-downstream {
   stroke: #22c55e;
-  stroke-width: 2;
+  stroke-width: 2.5;
   opacity: 1;
   marker-end: url(#arrowhead-green);
 }
 
+/* Core prerequisite connections (dashed) */
+.connection-line.core-prereq {
+  stroke: #3b82f6;
+  stroke-width: 2;
+  stroke-dasharray: 6 3;
+  opacity: 0.6;
+  marker-end: url(#arrowhead-blue-small);
+}
+
+.connection-line.core-prereq.highlighted-upstream {
+  opacity: 1;
+  stroke-width: 2.5;
+}
+
+/* Conflict connections (red zigzag) */
+.connection-line.conflict {
+  stroke: #dc2626;
+  stroke-width: 2;
+  stroke-dasharray: 8 4;
+  opacity: 0.8;
+  marker-end: url(#conflict-indicator);
+  animation: conflict-pulse 2s ease-in-out infinite;
+}
+
+@keyframes conflict-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
 .connection-line.faded {
   opacity: 0.15;
+}
+
+/* Animated path drawing */
+.connection-line.animated {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLine 0.4s ease-out forwards;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Connection labels */
+.connection-label {
+  font-size: 9px;
+  fill: var(--text-secondary);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.connection-label.visible {
+  opacity: 1;
+}
+
+.connection-label.prereq-label {
+  fill: #3b82f6;
+}
+
+.connection-label.unlock-label {
+  fill: #22c55e;
+}
+
+.connection-label-bg {
+  fill: var(--surface);
+  opacity: 0.9;
 }
 
 /* Graph Controls */
@@ -1768,6 +1892,29 @@ body {
   color: var(--text-secondary);
 }
 
+/* Interactive legend items */
+.legend-item.legend-interactive {
+  cursor: pointer;
+  padding: 0.15rem 0.3rem;
+  margin: -0.15rem -0.3rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.legend-item.legend-interactive:hover {
+  background: var(--background);
+}
+
+.legend-item.legend-interactive.active {
+  background: #eff6ff;
+}
+
+.legend-count {
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  font-weight: normal;
+}
+
 /* Graph Header Stats */
 .graph-header-stats {
   position: absolute;
@@ -1832,6 +1979,371 @@ body {
 
 .graph-major-bar-fill.complete {
   background: var(--success);
+}
+
+/* Graph Toggle Buttons */
+.graph-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.75rem;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text);
+  transition: all 0.2s;
+  position: relative;
+}
+
+.graph-toggle-btn:hover {
+  background: var(--border);
+  border-color: var(--text-secondary);
+}
+
+.graph-toggle-btn.active {
+  background: #fef3c7;
+  border-color: #d97706;
+  color: #92400e;
+}
+
+.graph-toggle-btn .toggle-icon {
+  font-size: 0.85rem;
+}
+
+.conflict-count-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #dc2626;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.1rem 0.35rem;
+  border-radius: 999px;
+  min-width: 16px;
+  text-align: center;
+}
+
+.conflict-count-badge.hidden {
+  display: none;
+}
+
+/* Mode Selector */
+.graph-mode-selector {
+  display: flex;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2px;
+  gap: 2px;
+}
+
+.mode-btn {
+  padding: 0.3rem 0.6rem;
+  background: transparent;
+  border: none;
+  border-radius: calc(var(--radius) - 2px);
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.mode-btn:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.mode-btn.active {
+  background: var(--primary);
+  color: white;
+}
+
+.mode-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Selected Majors Display */
+.graph-majors-display {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.5rem;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.7rem;
+}
+
+.graph-majors-display.hidden {
+  display: none;
+}
+
+.majors-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.selected-majors-tags {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  max-width: 200px;
+}
+
+.major-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.15rem 0.4rem;
+  background: var(--primary);
+  color: white;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+
+.major-tag .remove-major {
+  cursor: pointer;
+  opacity: 0.7;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.major-tag .remove-major:hover {
+  opacity: 1;
+}
+
+.clear-majors-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0 0.2rem;
+  line-height: 1;
+}
+
+.clear-majors-btn:hover {
+  color: var(--danger);
+}
+
+.no-majors-hint {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Major Relevance Indicators */
+.major-dots {
+  display: flex;
+  gap: 2px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.major-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.major-dot-overflow {
+  font-size: 7px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Major Highlight Glow */
+.course-node.major-relevant .node-bg {
+  filter: drop-shadow(0 0 4px rgba(var(--major-color-rgb, 37, 99, 235), 0.3));
+}
+
+.course-node.major-relevant .node-border {
+  stroke: var(--major-highlight-color, #3b82f6);
+  stroke-width: 1.5;
+  stroke-opacity: 0.6;
+}
+
+.course-node.major-dimmed {
+  opacity: 0.35;
+}
+
+.course-node.major-hidden {
+  display: none;
+}
+
+/* Course Info Panel */
+.course-info-panel {
+  position: absolute;
+  top: 4rem;
+  right: 1rem;
+  width: 260px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: 20;
+  max-height: calc(100vh - 280px);
+  overflow-y: auto;
+}
+
+.course-info-panel.hidden {
+  display: none;
+}
+
+.info-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--background);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  position: sticky;
+  top: 0;
+}
+
+.info-panel-header h4 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text);
+}
+
+.info-panel-close {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.info-panel-close:hover {
+  color: var(--text);
+}
+
+.info-panel-content {
+  padding: 0.75rem;
+}
+
+.info-section {
+  margin-bottom: 0.75rem;
+}
+
+.info-section:last-child {
+  margin-bottom: 0;
+}
+
+.info-section h5 {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 0.4rem 0;
+}
+
+.info-section ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.info-section li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.5rem;
+  margin-bottom: 0.3rem;
+  background: var(--background);
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+}
+
+.info-section li:last-child {
+  margin-bottom: 0;
+}
+
+.prereq-status {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.prereq-status.in-plan {
+  color: var(--success);
+}
+
+.prereq-status.in-core {
+  color: #6366f1;
+}
+
+.prereq-status.missing {
+  color: var(--danger);
+}
+
+.add-prereq-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius);
+  font-size: 0.65rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.add-prereq-btn:hover {
+  background: var(--penn-red);
+}
+
+.unlock-course {
+  color: var(--text);
+}
+
+.unlock-status {
+  color: var(--text-secondary);
+  font-size: 0.65rem;
+}
+
+/* Ghost Nodes */
+.ghost-node {
+  opacity: 0.5;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.ghost-node .node-bg {
+  fill: var(--background);
+  stroke: #94a3b8;
+  stroke-dasharray: 4 2;
+}
+
+.ghost-node .node-dept-bar {
+  opacity: 0.5;
+}
+
+.ghost-node:hover {
+  opacity: 0.8;
+}
+
+.ghost-node:hover .node-bg {
+  stroke: var(--primary);
+}
+
+.ghost-connection {
+  stroke: #94a3b8;
+  stroke-dasharray: 6 4;
+  opacity: 0.4;
 }
 
 /* Trash Dropzone */

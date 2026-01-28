@@ -369,14 +369,29 @@
           <div class="graph-canvas-container" id="graph-canvas-container">
             <svg id="pathway-graph" class="pathway-graph">
               <defs>
+                <!-- Default arrow (gray, inactive) -->
                 <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
                   <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8" />
                 </marker>
+                <!-- Prerequisite arrow (blue, filled) -->
                 <marker id="arrowhead-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
                   <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6" />
                 </marker>
-                <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <!-- Unlock arrow (green, hollow/open) -->
+                <marker id="arrowhead-green" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
+                  <polygon points="0 0, 12 4, 0 8" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+                </marker>
+                <!-- Unlock arrow (green, filled - for more visibility) -->
+                <marker id="arrowhead-green-filled" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
                   <polygon points="0 0, 10 3.5, 0 7" fill="#22c55e" />
+                </marker>
+                <!-- Conflict indicator (red circle) -->
+                <marker id="conflict-indicator" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+                  <circle cx="5" cy="5" r="4" fill="#dc2626" stroke="white" stroke-width="1"/>
+                </marker>
+                <!-- Small arrow for core prerequisites (dashed connections) -->
+                <marker id="arrowhead-blue-small" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                  <polygon points="0 0, 8 3, 0 6" fill="#3b82f6" />
                 </marker>
               </defs>
               <!-- Connection lines layer -->
@@ -414,26 +429,26 @@
               <div class="legend-section">
                 <h5>Connections</h5>
                 <div class="legend-items">
-                  <div class="legend-item">
+                  <div class="legend-item legend-interactive" data-highlight="prereq" title="Click to highlight all prerequisites">
                     <span class="legend-line legend-line-blue"></span>
-                    <span>Prerequisites</span>
+                    <span>Prerequisites <span class="legend-count" id="prereq-count">(0)</span></span>
                   </div>
-                  <div class="legend-item">
+                  <div class="legend-item legend-interactive" data-highlight="unlock" title="Click to highlight all unlocks">
                     <span class="legend-line legend-line-green"></span>
-                    <span>Unlocks</span>
+                    <span>Unlocks <span class="legend-count" id="unlock-count">(0)</span></span>
                   </div>
                 </div>
               </div>
               <div class="legend-section">
                 <h5>Warnings</h5>
                 <div class="legend-items">
-                  <div class="legend-item">
+                  <div class="legend-item legend-interactive" data-highlight="warning-prereq" title="Click to highlight courses with missing prerequisites">
                     <span class="legend-icon warning-prereq">⚠</span>
-                    <span>Missing prereq</span>
+                    <span>Missing prereq <span class="legend-count" id="warning-prereq-count">(0)</span></span>
                   </div>
-                  <div class="legend-item">
+                  <div class="legend-item legend-interactive" data-highlight="warning-conflict" title="Click to highlight courses with conflicts">
                     <span class="legend-icon warning-conflict">⚡</span>
-                    <span>Schedule conflict</span>
+                    <span>Schedule conflict <span class="legend-count" id="warning-conflict-count">(0)</span></span>
                   </div>
                 </div>
               </div>
@@ -462,6 +477,23 @@
             <div class="graph-major-progress" id="graph-major-progress">
               <!-- Mini progress bars for target majors -->
             </div>
+            <button class="graph-toggle-btn" id="show-conflicts-btn" title="Show Schedule Conflicts">
+              <span class="toggle-icon">⚡</span>
+              <span class="toggle-label">Conflicts</span>
+              <span class="conflict-count-badge hidden" id="conflict-count-badge">0</span>
+            </button>
+            <div class="graph-majors-display" id="graph-majors-display">
+              <span class="majors-label">Majors:</span>
+              <div class="selected-majors-tags" id="selected-majors-tags">
+                <!-- Populated by JS -->
+              </div>
+              <button class="clear-majors-btn" id="clear-majors-btn" title="Clear all target majors">×</button>
+            </div>
+            <div class="graph-mode-selector" id="major-mode-selector">
+              <button class="mode-btn active" data-mode="all" title="Show All Courses">All</button>
+              <button class="mode-btn" data-mode="highlight" title="Highlight Major Courses">Highlight</button>
+              <button class="mode-btn" data-mode="filter" title="Filter to Major Courses">Filter</button>
+            </div>
           </div>
         </div>
       </div>
@@ -469,6 +501,24 @@
       <!-- Trash Drop Zone (appears when dragging) -->
       <div class="trash-dropzone hidden" id="trash-dropzone">
         <span>Drop to remove</span>
+      </div>
+
+      <!-- Course Info Panel (appears on node selection) -->
+      <div class="course-info-panel hidden" id="course-info-panel">
+        <div class="info-panel-header">
+          <h4 id="info-panel-title">Course Info</h4>
+          <button class="info-panel-close" id="info-panel-close">&times;</button>
+        </div>
+        <div class="info-panel-content">
+          <div class="info-section" id="info-prereqs-section">
+            <h5>Prerequisites</h5>
+            <ul id="info-prereqs-list"></ul>
+          </div>
+          <div class="info-section" id="info-unlocks-section">
+            <h5>Unlocks</h5>
+            <ul id="info-unlocks-list"></ul>
+          </div>
+        </div>
       </div>
     </main>
   </div>
