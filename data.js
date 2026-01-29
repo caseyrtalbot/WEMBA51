@@ -367,6 +367,7 @@ const COURSES = {
       san_francisco: {
         term: 'T4',
         professor: 'Christopher Parsons',
+        slot: 'A,A',
         weekends: [0, 1, 2, 3, 4, 5, 6, 7],
         evaluations: {
           instructorQuality: 3.70,
@@ -414,6 +415,7 @@ const COURSES = {
       philadelphia: {
         term: 'T5',
         professor: 'Christopher Geczy',
+        slot: 'A,A',
         weekends: [0, 1, 2, 3, 4, 5, 6, 7],
         evaluations: {
           instructorQuality: 3.04,
@@ -432,6 +434,7 @@ const COURSES = {
       san_francisco: {
         term: 'T5',
         professor: 'Christopher Geczy',
+        slot: 'B,B',
         weekends: [0, 1, 2, 3, 4, 5, 6, 7],
         evaluations: {
           instructorQuality: 3.04,
@@ -479,6 +482,7 @@ const COURSES = {
       san_francisco: {
         term: 'T4',
         professor: 'Kevin Kaiser',
+        slot: 'C,C',
         weekends: [0, 1, 2, 3, 4, 5, 6, 7],
         evaluations: {
           instructorQuality: 3.72,
@@ -526,6 +530,7 @@ const COURSES = {
       philadelphia: {
         term: 'T5',
         professor: 'Michael Gibbons',
+        slot: 'B,B',
         weekends: [0, 1, 2, 3, 4, 5, 6, 7],
         evaluations: {
           instructorQuality: 3.13,
@@ -544,6 +549,7 @@ const COURSES = {
       san_francisco: {
         term: 'T5',
         professor: 'Michael Gibbons',
+        slot: 'A,A',
         weekends: [0, 1, 2, 3, 4, 5, 6, 7],
         evaluations: {
           instructorQuality: 3.13,
@@ -601,6 +607,7 @@ const COURSES = {
       philadelphia: {
         term: 'T4',
         professor: 'Itay Goldstein',
+        slot: 'A,A',
         weekends: [0, 1, 2, 3, 4, 5, 6],
         evaluations: {
           instructorQuality: 3.73,
@@ -629,6 +636,7 @@ const COURSES = {
       san_francisco: {
         term: 'T4',
         professor: 'David Musto',
+        slot: 'B',
         weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 3.13,
@@ -676,7 +684,8 @@ const COURSES = {
       philadelphia: {
         term: 'T4',
         professor: 'David Wessels',
-        weekends: [4, 5, 6],
+        slot: 'B',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 3.78,
           courseQuality: 3.69,
@@ -694,7 +703,8 @@ const COURSES = {
       san_francisco: {
         term: 'T6',
         professor: 'David Wessels',
-        weekends: [0, 1, 2],
+        slot: 'B',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 3.78,
           courseQuality: 3.69,
@@ -713,7 +723,7 @@ const COURSES = {
         term: 'T6',
         professor: 'David Wessels',
         slot: 'A',
-        weekends: [0, 1, 2],
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 3.78,
           courseQuality: 3.69,
@@ -770,7 +780,8 @@ const COURSES = {
       philadelphia: {
         term: 'T6',
         professor: 'Christopher Geczy',
-        weekends: [0, 1, 2],
+        slot: 'B',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 2.88,
           courseQuality: 2.60,
@@ -798,7 +809,8 @@ const COURSES = {
       san_francisco: {
         term: 'T6',
         professor: 'Kevin Kaiser',
-        weekends: [3, 4],
+        slot: 'B',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 3.31,
           courseQuality: 2.75,
@@ -863,7 +875,8 @@ const COURSES = {
       philadelphia: {
         term: 'T6',
         professor: 'Mae McDonnell',
-        weekends: [3, 4],
+        slot: 'A',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 3.38,
           courseQuality: 2.95,
@@ -881,7 +894,8 @@ const COURSES = {
       san_francisco: {
         term: 'T4',
         professor: 'Mae McDonnell',
-        weekends: [0, 1, 2],
+        slot: 'C',
+        weekends: [4, 5, 6],
         evaluations: {
           instructorQuality: 3.38,
           courseQuality: 2.95,
@@ -909,6 +923,7 @@ const COURSES = {
       philadelphia: {
         term: 'T5',
         professor: 'Mae McDonnell',
+        slot: 'C,C',
         weekends: [0, 1, 2, 3, 4, 5, 6, 7],
         evaluations: {
           instructorQuality: 3.48,
@@ -918,6 +933,7 @@ const COURSES = {
       san_francisco: {
         term: 'T4',
         professor: 'Mae McDonnell',
+        slot: 'B,B',
         weekends: [0, 1, 2, 3, 4, 5, 6, 7],
         evaluations: {
           instructorQuality: 3.48,
@@ -937,7 +953,8 @@ const COURSES = {
       philadelphia: {
         term: 'T5',
         professor: 'Sonia Marciano',
-        weekends: [4, 5, 6],
+        slot: 'A',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 1.97,
           courseQuality: 1.85,
@@ -955,7 +972,8 @@ const COURSES = {
       san_francisco: {
         term: 'T4',
         professor: 'Sonia Marciano',
-        weekends: [4, 5, 6, 7],
+        slot: 'B',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 1.97,
           courseQuality: 1.85,
@@ -1002,7 +1020,8 @@ const COURSES = {
       philadelphia: {
         term: 'T6',
         professor: 'Vit Henisz',
-        weekends: [0, 1, 2],
+        slot: 'B',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 3.21,
           courseQuality: 2.92,
@@ -1020,7 +1039,8 @@ const COURSES = {
       san_francisco: {
         term: 'T5',
         professor: 'Vit Henisz',
-        weekends: [0, 1, 2],
+        slot: 'C',
+        weekends: [4, 5, 6],
         evaluations: {
           instructorQuality: 3.21,
           courseQuality: 2.92,
@@ -1048,6 +1068,7 @@ const COURSES = {
       philadelphia: {
         term: 'T4',
         professor: 'Emilie Feldman',
+        slot: 'B,B',
         weekends: [0, 1, 2, 3, 4, 5, 6],
         evaluations: {
           instructorQuality: 3.33,
@@ -1066,6 +1087,7 @@ const COURSES = {
       san_francisco: {
         term: 'T5',
         professor: 'Harbir Singh',
+        slot: 'B,B',
         weekends: [0, 1, 2, 3, 4, 5, 6, 7],
         evaluations: {
           instructorQuality: 2.67,
@@ -1094,7 +1116,8 @@ const COURSES = {
       philadelphia: {
         term: 'T6',
         professor: 'Rahul Kapoor',
-        weekends: [0, 1, 2],
+        slot: 'B',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 3.24,
           courseQuality: 2.82,
@@ -1112,7 +1135,8 @@ const COURSES = {
       san_francisco: {
         term: 'T5',
         professor: 'Lori Rosenkopf',
-        weekends: [4, 5, 6],
+        slot: 'B',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 2.36,
           courseQuality: 2.00,
@@ -1230,9 +1254,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T6', professor: 'David Rhode', slot: 'C', weekends: [0, 1, 2, 3, 4] },
-      san_francisco: { term: 'T6', professor: 'David Rhode', slot: 'C', weekends: [0, 1, 2, 3, 4] },
-      global: { term: 'T6', professor: 'David Rhode', slot: 'C', weekends: [0, 1, 2, 3, 4] }
+      philadelphia: { term: 'T6', professor: 'David Rhode', slot: 'C,C', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
+      san_francisco: { term: 'T6', professor: 'David Rhode', slot: 'C,C', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
+      global: { term: 'T6', professor: 'David Rhode', slot: 'C,C', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
     }
   },
   'MGMT-8010': {
@@ -1246,7 +1270,8 @@ const COURSES = {
       philadelphia: {
         term: 'T4',
         professor: 'Henning Piezunka',
-        weekends: [0, 1, 2, 3],
+        slot: 'C',
+        weekends: [4, 5, 6],
         evaluations: {
           instructorQuality: 3.85,
           courseQuality: 3.76,
@@ -1264,7 +1289,8 @@ const COURSES = {
       san_francisco: {
         term: 'T5',
         professor: 'Karl Ulrich',
-        weekends: [0, 1, 2, 3],
+        slot: 'C',
+        weekends: [4, 5, 6],
         evaluations: {
           instructorQuality: 2.58,
           courseQuality: 2.20,
@@ -1336,7 +1362,8 @@ const COURSES = {
       san_francisco: {
         term: 'T6',
         professor: 'Robert Chalfin',
-        weekends: [0, 1, 2],
+        slot: 'A',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 2.88,
           courseQuality: 2.58,
@@ -1403,7 +1430,7 @@ const COURSES = {
     prerequisites: ['MGMT-8010'],
     offerings: {
       philadelphia: { term: 'T4', professor: 'Tyler Wry', slot: 'B', weekends: [0, 1, 2, 3] },
-      san_francisco: { term: 'T6', professor: 'Tyler Wry', slot: 'A', weekends: [0, 1, 2] },
+      san_francisco: { term: 'T6', professor: 'Tyler Wry', slot: 'A', weekends: [0, 1, 2, 3] },
       global: { term: 'T4', professor: 'Tyler Wry', slot: 'B', weekends: [0, 1, 2, 3] }
     }
   },
@@ -1418,6 +1445,7 @@ const COURSES = {
       philadelphia: {
         term: 'T5',
         professor: 'Michael Christensen',
+        slot: 'A',
         weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 2.73,
@@ -1436,7 +1464,8 @@ const COURSES = {
       san_francisco: {
         term: 'T4',
         professor: 'Michael Christensen',
-        weekends: [0, 1, 2, 3],
+        slot: 'C',
+        weekends: [4, 5, 6],
         evaluations: {
           instructorQuality: 2.73,
           courseQuality: 2.45,
@@ -1464,7 +1493,8 @@ const COURSES = {
       philadelphia: {
         term: 'T5',
         professor: 'Zeke Hernandez',
-        weekends: [4, 5, 6, 7],
+        slot: 'C',
+        weekends: [4, 5, 6],
         evaluations: {
           instructorQuality: 3.69,
           courseQuality: 3.28,
@@ -1482,7 +1512,8 @@ const COURSES = {
       san_francisco: {
         term: 'T6',
         professor: 'Zeke Hernandez',
-        weekends: [0, 1, 2],
+        slot: 'B',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 3.69,
           courseQuality: 3.28,
@@ -1614,8 +1645,8 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['MKTG-6110'],
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Annie Wilson', weekends: [0, 1, 2, 3] },
-      san_francisco: { term: 'T6', professor: 'Annie Wilson', weekends: [0, 1, 2] }
+      philadelphia: { term: 'T4', professor: 'Annie Wilson', slot: 'C', weekends: [4, 5, 6] },
+      san_francisco: { term: 'T6', professor: 'Annie Wilson', slot: 'A', weekends: [0, 1, 2, 3] }
     }
   },
   'MKTG-7120': {
@@ -1626,8 +1657,8 @@ const COURSES = {
     credits: 1.0,
     prerequisites: ['MKTG-6110', 'STAT-6130'],
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Raghu Iyengar', weekends: [3, 4] },
-      san_francisco: { term: 'T4', professor: 'Raghu Iyengar', weekends: [4, 5, 6, 7] }
+      philadelphia: { term: 'T6', professor: 'Raghu Iyengar', slot: 'A', weekends: [0, 1, 2, 3] },
+      san_francisco: { term: 'T4', professor: 'Raghu Iyengar', slot: 'C', weekends: [4, 5, 6] }
     }
   },
   'MKTG-7710': {
@@ -1703,8 +1734,8 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['MKTG-6110', 'BEPP-6110'],
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Jagmohan S Raju', weekends: [0, 1, 2] },
-      san_francisco: { term: 'T6', professor: 'Jagmohan S Raju', weekends: [3, 4] }
+      philadelphia: { term: 'T6', professor: 'Jagmohan S Raju', slot: 'A', weekends: [0, 1, 2, 3] },
+      san_francisco: { term: 'T6', professor: 'Jagmohan S Raju', slot: 'A', weekends: [0, 1, 2, 3] }
     }
   },
   'MKTG-7760': {
@@ -1715,8 +1746,8 @@ const COURSES = {
     credits: 1.0,
     prerequisites: ['STAT-6130'],
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Pete Fader', weekends: [0, 1, 2, 3, 4, 5, 6] },
-      san_francisco: { term: 'T5', professor: 'Pete Fader', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+      philadelphia: { term: 'T4', professor: 'Pete Fader', slot: 'A,A', weekends: [0, 1, 2, 3, 4, 5, 6] },
+      san_francisco: { term: 'T5', professor: 'Pete Fader', slot: 'A,A', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
     }
   },
   'MKTG-7770': {
@@ -1730,7 +1761,8 @@ const COURSES = {
       philadelphia: {
         term: 'T4',
         professor: 'Pinar Yildirim',
-        weekends: [4, 5, 6],
+        slot: 'B',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 2.54,
           courseQuality: 2.54,
@@ -1749,7 +1781,7 @@ const COURSES = {
         term: 'T6',
         professor: 'Pinar Yildirim',
         slot: 'A',
-        weekends: [0, 1, 2],
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 2.54,
           courseQuality: 2.54,
@@ -1785,8 +1817,8 @@ const COURSES = {
     credits: 1.0,
     prerequisites: ['MKTG-6110'],
     offerings: {
-      philadelphia: { term: 'T5', professor: 'Patti Williams', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
-      san_francisco: { term: 'T4', professor: 'Patti Williams', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+      philadelphia: { term: 'T5', professor: 'Patti Williams', slot: 'A,A', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
+      san_francisco: { term: 'T4', professor: 'Patti Williams', slot: 'A,A', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
     }
   },
   'MKTG-7790': {
@@ -1907,6 +1939,7 @@ const COURSES = {
       philadelphia: {
         term: 'T4',
         professor: 'Gad Allon',
+        slot: 'B,B',
         weekends: [0, 1, 2, 3, 4, 5, 6],
         evaluations: {
           instructorQuality: 3.40,
@@ -1925,6 +1958,7 @@ const COURSES = {
       san_francisco: {
         term: 'T5',
         professor: 'Gad Allon',
+        slot: 'B,B',
         weekends: [0, 1, 2, 3, 4, 5, 6, 7],
         evaluations: {
           instructorQuality: 3.40,
@@ -1980,7 +2014,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      san_francisco: { term: 'T5', professor: 'Karl Ulrich', weekends: [4, 5, 6, 7] },
+      san_francisco: { term: 'T5', professor: 'Karl Ulrich', slot: 'A', weekends: [0, 1, 2, 3] },
       global: { term: 'T5', professor: 'Karl Ulrich', dates: 'Dec 7-10, 2026' }
     }
   },
@@ -1992,7 +2026,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      san_francisco: { term: 'T6', professor: 'Lynn Wu', slot: 'B', weekends: [0, 1, 2] },
+      san_francisco: { term: 'T6', professor: 'Lynn Wu', slot: 'B', weekends: [0, 1, 2, 3] },
       global: { term: 'T5', professor: 'Lynn Wu', slot: 'C', weekends: [4, 5, 6] }
     }
   },
@@ -2129,7 +2163,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Peter Conti-Brown', weekends: [0, 1, 2] }
+      philadelphia: { term: 'T6', professor: 'Peter Conti-Brown', slot: 'A', weekends: [0, 1, 2, 3] }
     }
   },
   'LGST-7500-BW': {
@@ -2165,7 +2199,8 @@ const COURSES = {
       philadelphia: {
         term: 'T6',
         professor: 'Nazli Bhatia',
-        weekends: [0, 1, 2, 3, 4],
+        slot: 'A,A',
+        weekends: [0, 1, 2, 3, 4, 5, 6, 7],
         evaluations: {
           instructorQuality: 3.40,
           courseQuality: 3.32
@@ -2174,7 +2209,8 @@ const COURSES = {
       san_francisco: {
         term: 'T6',
         professor: 'Mori Taheripour',
-        weekends: [0, 1, 2, 3, 4],
+        slot: 'A,A',
+        weekends: [0, 1, 2, 3, 4, 5, 6, 7],
         evaluations: {
           instructorQuality: 3.21,
           courseQuality: 3.22
@@ -2211,7 +2247,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Bob Borghese', weekends: [0, 1, 2, 3] }
+      philadelphia: { term: 'T4', professor: 'Bob Borghese', slot: 'C', weekends: [4, 5, 6] }
     }
   },
   'LGST-8980-BRAZIL': {
@@ -2300,7 +2336,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['HCMG-8410'],
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Robert Burns', weekends: [3, 4] }
+      philadelphia: { term: 'T6', professor: 'Robert Burns', slot: 'B', weekends: [0, 1, 2, 3] }
     }
   },
   'HCMG-8500': {
@@ -2322,8 +2358,8 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Guy David', weekends: [0, 1, 2, 3] },
-      san_francisco: { term: 'T4', professor: 'Guy David', weekends: [0, 1, 2, 3] }
+      philadelphia: { term: 'T4', professor: 'Guy David', slot: 'C', weekends: [4, 5, 6] },
+      san_francisco: { term: 'T4', professor: 'Guy David', slot: 'A', weekends: [0, 1, 2, 3] }
     }
   },
   'HCMG-8590': {
@@ -2334,7 +2370,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Claudio Lucarelli', weekends: [4, 5, 6] }
+      philadelphia: { term: 'T4', professor: 'Claudio Lucarelli', slot: 'C', weekends: [4, 5, 6] }
     }
   },
   'HCMG-8600': {
@@ -2356,7 +2392,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['MGMT-8010'],
     offerings: {
-      philadelphia: { term: 'T5', professor: 'Stephen Sammut', weekends: [0, 1, 2, 3] }
+      philadelphia: { term: 'T5', professor: 'Stephen Sammut', slot: 'B', weekends: [0, 1, 2, 3] }
     }
   },
   'HCMG-8980-ROMANIA-SWEDEN': {
@@ -2382,7 +2418,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['STAT-6130'],
     offerings: {
-      san_francisco: { term: 'T5', professor: 'Bob Stine', weekends: [4, 5, 6, 7] }
+      san_francisco: { term: 'T5', professor: 'Bob Stine', slot: 'C', weekends: [4, 5, 6] }
     }
   },
   'STAT-7230': {
@@ -2420,7 +2456,8 @@ const COURSES = {
       philadelphia: {
         term: 'T5',
         professor: 'Todd Sinai',
-        weekends: [4, 5, 6, 7],
+        slot: 'C',
+        weekends: [4, 5, 6],
         evaluations: {
           instructorQuality: 3.09,
           courseQuality: 2.91
@@ -2429,7 +2466,8 @@ const COURSES = {
       san_francisco: {
         term: 'T6',
         professor: 'Todd Sinai',
-        weekends: [0, 1, 2],
+        slot: 'B',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 3.09,
           courseQuality: 2.91
@@ -2459,9 +2497,10 @@ const COURSES = {
     prerequisites: ['ACCT-6130'],
     offerings: {
       philadelphia: {
-        term: 'T4',
+        term: 'T5',
         professor: 'Brian Bushee',
-        weekends: [0, 1, 2, 3],
+        slot: 'C',
+        weekends: [4, 5, 6],
         evaluations: {
           instructorQuality: 3.74,
           courseQuality: 3.74,
@@ -2477,9 +2516,10 @@ const COURSES = {
         }
       },
       san_francisco: {
-        term: 'T5',
+        term: 'T6',
         professor: 'Brian Bushee',
-        weekends: [0, 1, 2, 3],
+        slot: 'C',
+        weekends: [4, 5, 6],
         evaluations: {
           instructorQuality: 3.74,
           courseQuality: 3.74,
