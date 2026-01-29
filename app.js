@@ -6,6 +6,7 @@ let state = {
   plannedCourses: [],
   targetMajors: [],
   waivedCourses: [],
+  completedBlockCourses: [], // Early block courses completed during T1-T3
   financeChoice: null, // 'FNCE-6110' or 'FNCE-6210'
   currentView: 'dashboard',
   explorerMode: 'majors',
@@ -233,6 +234,9 @@ function updateDashboard() {
   // Update major progress
   updateMajorProgress();
 
+  // Update completed block courses
+  updateCompletedBlockCourses();
+
   // Update alerts
   updateAlerts();
 }
@@ -266,6 +270,61 @@ function updateMajorProgress() {
         ${percent >= 100 ? '<span class="status-badge ready" style="margin-top: 0.5rem;">Complete</span>' : ''}
       </div>
     `;
+  });
+
+  container.innerHTML = html;
+}
+
+function updateCompletedBlockCourses() {
+  const container = document.getElementById('completed-block-courses-content');
+  if (!container) return;
+
+  const availableCourses = getEarlyBlockCoursesForCohort(state.selectedCohort);
+  const completedCU = getCompletedBlockCoursesCU();
+
+  if (availableCourses.length === 0) {
+    container.innerHTML = '<p class="empty-state">No block courses available for your cohort</p>';
+    return;
+  }
+
+  // Group by term
+  const coursesByTerm = { T1: [], T2: [] };
+  availableCourses.forEach(course => {
+    if (coursesByTerm[course.term]) {
+      coursesByTerm[course.term].push(course);
+    }
+  });
+
+  let html = `<div class="block-courses-summary">
+    <span class="block-cu-total">${completedCU.toFixed(1)} CU</span> from block courses
+  </div>`;
+
+  ['T1', 'T2'].forEach(term => {
+    const courses = coursesByTerm[term];
+    if (courses.length === 0) return;
+
+    const termLabel = term === 'T1' ? 'Term 1 (August)' : 'Term 2 (Fall)';
+    html += `<div class="block-term-group">
+      <h4 class="block-term-label">${termLabel}</h4>
+      <div class="block-courses-list">`;
+
+    courses.forEach(course => {
+      const isCompleted = state.completedBlockCourses.includes(course.code);
+      html += `
+        <div class="block-course-item ${isCompleted ? 'completed' : ''}">
+          <div class="block-course-info">
+            <span class="block-course-title">${course.title}</span>
+            <span class="block-course-meta">${course.credits} CU · ${course.dates} · ${course.location}</span>
+          </div>
+          <button class="block-course-btn ${isCompleted ? 'added' : ''}"
+                  onclick="toggleCompletedBlockCourse('${course.code}')">
+            ${isCompleted ? '✓ Added' : '+ Add'}
+          </button>
+        </div>
+      `;
+    });
+
+    html += '</div></div>';
   });
 
   container.innerHTML = html;
@@ -779,6 +838,45 @@ function removeCourse(courseCode) {
   }
 }
 
+// Early Block Courses Management
+function getEarlyBlockCoursesForCohort(cohort) {
+  return Object.entries(EARLY_BLOCK_COURSES)
+    .filter(([code, course]) => course.cohorts.includes(cohort))
+    .map(([code, course]) => ({ code, ...course }));
+}
+
+function getEarlyBlockCoursesForTerm(term) {
+  const cohort = state.selectedCohort;
+  return Object.entries(EARLY_BLOCK_COURSES)
+    .filter(([code, course]) => course.term === term && course.cohorts.includes(cohort))
+    .map(([code, course]) => ({ code, ...course }));
+}
+
+function toggleCompletedBlockCourse(courseCode) {
+  if (state.completedBlockCourses.includes(courseCode)) {
+    state.completedBlockCourses = state.completedBlockCourses.filter(c => c !== courseCode);
+  } else {
+    state.completedBlockCourses.push(courseCode);
+  }
+  saveState();
+
+  // Refresh displays
+  updateDashboard();
+  updatePathway();
+
+  // Update graph view if active
+  if (typeof renderGraphView === 'function' && state.currentView === 'graph') {
+    renderGraphView();
+  }
+}
+
+function getCompletedBlockCoursesCU() {
+  return state.completedBlockCourses.reduce((total, code) => {
+    const course = EARLY_BLOCK_COURSES[code];
+    return total + (course ? course.credits : 0);
+  }, 0);
+}
+
 function toggleTargetMajor(majorId) {
   if (state.targetMajors.includes(majorId)) {
     state.targetMajors = state.targetMajors.filter(m => m !== majorId);
@@ -803,7 +901,7 @@ function updatePathway() {
   const cohort = state.selectedCohort;
   const coreCurriculum = CORE_CURRICULUM[cohort];
 
-  // Update Terms 1-3 (core)
+  // Update Terms 1-3 (core + early block courses)
   ['T1', 'T2', 'T3'].forEach(term => {
     const courses = coreCurriculum[term] || [];
     const coursesList = document.getElementById(`${term}-courses`);
@@ -823,15 +921,42 @@ function updatePathway() {
       }
     }
 
-    const totalCU = termCourses.reduce((sum, c) => sum + c.credits, 0);
+    // Get early block courses for this term
+    const earlyBlockCourses = getEarlyBlockCoursesForTerm(term);
+    const completedBlockInTerm = earlyBlockCourses.filter(c => state.completedBlockCourses.includes(c.code));
+
+    // Calculate total CU including completed block courses
+    const coreCU = termCourses.reduce((sum, c) => sum + c.credits, 0);
+    const blockCU = completedBlockInTerm.reduce((sum, c) => sum + c.credits, 0);
+    const totalCU = coreCU + blockCU;
     cuDisplay.textContent = `${totalCU.toFixed(1)} CU`;
 
-    coursesList.innerHTML = termCourses.map(course => `
+    // Render core courses
+    let html = termCourses.map(course => `
       <li>
         <span class="course-name">${course.code.replace('-', ' ')}: ${course.title}</span>
         <span class="course-cu">${course.credits} CU</span>
       </li>
     `).join('');
+
+    // Add early block courses section if any are available for this term
+    if (earlyBlockCourses.length > 0) {
+      html += `<li class="block-courses-divider"><span>Block Courses</span></li>`;
+      earlyBlockCourses.forEach(course => {
+        const isCompleted = state.completedBlockCourses.includes(course.code);
+        html += `
+          <li class="block-course-row ${isCompleted ? 'completed' : ''}">
+            <span class="course-name">${course.title}</span>
+            <button class="block-add-btn ${isCompleted ? 'added' : ''}"
+                    onclick="toggleCompletedBlockCourse('${course.code}')">
+              ${isCompleted ? '✓' : '+'}
+            </button>
+          </li>
+        `;
+      });
+    }
+
+    coursesList.innerHTML = html;
   });
 
   // Update Terms 4-6 and Block Weeks (electives)
@@ -1137,6 +1262,14 @@ function calculateTotalCU() {
     total += 1.0; // Add full 1.0 CU for FNCE-6110 (we skipped FNCE-6210's 0.5 CU above)
   }
 
+  // Completed early block courses (T1-T3 supplemental)
+  state.completedBlockCourses.forEach(code => {
+    const course = EARLY_BLOCK_COURSES[code];
+    if (course) {
+      total += course.credits;
+    }
+  });
+
   // Elective CUs
   state.plannedCourses.forEach(code => {
     // Normalize to hyphen format for COURSES lookup
@@ -1195,6 +1328,11 @@ function getCourseCreditsIfTaken(code) {
   if (state.plannedCourses.includes(normalizedCode)) {
     const course = COURSES[normalizedCode];
     return course ? course.credits : 0;
+  }
+  // Check completed early block courses
+  if (state.completedBlockCourses.includes(normalizedCode)) {
+    const blockCourse = EARLY_BLOCK_COURSES[normalizedCode];
+    return blockCourse ? blockCourse.credits : 0;
   }
   return getCoreCourseCredits(normalizedCode);
 }
@@ -1270,6 +1408,22 @@ function calculateMarketingOperationsProgress() {
     }
   });
 
+  // Also check completed early block courses
+  state.completedBlockCourses.forEach(code => {
+    const blockCourse = EARLY_BLOCK_COURSES[code];
+    if (!blockCourse) return;
+    const eligibleOutside = requirements.electives.eligibleOutsideDepartments || [];
+    const isEligibleDepartment = requirements.electives.eligibleDepartments.includes(blockCourse.department);
+    const isEligibleOutside = eligibleOutside.includes(code);
+    if (!isEligibleDepartment && !isEligibleOutside) return;
+
+    plannedElectiveCourses.push({ code, course: blockCourse });
+
+    if (requirements.oiddCore.courses.includes(code)) {
+      plannedOiddCoreCredits += blockCourse.credits;
+    }
+  });
+
   const remainingOiddCore = Math.max(0, details.oiddCore.required - details.oiddCore.credits);
   const oiddCoreFromPlanned = Math.min(remainingOiddCore, plannedOiddCoreCredits);
   details.oiddCore.credits += oiddCoreFromPlanned;
@@ -1334,6 +1488,14 @@ function calculateMajorProgress(majorId) {
     }
   });
 
+  // Check completed early block courses that count toward this major
+  state.completedBlockCourses.forEach(code => {
+    const blockCourse = EARLY_BLOCK_COURSES[code];
+    if (blockCourse && allCourses.includes(code)) {
+      completed += blockCourse.credits;
+    }
+  });
+
   // Check core curriculum courses that count
   if (major.coreRequirements) {
     major.coreRequirements.forEach(code => {
@@ -1377,6 +1539,21 @@ function exportPlan() {
 
   if (state.targetMajors.length > 0) {
     text += `Target Major(s): ${state.targetMajors.map(m => MAJORS[m].name).join(', ')}\n`;
+  }
+
+  // Completed Block Courses (T1-T3)
+  if (state.completedBlockCourses.length > 0) {
+    text += `\n--- Completed Block Courses (Terms 1-3) ---\n\n`;
+    const blockCU = getCompletedBlockCoursesCU();
+    text += `Total: ${blockCU.toFixed(1)} CU\n\n`;
+    state.completedBlockCourses.forEach(code => {
+      const course = EARLY_BLOCK_COURSES[code];
+      if (course) {
+        text += `  - ${course.code}: ${course.title} (${course.credits} CU)\n`;
+        text += `    Professor: ${course.professor} | ${course.dates}\n`;
+      }
+    });
+    text += `\n`;
   }
 
   text += `\n--- Elective Courses ---\n\n`;
@@ -1587,3 +1764,4 @@ window.addCourseAndClose = addCourseAndClose;
 window.toggleTargetMajor = toggleTargetMajor;
 window.exportPlan = exportPlan;
 window.clearElectives = clearElectives;
+window.toggleCompletedBlockCourse = toggleCompletedBlockCourse;

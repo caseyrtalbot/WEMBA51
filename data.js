@@ -1,6 +1,135 @@
 // WEMBA 51 Pathway Planner - Data
 // Generated from curriculum documents
 
+// Early Block Courses - 11 courses available for registration before Feb 15
+// These are block courses taken during Terms 1-2 (after June 29-July 3)
+// All courses are open to all cohorts regardless of location
+const EARLY_BLOCK_COURSES = {
+  // Term 1 - Summer 2026 (August)
+  'LGST-8090': {
+    code: 'LGST 8090',
+    title: 'Sports Business Management',
+    professor: 'DiGisi',
+    credits: 0.5,
+    department: 'LGST',
+    term: 'T1',
+    dates: 'August 3 - 6, 2026',
+    location: 'SFO',
+    cohorts: ['philadelphia', 'san_francisco', 'global']
+  },
+  'MKTG-8500': {
+    code: 'MKTG 8500',
+    title: 'Sales 3.0 and the Future of Revenue Growth',
+    professor: 'Reed',
+    credits: 0.5,
+    department: 'MKTG',
+    term: 'T1',
+    dates: 'August 3 - 6, 2026',
+    location: 'SFO',
+    cohorts: ['philadelphia', 'san_francisco', 'global']
+  },
+  // Term 2 - Fall 2026
+  'MKTG-8510': {
+    code: 'MKTG XXXX',
+    title: 'Designing and Deploying AI Agents',
+    professor: 'Karol',
+    credits: 0.5,
+    department: 'MKTG',
+    term: 'T2',
+    dates: 'October 12 - 15, 2026',
+    location: 'PHL',
+    cohorts: ['philadelphia', 'san_francisco', 'global']
+  },
+  'MKTG-7340': {
+    code: 'MKTG 7340',
+    title: 'Creativity',
+    professor: 'Nave',
+    credits: 0.5,
+    department: 'MKTG',
+    term: 'T2',
+    dates: 'October 12 - 15, 2026',
+    location: 'SFO',
+    cohorts: ['philadelphia', 'san_francisco', 'global']
+  },
+  'LGST-7500': {
+    code: 'LGST 7500',
+    title: 'Global (Anti-) Money Laundering',
+    professor: 'Conti-Brown',
+    credits: 0.5,
+    department: 'LGST',
+    term: 'T2',
+    dates: 'October 12 - 15, 2026',
+    location: 'PHL',
+    cohorts: ['philadelphia', 'san_francisco', 'global']
+  },
+  'OIDD-6530': {
+    code: 'OIDD 6530',
+    title: 'Mathematical Modeling and its Appl. in Finance',
+    professor: 'Katalan',
+    credits: 0.5,
+    department: 'OIDD',
+    term: 'T2',
+    dates: 'October 12 - 15, 2026',
+    location: 'SFO',
+    cohorts: ['philadelphia', 'san_francisco', 'global']
+  },
+  'HCMG-8600': {
+    code: 'HCMG 8600',
+    title: 'Leading Healthcare Organizations',
+    professor: 'Nembhard',
+    credits: 0.5,
+    department: 'HCMG',
+    term: 'T2',
+    dates: 'November 30 - December 3, 2026',
+    location: 'PHL',
+    cohorts: ['philadelphia', 'san_francisco', 'global']
+  },
+  'OIDD-6140': {
+    code: 'OIDD 6140',
+    title: 'Innovation',
+    professor: 'Netessine',
+    credits: 0.5,
+    department: 'OIDD',
+    term: 'T2',
+    dates: 'November 30 - December 3, 2026',
+    location: 'SFO',
+    cohorts: ['philadelphia', 'san_francisco', 'global']
+  },
+  'MGMT-8710': {
+    code: 'MGMT 8710',
+    title: 'Advanced Global Strategy',
+    professor: 'Hernandez',
+    credits: 0.5,
+    department: 'MGMT',
+    term: 'T2',
+    dates: 'December 7 - 10, 2026',
+    location: 'Global',
+    cohorts: ['philadelphia', 'san_francisco', 'global']
+  },
+  'OIDD-6540': {
+    code: 'OIDD 6540',
+    title: 'Product Management',
+    professor: 'Ulrich',
+    credits: 0.5,
+    department: 'OIDD',
+    term: 'T2',
+    dates: 'December 7 - 10, 2026',
+    location: 'Global',
+    cohorts: ['philadelphia', 'san_francisco', 'global']
+  },
+  'LGST-6420': {
+    code: 'LGST 6420',
+    title: 'Big Data, Big Responsibilities, Toward Accountable AI',
+    professor: 'Werbach',
+    credits: 0.5,
+    department: 'LGST',
+    term: 'T2',
+    dates: 'December 17 - 20, 2026',
+    location: 'SFO',
+    cohorts: ['philadelphia', 'san_francisco', 'global']
+  }
+};
+
 const COHORTS = {
   philadelphia: {
     id: 'philadelphia',
