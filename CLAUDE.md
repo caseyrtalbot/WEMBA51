@@ -20,16 +20,20 @@ npx http-server
 
 Then open `http://localhost:8000` in a browser.
 
+**Deployment:** Hosted on Vercel (see `.vercel/` config). Deploy by pushing to the connected repository.
+
 ## Architecture
 
 ```
-index.html  →  DOM structure (cohort selection, main app views, modals)
+index.html       →  DOM structure (cohort selection, main app views, modals)
      ↓
-app.js      →  State management, event handlers, view updates, validation
+app.js           →  State management, event handlers, view updates, validation
      ↓
-data.js     →  Static curriculum data (COHORTS, COURSES, MAJORS, CORE_CURRICULUM, SCHEDULE)
+pathway-graph.js →  PathwayGraph class for interactive SVG visualization
      ↓
-styles.css  →  CSS custom properties for theming, responsive breakpoints at 768px
+data.js          →  Static curriculum data (COHORTS, COURSES, MAJORS, CORE_CURRICULUM, SCHEDULE)
+     ↓
+styles.css       →  CSS custom properties for theming, responsive breakpoints at 768px
 ```
 
 ### State Management
@@ -42,7 +46,7 @@ state = {
   plannedCourses,     // Array of course codes: ['FNCE-7050', 'MGMT-8010']
   targetMajors,       // Array of major IDs: ['finance', 'management']
   financeChoice,      // 'FNCE-6110' | 'FNCE-6210' (PHL/SF only)
-  currentView,        // 'dashboard' | 'explorer' | 'pathway'
+  currentView,        // 'dashboard' | 'explorer' | 'pathway' | 'graph'
   explorerMode,       // 'majors' | 'departments'
   selectedMajor,
   selectedDepartment,
@@ -53,7 +57,7 @@ state = {
 ### Data Flow
 
 1. User action → state update → `saveState()` to localStorage
-2. State change → view update functions (`updateDashboard()`, `updatePathway()`, etc.)
+2. State change → view update functions (`updateDashboard()`, `updatePathway()`, `renderGraphView()`, etc.)
 3. On page load → `loadState()` restores previous session
 
 ### Key Data Structures
@@ -63,7 +67,7 @@ state = {
 COURSES['FNCE-7050'] = {
   code: 'FNCE 7050',
   title: 'Investment Management',
-  description: 'Survey of investment strategies...',  // Shown in detail modal
+  description: 'Survey of investment strategies...',
   department: 'FNCE',
   credits: 1.0,
   prerequisites: ['FNCE-6110'],  // Course codes, validated against plan
@@ -90,6 +94,28 @@ COURSES['FNCE-7050'] = {
 - **Dashboard:** Progress toward 19.0 CU, major progress, alerts, finance decision card
 - **Explorer:** Browse courses by major or department, search, add/remove from plan
 - **Pathway:** Timeline view of Terms 1-6 plus Block Weeks, validation messages
+- **Graph Builder:** Interactive SVG-based visualization of course plan with drag-and-drop, prerequisites, and conflict detection
+
+## Graph Builder (pathway-graph.js)
+
+The `PathwayGraph` class provides an interactive visualization:
+
+```javascript
+GRAPH_CONFIG = {
+  nodeWidth: 170, nodeHeight: 70,
+  columnWidth: 220, columnGap: 40,
+  minZoom: 0.5, maxZoom: 2.0
+}
+```
+
+Key features:
+- Drag courses from catalog to term columns
+- Prerequisite arrows (blue) and unlock arrows (green)
+- Schedule conflict detection with visual indicators
+- Major filtering modes: 'all', 'highlight', 'filter'
+- Zoom/pan controls, interactive legend
+
+Department colors are defined in `DEPT_COLORS` object matching `DEPARTMENTS` in data.js.
 
 ## Key Functions
 
@@ -102,6 +128,7 @@ COURSES['FNCE-7050'] = {
 | `getScheduleConflicts()` | Detects courses with overlapping weekend schedules |
 | `getMissingPrerequisites()` | Checks planned courses against their prerequisites |
 | `getPrerequisiteInfo(courseCode)` | Returns prereq status for modal display |
+| `renderGraphView()` | Renders/refreshes the Graph Builder view |
 
 ## Validation Features
 

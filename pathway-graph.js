@@ -531,6 +531,8 @@ class PathwayGraph {
     // Map majors to their primary department colors
     const majorDeptMap = {
       'finance': 'FNCE',
+      'ai_business': 'OIDD',
+      'marketing_operations': 'MKTG',
       'management': 'MGMT',
       'marketing': 'MKTG',
       'operations': 'OIDD',
@@ -539,7 +541,7 @@ class PathwayGraph {
       'healthcare': 'HCMG',
       'real_estate': 'REAL',
       'entrepreneurship': 'MGMT',
-      'strategy': 'MGMT'
+      'strategic_management': 'MGMT'
     };
 
     const dept = majorDeptMap[majorId] || 'MGMT';
@@ -780,8 +782,10 @@ class PathwayGraph {
     const titleEl = document.getElementById('info-panel-title');
     const prereqsList = document.getElementById('info-prereqs-list');
     const unlocksList = document.getElementById('info-unlocks-list');
+    const conflictsList = document.getElementById('info-conflicts-list');
     const prereqsSection = document.getElementById('info-prereqs-section');
     const unlocksSection = document.getElementById('info-unlocks-section');
+    const conflictsSection = document.getElementById('info-conflicts-section');
 
     if (!panel) return;
 
@@ -846,6 +850,20 @@ class PathwayGraph {
       }).join('');
     }
 
+    // Render conflicts
+    const conflictDetails = this.getConflictDetailsForCourse(normalizedCode);
+    if (!conflictsSection || !conflictsList || conflictDetails.length === 0) {
+      if (conflictsSection) conflictsSection.style.display = 'none';
+    } else {
+      conflictsSection.style.display = 'block';
+      conflictsList.innerHTML = conflictDetails.map(detail => `
+        <li class="conflict-item">
+          <span class="conflict-course">${detail.otherCourse}</span>
+          <span class="conflict-detail">${detail.termLabel} · ${detail.weekendLabel}</span>
+        </li>
+      `).join('');
+    }
+
     // Setup close button
     document.getElementById('info-panel-close').onclick = () => this.clearSelection();
 
@@ -873,6 +891,53 @@ class PathwayGraph {
     });
 
     return unlocks;
+  }
+
+  getConflictDetailsForCourse(courseCode) {
+    const course = COURSES[courseCode];
+    if (!course) return [];
+
+    const courseLabel = course.code.replace('-', ' ');
+    const conflicts = getScheduleConflicts();
+    if (conflicts.length === 0) return [];
+
+    const schedule = SCHEDULE[this.state.selectedCohort] || {};
+
+    return conflicts
+      .filter(conflict => conflict.course1 === courseLabel || conflict.course2 === courseLabel)
+      .map(conflict => {
+        const otherCourse = conflict.course1 === courseLabel ? conflict.course2 : conflict.course1;
+        const scheduleInfo = this.resolveConflictSchedule(conflict, schedule);
+        const termLabel = scheduleInfo.termName || conflict.term;
+        const weekendLabel = `Weekend ${conflict.weekend + 1}` +
+          (scheduleInfo.weekendDate ? ` (${scheduleInfo.weekendDate})` : '');
+
+        return {
+          otherCourse,
+          termLabel,
+          weekendLabel
+        };
+      });
+  }
+
+  resolveConflictSchedule(conflict, schedule) {
+    let termKey = null;
+
+    if (schedule[conflict.term]) {
+      termKey = conflict.term;
+    } else {
+      termKey = Object.keys(schedule).find(key => schedule[key].name === conflict.term);
+    }
+
+    if (!termKey) {
+      return { termName: conflict.term, weekendDate: null };
+    }
+
+    const termData = schedule[termKey];
+    return {
+      termName: termData?.name || conflict.term,
+      weekendDate: termData?.weekends?.[conflict.weekend] || null
+    };
   }
 
   renderGhostNodes(courseCode) {
@@ -1026,6 +1091,7 @@ class PathwayGraph {
     this.renderConnections();
     this.updateStats();
     this.updateConflictBadge();
+    this.updateGraphAlerts();
     this.updateLegendCounts();
     this.updateMajorsDisplay();
 
@@ -1050,6 +1116,36 @@ class PathwayGraph {
         badge.classList.add('hidden');
       }
     }
+  }
+
+  updateGraphAlerts() {
+    const alertsContainer = document.getElementById('graph-alerts');
+    const alertsList = document.getElementById('graph-alerts-list');
+    if (!alertsContainer || !alertsList) return;
+
+    const conflicts = getScheduleConflicts();
+    if (conflicts.length === 0) {
+      alertsContainer.classList.add('hidden');
+      alertsList.innerHTML = '';
+      return;
+    }
+
+    const schedule = SCHEDULE[this.state.selectedCohort] || {};
+
+    alertsList.innerHTML = conflicts.map(conflict => {
+      const scheduleInfo = this.resolveConflictSchedule(conflict, schedule);
+      const termLabel = scheduleInfo.termName || conflict.term;
+      const weekendLabel = `Weekend ${conflict.weekend + 1}` +
+        (scheduleInfo.weekendDate ? ` (${scheduleInfo.weekendDate})` : '');
+
+      return `
+        <li class="alert-item warning">
+          Schedule conflict: ${conflict.course1} and ${conflict.course2} overlap on ${weekendLabel} in ${termLabel}
+        </li>
+      `;
+    }).join('');
+
+    alertsContainer.classList.remove('hidden');
   }
 
   renderDropZones() {
