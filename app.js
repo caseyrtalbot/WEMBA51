@@ -483,7 +483,7 @@ function getScheduleConflicts() {
     if (!course) return;
 
     const offering = course.offerings[cohort];
-    if (!offering || offering.term === 'BW') return; // Skip block weeks - they have specific dates
+    if (!offering) return;
 
     const term = offering.term;
     if (!coursesByTerm[term]) coursesByTerm[term] = [];
@@ -496,6 +496,24 @@ function getScheduleConflicts() {
       for (let j = i + 1; j < courses.length; j++) {
         const c1 = courses[i];
         const c2 = courses[j];
+
+        // Check for GMC date conflicts (both have category: 'GMC' and same dates)
+        if (c1.offering.category === 'GMC' && c2.offering.category === 'GMC') {
+          if (c1.offering.dates && c2.offering.dates && c1.offering.dates === c2.offering.dates) {
+            conflicts.push({
+              course1: c1.course.code.replace('-', ' '),
+              course2: c2.course.code.replace('-', ' '),
+              term: SCHEDULE[cohort][term]?.name || term,
+              weekend: c1.offering.dates + ' (GMC)'
+            });
+          }
+          continue; // GMC courses don't conflict with regular weekend courses
+        }
+
+        // Skip if either is a GMC course (they don't conflict with regular courses)
+        if (c1.offering.category === 'GMC' || c2.offering.category === 'GMC') {
+          continue;
+        }
 
         // Get weekend arrays (default to empty if not specified)
         const weekends1 = c1.offering.weekends || [];

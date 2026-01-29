@@ -909,8 +909,15 @@ class PathwayGraph {
         const otherCourse = conflict.course1 === courseLabel ? conflict.course2 : conflict.course1;
         const scheduleInfo = this.resolveConflictSchedule(conflict, schedule);
         const termLabel = scheduleInfo.termName || conflict.term;
-        const weekendLabel = `Weekend ${conflict.weekend + 1}` +
-          (scheduleInfo.weekendDate ? ` (${scheduleInfo.weekendDate})` : '');
+
+        // Handle GMC conflicts (weekend is a date string with '(GMC)')
+        let weekendLabel;
+        if (typeof conflict.weekend === 'string' && conflict.weekend.includes('(GMC)')) {
+          weekendLabel = conflict.weekend;
+        } else {
+          weekendLabel = `Weekend ${conflict.weekend + 1}` +
+            (scheduleInfo.weekendDate ? ` (${scheduleInfo.weekendDate})` : '');
+        }
 
         return {
           otherCourse,
@@ -1470,11 +1477,16 @@ class PathwayGraph {
       );
       relevantConflicts.forEach(c => {
         const otherCourse = c.course1 === normalizedCode ? c.course2 : c.course1;
-        // Get more detailed conflict info
-        const schedule = SCHEDULE[cohort]?.[c.term.includes('Term') ? `T${c.term.match(/\d/)?.[0]}` : c.term];
-        const weekendInfo = schedule?.weekends?.[c.weekend];
-        const weekendDates = weekendInfo ? ` (${weekendInfo})` : '';
-        messages.push(`Conflicts with ${otherCourse} on Weekend ${c.weekend + 1}${weekendDates}`);
+        // Check if this is a GMC conflict (weekend contains '(GMC)')
+        if (typeof c.weekend === 'string' && c.weekend.includes('(GMC)')) {
+          messages.push(`Conflicts with ${otherCourse} on ${c.weekend}`);
+        } else {
+          // Regular weekend conflict
+          const schedule = SCHEDULE[cohort]?.[c.term.includes('Term') ? `T${c.term.match(/\d/)?.[0]}` : c.term];
+          const weekendInfo = schedule?.weekends?.[c.weekend];
+          const weekendDates = weekendInfo ? ` (${weekendInfo})` : '';
+          messages.push(`Conflicts with ${otherCourse} on Weekend ${c.weekend + 1}${weekendDates}`);
+        }
       });
     }
 

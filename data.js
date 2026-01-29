@@ -816,7 +816,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['FNCE-6110'],
     offerings: {
-      philadelphia: { term: 'BW', professor: 'Burcu Esmer', dates: 'May 3-6, 2027' }
+      philadelphia: { term: 'T6', professor: 'Burcu Esmer', dates: 'May 3-6, 2027' }
     }
   },
   'FNCE-7401': {
@@ -827,7 +827,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['FNCE-6110', 'FNCE-6130'],
     offerings: {
-      san_francisco: { term: 'BW', professor: 'Anthony Landry', dates: 'Apr 26-29, 2027' }
+      san_francisco: { term: 'T6', professor: 'Anthony Landry', dates: 'Apr 26-29, 2027' }
     }
   },
   'FNCE-8960': {
@@ -838,9 +838,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['FNCE-6110'],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'David Musto, Burcu Esmer', dates: 'Jan 5-9, 2026', location: 'UAE' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'David Musto, Burcu Esmer', dates: 'Jan 5-9, 2026', location: 'UAE' },
-      global: { term: 'BW', category: 'GMC', professor: 'David Musto, Burcu Esmer', dates: 'Jan 5-9, 2026', location: 'UAE' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'David Musto, Burcu Esmer', dates: 'Jan 5-9, 2026', location: 'UAE' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'David Musto, Burcu Esmer', dates: 'Jan 5-9, 2026', location: 'UAE' },
+      global: { term: 'T4', category: 'GMC', professor: 'David Musto, Burcu Esmer', dates: 'Jan 5-9, 2026', location: 'UAE' }
     }
   },
 
@@ -1147,7 +1147,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      san_francisco: { term: 'BW', professor: 'Lori Rosenkopf', dates: 'Mar 8-11, 2027' }
+      san_francisco: { term: 'T6', professor: 'Lori Rosenkopf', dates: 'Mar 8-11, 2027' }
     }
   },
   'MGMT-7720': {
@@ -1158,7 +1158,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', professor: 'Samir Nurmohamed', dates: 'Jan 11-14, 2027' }
+      philadelphia: { term: 'T6', professor: 'Samir Nurmohamed', dates: 'Jan 11-14, 2027' }
     }
   },
   'MGMT-7820': {
@@ -1197,7 +1197,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', professor: 'Vit Henisz', dates: 'May 3-6, 2027' }
+      philadelphia: { term: 'T6', professor: 'Vit Henisz', dates: 'May 3-6, 2027' }
     }
   },
   'MGMT-7930': {
@@ -1368,7 +1368,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', professor: 'Ethan Mollick', dates: 'Jan 12-15, 2026' }
+      philadelphia: { term: 'T4', professor: 'Ethan Mollick', dates: 'Jan 12-15, 2026' }
     }
   },
   'MGMT-8160': {
@@ -1379,7 +1379,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['MGMT-8010'],
     offerings: {
-      san_francisco: { term: 'BW', professor: 'Valery Yakubovich', dates: 'May 3-6, 2027' }
+      san_francisco: { term: 'T6', professor: 'Valery Yakubovich', dates: 'May 3-6, 2027' }
     }
   },
   'MGMT-8310': {
@@ -1486,7 +1486,7 @@ const COURSES = {
         }
       },
       global: {
-        term: 'BW',
+        term: 'T5',
         professor: 'Zeke Hernandez',
         dates: 'Dec 7-10, 2026',
         evaluations: {
@@ -1513,7 +1513,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      global: { term: 'BW', professor: 'Henning Piezunka', dates: 'Jun 29 - Jul 3, 2026', location: 'Bologna' }
+      global: { term: 'T4', professor: 'Henning Piezunka', dates: 'Jun 29 - Jul 3, 2026', location: 'Bologna' }
     }
   },
   'MGMT-XXXX-IMPACT': {
@@ -1524,7 +1524,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', professor: 'Vit Henisz', dates: 'May 4-7, 2026', location: 'Philadelphia/NY' }
+      philadelphia: { term: 'T4', professor: 'Vit Henisz', dates: 'May 4-7, 2026', location: 'Philadelphia/NY' }
     }
   },
   'MGMT-8970-INDIA': {
@@ -1535,9 +1535,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' },
-      global: { term: 'BW', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' },
+      global: { term: 'T4', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' }
     }
   },
   'WH-2120': {
@@ -1548,9 +1548,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' },
-      global: { term: 'BW', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' },
+      global: { term: 'T4', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' }
     }
   },
   'MGMT-8970-GERMANY': {
@@ -1561,9 +1561,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'John Paul MacDuffie, Nicolaj Siggelkow', dates: 'May 4-8, 2026', location: 'Germany' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'John Paul MacDuffie, Nicolaj Siggelkow', dates: 'May 4-8, 2026', location: 'Germany' },
-      global: { term: 'BW', category: 'GMC', professor: 'John Paul MacDuffie, Nicolaj Siggelkow', dates: 'May 4-8, 2026', location: 'Germany' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'John Paul MacDuffie, Nicolaj Siggelkow', dates: 'May 4-8, 2026', location: 'Germany' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'John Paul MacDuffie, Nicolaj Siggelkow', dates: 'May 4-8, 2026', location: 'Germany' },
+      global: { term: 'T4', category: 'GMC', professor: 'John Paul MacDuffie, Nicolaj Siggelkow', dates: 'May 4-8, 2026', location: 'Germany' }
     }
   },
   'MGMT-8980-SOUTH-AFRICA': {
@@ -1574,9 +1574,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' },
-      global: { term: 'BW', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' },
+      global: { term: 'T4', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' }
     }
   },
   'MGMT-XXX3-LONDON': {
@@ -1587,9 +1587,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Henning Piezunka', dates: 'May 4-8, 2026', location: 'UK (London)' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Henning Piezunka', dates: 'May 4-8, 2026', location: 'UK (London)' },
-      global: { term: 'BW', category: 'GMC', professor: 'Henning Piezunka', dates: 'May 4-8, 2026', location: 'UK (London)' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Henning Piezunka', dates: 'May 4-8, 2026', location: 'UK (London)' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Henning Piezunka', dates: 'May 4-8, 2026', location: 'UK (London)' },
+      global: { term: 'T4', category: 'GMC', professor: 'Henning Piezunka', dates: 'May 4-8, 2026', location: 'UK (London)' }
     }
   },
 
@@ -1680,7 +1680,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      san_francisco: { term: 'BW', professor: 'Gideon Nave', dates: 'Oct 12-15, 2026' }
+      san_francisco: { term: 'T5', professor: 'Gideon Nave', dates: 'Oct 12-15, 2026' }
     }
   },
   'MKTG-7540': {
@@ -1761,7 +1761,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['MKTG-6110'],
     offerings: {
-      philadelphia: { term: 'BW', professor: 'Pinar Yildirim', dates: 'Jan 11-14, 2027' }
+      philadelphia: { term: 'T6', professor: 'Pinar Yildirim', dates: 'Jan 11-14, 2027' }
     }
   },
   'MKTG-7780': {
@@ -1795,7 +1795,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      san_francisco: { term: 'BW', professor: 'Americus Reed', dates: 'Aug 3-6, 2026' }
+      san_francisco: { term: 'T4', professor: 'Americus Reed', dates: 'Aug 3-6, 2026' }
     }
   },
   'MKTG-8530': {
@@ -1806,7 +1806,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['MKTG-6110'],
     offerings: {
-      philadelphia: { term: 'BW', professor: 'Annie Wilson', dates: 'Mar 8-11, 2027' }
+      philadelphia: { term: 'T6', professor: 'Annie Wilson', dates: 'Mar 8-11, 2027' }
     }
   },
   'MKTG-8960-SAUDI': {
@@ -1817,9 +1817,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Peter Fader', dates: 'Jan 4-8, 2026', location: 'Saudi Arabia' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Peter Fader', dates: 'Jan 4-8, 2026', location: 'Saudi Arabia' },
-      global: { term: 'BW', category: 'GMC', professor: 'Peter Fader', dates: 'Jan 4-8, 2026', location: 'Saudi Arabia' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Peter Fader', dates: 'Jan 4-8, 2026', location: 'Saudi Arabia' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Peter Fader', dates: 'Jan 4-8, 2026', location: 'Saudi Arabia' },
+      global: { term: 'T4', category: 'GMC', professor: 'Peter Fader', dates: 'Jan 4-8, 2026', location: 'Saudi Arabia' }
     }
   },
   'MKTG-8960-KOREA': {
@@ -1830,9 +1830,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Gideon Nave, Stefano Puntoni', dates: 'May 25-29, 2026', location: 'South Korea' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Gideon Nave, Stefano Puntoni', dates: 'May 25-29, 2026', location: 'South Korea' },
-      global: { term: 'BW', category: 'GMC', professor: 'Gideon Nave, Stefano Puntoni', dates: 'May 25-29, 2026', location: 'South Korea' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Gideon Nave, Stefano Puntoni', dates: 'May 25-29, 2026', location: 'South Korea' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Gideon Nave, Stefano Puntoni', dates: 'May 25-29, 2026', location: 'South Korea' },
+      global: { term: 'T4', category: 'GMC', professor: 'Gideon Nave, Stefano Puntoni', dates: 'May 25-29, 2026', location: 'South Korea' }
     }
   },
   'MKTG-8970': {
@@ -1843,7 +1843,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['MKTG-6110'],
     offerings: {
-      san_francisco: { term: 'BW', professor: 'Barbara Kahn', dates: 'May 3-7, 2027', location: 'Paris' }
+      san_francisco: { term: 'T6', professor: 'Barbara Kahn', dates: 'May 3-7, 2027', location: 'Paris' }
     }
   },
   'MKTG-XXXX': {
@@ -1854,7 +1854,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', professor: 'Sohiit Karol', dates: 'Oct 12-15, 2026' }
+      philadelphia: { term: 'T5', professor: 'Sohiit Karol', dates: 'Oct 12-15, 2026' }
     }
   },
 
@@ -1880,7 +1880,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      san_francisco: { term: 'BW', professor: 'Serguei Netessine', dates: 'Nov 30 - Dec 3, 2026' }
+      san_francisco: { term: 'T5', professor: 'Serguei Netessine', dates: 'Nov 30 - Dec 3, 2026' }
     }
   },
   'OIDD-6360': {
@@ -1955,7 +1955,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['STAT-6130', 'FNCE-6110'],
     offerings: {
-      san_francisco: { term: 'BW', professor: 'Ziv Katalan', dates: 'Oct 12-15, 2026' }
+      san_francisco: { term: 'T5', professor: 'Ziv Katalan', dates: 'Oct 12-15, 2026' }
     }
   },
   'OIDD-6540': {
@@ -1967,7 +1967,7 @@ const COURSES = {
     prerequisites: [],
     offerings: {
       san_francisco: { term: 'T5', professor: 'Karl Ulrich', weekends: [4, 5, 6, 7] },
-      global: { term: 'BW', professor: 'Karl Ulrich', dates: 'Dec 7-10, 2026' }
+      global: { term: 'T5', professor: 'Karl Ulrich', dates: 'Dec 7-10, 2026' }
     }
   },
   'OIDD-6620': {
@@ -1990,8 +1990,8 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', professor: 'Priyanka Vergadia', dates: 'May 3-6, 2027' },
-      san_francisco: { term: 'BW', professor: 'Kartik Hosanagar', dates: 'Mar 8-11, 2027' }
+      philadelphia: { term: 'T6', professor: 'Priyanka Vergadia', dates: 'May 3-6, 2027' },
+      san_francisco: { term: 'T6', professor: 'Kartik Hosanagar', dates: 'Mar 8-11, 2027' }
     }
   },
   'OIDD-6920': {
@@ -2002,7 +2002,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['MGMT-6910'],
     offerings: {
-      philadelphia: { term: 'BW', professor: 'Maurice Schweitzer', dates: 'Mar 8-11, 2027' }
+      philadelphia: { term: 'T6', professor: 'Maurice Schweitzer', dates: 'Mar 8-11, 2027' }
     }
   },
   'OIDD-6930': {
@@ -2014,7 +2014,7 @@ const COURSES = {
     prerequisites: [],
     offerings: {
       philadelphia: { term: 'T5', professor: 'Cade Massey', weekends: [0, 1, 2, 3] },
-      san_francisco: { term: 'BW', professor: 'Cade Massey', dates: 'Feb 15-18, 2027' },
+      san_francisco: { term: 'T6', professor: 'Cade Massey', dates: 'Feb 15-18, 2027' },
       global: { term: 'T4', professor: 'Cade Massey', weekends: [0, 1, 2, 3] }
     }
   },
@@ -2026,7 +2026,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      san_francisco: { term: 'BW', professor: 'Serguei Netessine', dates: 'Mar 8-11, 2027', location: 'Seattle' }
+      san_francisco: { term: 'T6', professor: 'Serguei Netessine', dates: 'Mar 8-11, 2027', location: 'Seattle' }
     }
   },
   'OIDD-8970-INDIA': {
@@ -2037,9 +2037,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Senthil Veeraghavan, Ziv Katalan', dates: 'Dec 29, 2025 - Jan 2, 2026', location: 'India' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Senthil Veeraghavan, Ziv Katalan', dates: 'Dec 29, 2025 - Jan 2, 2026', location: 'India' },
-      global: { term: 'BW', category: 'GMC', professor: 'Senthil Veeraghavan, Ziv Katalan', dates: 'Dec 29, 2025 - Jan 2, 2026', location: 'India' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Senthil Veeraghavan, Ziv Katalan', dates: 'Dec 29, 2025 - Jan 2, 2026', location: 'India' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Senthil Veeraghavan, Ziv Katalan', dates: 'Dec 29, 2025 - Jan 2, 2026', location: 'India' },
+      global: { term: 'T4', category: 'GMC', professor: 'Senthil Veeraghavan, Ziv Katalan', dates: 'Dec 29, 2025 - Jan 2, 2026', location: 'India' }
     }
   },
   'OIDD-8970-INDONESIA': {
@@ -2050,9 +2050,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Sergei Savin', dates: 'Jan 12-17, 2026', location: 'Indonesia' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Sergei Savin', dates: 'Jan 12-17, 2026', location: 'Indonesia' },
-      global: { term: 'BW', category: 'GMC', professor: 'Sergei Savin', dates: 'Jan 12-17, 2026', location: 'Indonesia' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Sergei Savin', dates: 'Jan 12-17, 2026', location: 'Indonesia' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Sergei Savin', dates: 'Jan 12-17, 2026', location: 'Indonesia' },
+      global: { term: 'T4', category: 'GMC', professor: 'Sergei Savin', dates: 'Jan 12-17, 2026', location: 'Indonesia' }
     }
   },
   'OIDD-8970-MEXICO': {
@@ -2063,9 +2063,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Santiago Gallino', dates: 'Mar 9-13, 2026', location: 'Mexico' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Santiago Gallino', dates: 'Mar 9-13, 2026', location: 'Mexico' },
-      global: { term: 'BW', category: 'GMC', professor: 'Santiago Gallino', dates: 'Mar 9-13, 2026', location: 'Mexico' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Santiago Gallino', dates: 'Mar 9-13, 2026', location: 'Mexico' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Santiago Gallino', dates: 'Mar 9-13, 2026', location: 'Mexico' },
+      global: { term: 'T4', category: 'GMC', professor: 'Santiago Gallino', dates: 'Mar 9-13, 2026', location: 'Mexico' }
     }
   },
   'OIDD-8970-TAIWAN-HK': {
@@ -2076,9 +2076,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Senthil Veeraraghavan, Edwin Keh', dates: 'Mar 9-13, 2026', location: 'Taiwan & Hong Kong' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Senthil Veeraraghavan, Edwin Keh', dates: 'Mar 9-13, 2026', location: 'Taiwan & Hong Kong' },
-      global: { term: 'BW', category: 'GMC', professor: 'Senthil Veeraraghavan, Edwin Keh', dates: 'Mar 9-13, 2026', location: 'Taiwan & Hong Kong' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Senthil Veeraraghavan, Edwin Keh', dates: 'Mar 9-13, 2026', location: 'Taiwan & Hong Kong' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Senthil Veeraraghavan, Edwin Keh', dates: 'Mar 9-13, 2026', location: 'Taiwan & Hong Kong' },
+      global: { term: 'T4', category: 'GMC', professor: 'Senthil Veeraraghavan, Edwin Keh', dates: 'Mar 9-13, 2026', location: 'Taiwan & Hong Kong' }
     }
   },
   'OIDD-XXX2-NIGERIA': {
@@ -2089,9 +2089,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Hummy Song, Eric Kacou', dates: 'May 4-8, 2026', location: 'Nigeria' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Hummy Song, Eric Kacou', dates: 'May 4-8, 2026', location: 'Nigeria' },
-      global: { term: 'BW', category: 'GMC', professor: 'Hummy Song, Eric Kacou', dates: 'May 4-8, 2026', location: 'Nigeria' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Hummy Song, Eric Kacou', dates: 'May 4-8, 2026', location: 'Nigeria' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Hummy Song, Eric Kacou', dates: 'May 4-8, 2026', location: 'Nigeria' },
+      global: { term: 'T4', category: 'GMC', professor: 'Hummy Song, Eric Kacou', dates: 'May 4-8, 2026', location: 'Nigeria' }
     }
   },
 
@@ -2104,7 +2104,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      san_francisco: { term: 'BW', professor: 'Kevin Werbach', dates: 'Fall 2026 (TBD)' }
+      san_francisco: { term: 'T5', professor: 'Kevin Werbach', dates: 'Fall 2026 (TBD)' }
     }
   },
   'LGST-7500': {
@@ -2126,7 +2126,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', professor: 'Peter Conti-Brown', dates: 'Oct 12-15, 2026' }
+      philadelphia: { term: 'T5', professor: 'Peter Conti-Brown', dates: 'Oct 12-15, 2026' }
     }
   },
   'LGST-XXXX': {
@@ -2137,7 +2137,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', professor: 'Nina Strohminger', dates: 'Jun 15-18, 2026' }
+      philadelphia: { term: 'T4', professor: 'Nina Strohminger', dates: 'Jun 15-18, 2026' }
     }
   },
   'LGST-8060': {
@@ -2185,7 +2185,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      san_francisco: { term: 'BW', professor: 'Rob DiGisi', dates: 'Aug 3-6, 2026' }
+      san_francisco: { term: 'T4', professor: 'Rob DiGisi', dates: 'Aug 3-6, 2026' }
     }
   },
   'LGST-8130': {
@@ -2207,9 +2207,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Peter Conti-Brown', dates: 'Jan 12-16, 2026', location: 'Brazil' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Peter Conti-Brown', dates: 'Jan 12-16, 2026', location: 'Brazil' },
-      global: { term: 'BW', category: 'GMC', professor: 'Peter Conti-Brown', dates: 'Jan 12-16, 2026', location: 'Brazil' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Peter Conti-Brown', dates: 'Jan 12-16, 2026', location: 'Brazil' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Peter Conti-Brown', dates: 'Jan 12-16, 2026', location: 'Brazil' },
+      global: { term: 'T4', category: 'GMC', professor: 'Peter Conti-Brown', dates: 'Jan 12-16, 2026', location: 'Brazil' }
     }
   },
   'LGST-8980-VIETNAM': {
@@ -2220,9 +2220,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Philip Nichols, Edwin Keh', dates: 'Jan 12-16, 2026', location: 'Vietnam' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Philip Nichols, Edwin Keh', dates: 'Jan 12-16, 2026', location: 'Vietnam' },
-      global: { term: 'BW', category: 'GMC', professor: 'Philip Nichols, Edwin Keh', dates: 'Jan 12-16, 2026', location: 'Vietnam' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Philip Nichols, Edwin Keh', dates: 'Jan 12-16, 2026', location: 'Vietnam' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Philip Nichols, Edwin Keh', dates: 'Jan 12-16, 2026', location: 'Vietnam' },
+      global: { term: 'T4', category: 'GMC', professor: 'Philip Nichols, Edwin Keh', dates: 'Jan 12-16, 2026', location: 'Vietnam' }
     }
   },
   'LGST-8980-THAILAND': {
@@ -2233,9 +2233,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' },
-      global: { term: 'BW', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' },
+      global: { term: 'T4', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' }
     }
   },
   'LGST-8980-CHINA': {
@@ -2246,9 +2246,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Kevin Werbach', dates: 'May 4-8, 2026', location: 'China' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Kevin Werbach', dates: 'May 4-8, 2026', location: 'China' },
-      global: { term: 'BW', category: 'GMC', professor: 'Kevin Werbach', dates: 'May 4-8, 2026', location: 'China' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Kevin Werbach', dates: 'May 4-8, 2026', location: 'China' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Kevin Werbach', dates: 'May 4-8, 2026', location: 'China' },
+      global: { term: 'T4', category: 'GMC', professor: 'Kevin Werbach', dates: 'May 4-8, 2026', location: 'China' }
     }
   },
   'LGST-8980-SOUTH-AFRICA': {
@@ -2259,9 +2259,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' },
-      global: { term: 'BW', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' },
+      global: { term: 'T4', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' }
     }
   },
 
@@ -2274,7 +2274,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', professor: 'Robert Burns', dates: 'Jun 15-18, 2026' }
+      philadelphia: { term: 'T4', professor: 'Robert Burns', dates: 'Jun 15-18, 2026' }
     }
   },
   'HCMG-8450': {
@@ -2296,7 +2296,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      san_francisco: { term: 'BW', professor: 'Ezekiel Emanuel', dates: 'Spring 2027 (TBD)' }
+      san_francisco: { term: 'T6', professor: 'Ezekiel Emanuel', dates: 'Spring 2027 (TBD)' }
     }
   },
   'HCMG-8520': {
@@ -2330,7 +2330,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', professor: 'Ingrid Nembhard', dates: 'Nov 30 - Dec 3, 2026' }
+      philadelphia: { term: 'T5', professor: 'Ingrid Nembhard', dates: 'Nov 30 - Dec 3, 2026' }
     }
   },
   'HCMG-8670': {
@@ -2352,9 +2352,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', category: 'GMC', professor: 'Guy David', dates: 'May 25-29, 2026', location: 'Sweden, Romania' },
-      san_francisco: { term: 'BW', category: 'GMC', professor: 'Guy David', dates: 'May 25-29, 2026', location: 'Sweden, Romania' },
-      global: { term: 'BW', category: 'GMC', professor: 'Guy David', dates: 'May 25-29, 2026', location: 'Sweden, Romania' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Guy David', dates: 'May 25-29, 2026', location: 'Sweden, Romania' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Guy David', dates: 'May 25-29, 2026', location: 'Sweden, Romania' },
+      global: { term: 'T4', category: 'GMC', professor: 'Guy David', dates: 'May 25-29, 2026', location: 'Sweden, Romania' }
     }
   },
 
@@ -2389,7 +2389,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['STAT-6130'],
     offerings: {
-      philadelphia: { term: 'BW', professor: 'Adi Wyner', dates: 'May 3-6, 2027' }
+      philadelphia: { term: 'T6', professor: 'Adi Wyner', dates: 'May 3-6, 2027' }
     }
   },
 
@@ -2430,7 +2430,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'BW', professor: 'Bob Chalfin', dates: 'Jun 15-18, 2026' }
+      philadelphia: { term: 'T4', professor: 'Bob Chalfin', dates: 'Jun 15-18, 2026' }
     }
   },
 
