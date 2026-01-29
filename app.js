@@ -163,10 +163,14 @@ function setFinanceChoice(choice) {
   state.financeChoice = choice;
   saveState();
 
+  // Update all credit displays across all views instantly
+  updateAllCreditDisplays();
+
   document.querySelectorAll('.decision-btn').forEach(btn => {
     btn.classList.toggle('selected', btn.dataset.choice === choice);
   });
 
+  // Refresh view-specific content
   updateDashboard();
   updatePathway();
 
@@ -797,7 +801,10 @@ function addCourse(courseCode) {
     state.plannedCourses.push(normalizedCode);
     saveState();
 
-    // Refresh displays
+    // Update all credit displays across all views instantly
+    updateAllCreditDisplays();
+
+    // Refresh view-specific content
     updateDashboard();
     updatePathway();
 
@@ -821,7 +828,10 @@ function removeCourse(courseCode) {
   state.plannedCourses = state.plannedCourses.filter(c => c !== normalizedCode);
   saveState();
 
-  // Refresh displays
+  // Update all credit displays across all views instantly
+  updateAllCreditDisplays();
+
+  // Refresh view-specific content
   updateDashboard();
   updatePathway();
 
@@ -860,7 +870,10 @@ function toggleCompletedBlockCourse(courseCode) {
   }
   saveState();
 
-  // Refresh displays
+  // Update all credit displays across all views instantly
+  updateAllCreditDisplays();
+
+  // Refresh view-specific content
   updateDashboard();
   updatePathway();
 
@@ -872,7 +885,9 @@ function toggleCompletedBlockCourse(courseCode) {
 
 function getCompletedBlockCoursesCU() {
   return state.completedBlockCourses.reduce((total, code) => {
-    const course = EARLY_BLOCK_COURSES[code];
+    // Normalize to hyphen format for EARLY_BLOCK_COURSES lookup
+    const normalizedCode = code.replace(/\s+/g, '-');
+    const course = EARLY_BLOCK_COURSES[normalizedCode];
     return total + (course ? course.credits : 0);
   }, 0);
 }
@@ -1264,7 +1279,9 @@ function calculateTotalCU() {
 
   // Completed early block courses (T1-T3 supplemental)
   state.completedBlockCourses.forEach(code => {
-    const course = EARLY_BLOCK_COURSES[code];
+    // Normalize to hyphen format for EARLY_BLOCK_COURSES lookup
+    const normalizedCode = code.replace(/\s+/g, '-');
+    const course = EARLY_BLOCK_COURSES[normalizedCode];
     if (course) {
       total += course.credits;
     }
@@ -1281,6 +1298,52 @@ function calculateTotalCU() {
   });
 
   return total;
+}
+
+// Update all credit unit displays across all views (for real-time sync)
+function updateAllCreditDisplays() {
+  const totalCU = calculateTotalCU();
+  const progress = (totalCU / PROGRAM_RULES.graduationMinimum) * 100;
+
+  // Banner header Plan Total
+  const totalCuEl = document.getElementById('total-cu');
+  if (totalCuEl) totalCuEl.textContent = totalCU.toFixed(1);
+
+  // Dashboard progress
+  const progressCuEl = document.getElementById('progress-cu');
+  if (progressCuEl) progressCuEl.textContent = totalCU.toFixed(1);
+
+  const progressBarEl = document.getElementById('progress-bar');
+  if (progressBarEl) progressBarEl.style.width = `${Math.min(progress, 100)}%`;
+
+  const progressPercentEl = document.getElementById('progress-percent');
+  if (progressPercentEl) progressPercentEl.textContent = `(${Math.round(progress)}%)`;
+
+  // Pathway view stats
+  const pathwayCuEl = document.getElementById('pathway-total-cu');
+  if (pathwayCuEl) pathwayCuEl.textContent = totalCU.toFixed(1);
+
+  const pathwayStatusEl = document.getElementById('pathway-status');
+  if (pathwayStatusEl) {
+    pathwayStatusEl.textContent = totalCU >= PROGRAM_RULES.graduationMinimum ? 'Ready' : 'In Progress';
+  }
+
+  // Graph Builder stats
+  const graphCuEl = document.getElementById('graph-total-cu');
+  if (graphCuEl) graphCuEl.textContent = totalCU.toFixed(1);
+
+  // Graduation status badge
+  const statusEl = document.getElementById('graduation-status');
+  if (statusEl) {
+    if (totalCU >= PROGRAM_RULES.graduationMinimum) {
+      statusEl.textContent = 'Graduation Ready';
+      statusEl.className = 'status-badge ready';
+    } else {
+      const needed = (PROGRAM_RULES.graduationMinimum - totalCU).toFixed(1);
+      statusEl.textContent = `Need ${needed} more CU`;
+      statusEl.className = 'status-badge pending';
+    }
+  }
 }
 
 function normalizeCourseCode(code) {
@@ -1410,16 +1473,18 @@ function calculateMarketingOperationsProgress() {
 
   // Also check completed early block courses
   state.completedBlockCourses.forEach(code => {
-    const blockCourse = EARLY_BLOCK_COURSES[code];
+    // Normalize to hyphen format for EARLY_BLOCK_COURSES lookup
+    const normalizedCode = code.replace(/\s+/g, '-');
+    const blockCourse = EARLY_BLOCK_COURSES[normalizedCode];
     if (!blockCourse) return;
     const eligibleOutside = requirements.electives.eligibleOutsideDepartments || [];
     const isEligibleDepartment = requirements.electives.eligibleDepartments.includes(blockCourse.department);
-    const isEligibleOutside = eligibleOutside.includes(code);
+    const isEligibleOutside = eligibleOutside.includes(normalizedCode);
     if (!isEligibleDepartment && !isEligibleOutside) return;
 
-    plannedElectiveCourses.push({ code, course: blockCourse });
+    plannedElectiveCourses.push({ code: normalizedCode, course: blockCourse });
 
-    if (requirements.oiddCore.courses.includes(code)) {
+    if (requirements.oiddCore.courses.includes(normalizedCode)) {
       plannedOiddCoreCredits += blockCourse.credits;
     }
   });
@@ -1490,8 +1555,10 @@ function calculateMajorProgress(majorId) {
 
   // Check completed early block courses that count toward this major
   state.completedBlockCourses.forEach(code => {
-    const blockCourse = EARLY_BLOCK_COURSES[code];
-    if (blockCourse && allCourses.includes(code)) {
+    // Normalize to hyphen format for EARLY_BLOCK_COURSES lookup
+    const normalizedCode = code.replace(/\s+/g, '-');
+    const blockCourse = EARLY_BLOCK_COURSES[normalizedCode];
+    if (blockCourse && allCourses.includes(normalizedCode)) {
       completed += blockCourse.credits;
     }
   });
@@ -1547,7 +1614,9 @@ function exportPlan() {
     const blockCU = getCompletedBlockCoursesCU();
     text += `Total: ${blockCU.toFixed(1)} CU\n\n`;
     state.completedBlockCourses.forEach(code => {
-      const course = EARLY_BLOCK_COURSES[code];
+      // Normalize to hyphen format for EARLY_BLOCK_COURSES lookup
+      const normalizedCode = code.replace(/\s+/g, '-');
+      const course = EARLY_BLOCK_COURSES[normalizedCode];
       if (course) {
         text += `  - ${course.code}: ${course.title} (${course.credits} CU)\n`;
         text += `    Professor: ${course.professor} | ${course.dates}\n`;
@@ -1586,8 +1655,18 @@ function clearElectives() {
   if (confirm('Clear all planned elective courses?')) {
     state.plannedCourses = [];
     saveState();
+
+    // Update all credit displays across all views instantly
+    updateAllCreditDisplays();
+
+    // Refresh view-specific content
     updateDashboard();
     updatePathway();
+
+    // Update graph view if active
+    if (typeof renderGraphView === 'function' && state.currentView === 'graph') {
+      renderGraphView();
+    }
   }
 }
 
@@ -1765,3 +1844,4 @@ window.toggleTargetMajor = toggleTargetMajor;
 window.exportPlan = exportPlan;
 window.clearElectives = clearElectives;
 window.toggleCompletedBlockCourse = toggleCompletedBlockCourse;
+window.updateAllCreditDisplays = updateAllCreditDisplays;
