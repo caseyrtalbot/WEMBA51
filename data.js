@@ -124,7 +124,7 @@ const EARLY_BLOCK_COURSES = {
     credits: 0.5,
     department: 'LGST',
     term: 'T2',
-    dates: 'December 17 - 20, 2026',
+    dates: 'Fall 2026 (TBD)',
     location: 'SFO',
     cohorts: ['philadelphia', 'san_francisco', 'global']
   }
@@ -413,7 +413,7 @@ const COURSES = {
     prerequisites: ['FNCE-6110'],
     offerings: {
       philadelphia: {
-        term: 'T5',
+        term: 'T4',
         professor: 'Christopher Geczy',
         slot: 'A,A',
         weekends: [0, 1, 2, 3, 4, 5, 6, 7],
@@ -1220,7 +1220,8 @@ const COURSES = {
           recommendToMajor: 2.11,
           recommendToNonMajor: 2.00
         }
-      }
+      },
+      san_francisco: { term: 'T6', professor: 'Nicolaj Siggelkow', dates: 'Feb 2-5, 2027' }
     }
   },
   'MGMT-7830': {
@@ -1551,12 +1552,12 @@ const COURSES = {
   'MGMT-XXXX': {
     code: 'MGMT XXXX',
     title: 'Finishing First: Motorsport Lessons on Competition',
-    description: 'Strategic lessons from Formula 1 and motorsport. Immersive experience in Bologna exploring technology, teamwork, and competitive dynamics in racing.',
+    description: 'Strategic lessons from Formula 1 and motorsport. Exploring technology, teamwork, and competitive dynamics in racing.',
     department: 'MGMT',
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      global: { term: 'T4', professor: 'Henning Piezunka', dates: 'Jun 29 - Jul 3, 2026', location: 'Bologna' }
+      philadelphia: { term: 'T4', professor: 'Henning Piezunka', dates: 'Jun 29 - Jul 3, 2026' }
     }
   },
   'MGMT-XXXX-IMPACT': {
@@ -1654,7 +1655,7 @@ const COURSES = {
     title: 'Marketing Research',
     description: 'Design and analysis of marketing research studies. Covers survey methods, experimental design, conjoint analysis, and qualitative research techniques.',
     department: 'MKTG',
-    credits: 1.0,
+    credits: 0.5,
     prerequisites: ['MKTG-6110', 'STAT-6130'],
     offerings: {
       philadelphia: { term: 'T6', professor: 'Raghu Iyengar', slot: 'A', weekends: [0, 1, 2, 3] },
@@ -1829,7 +1830,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      global: { term: 'T6', professor: 'Stefano Puntoni', slot: 'B', weekends: [3, 4] }
+      global: { term: 'T5', professor: 'Stefano Puntoni', slot: 'B', weekends: [3, 4] }
     }
   },
   'MKTG-8500': {
@@ -2497,7 +2498,7 @@ const COURSES = {
     prerequisites: ['ACCT-6130'],
     offerings: {
       philadelphia: {
-        term: 'T5',
+        term: 'T4',
         professor: 'Brian Bushee',
         slot: 'C',
         weekends: [4, 5, 6],
@@ -2516,7 +2517,7 @@ const COURSES = {
         }
       },
       san_francisco: {
-        term: 'T6',
+        term: 'T5',
         professor: 'Brian Bushee',
         slot: 'C',
         weekends: [4, 5, 6],
