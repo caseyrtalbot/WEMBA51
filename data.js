@@ -1088,11 +1088,15 @@ const MAJORS = {
     stemCertified: false,
     description: 'Develop skills in competitive strategy, corporate development, and technology strategy.',
     coreRequirements: ['MGMT-6100', 'MGMT-6130'],
-    electiveCUs: 3.0,
-    primaryCourses: ['MGMT-7010', 'MGMT-7210', 'MGMT-7310', 'MGMT-7820', 'MGMT-8010', 'MGMT-8710'],
-    secondaryCourses: ['MGMT-6250', 'MGMT-7150', 'MGMT-8110', 'MGMT-8320'],
+    electiveCUs: 4.0,
+    electiveCourses: [
+      'MGMT-6250', 'MGMT-7010', 'MGMT-7110', 'MGMT-7140', 'MGMT-7150', 'MGMT-7170',
+      'MGMT-7200', 'MGMT-7210', 'MGMT-7230', 'MGMT-7310', 'MGMT-7730', 'MGMT-7820',
+      'MGMT-8010', 'MGMT-8020', 'MGMT-8110', 'MGMT-8140', 'MGMT-8320', 'MGMT-8710',
+      'MGMT-8920', 'MKTG-7770', 'OIDD-6360', 'LGST-7290', 'LGST-8150'
+    ],
     warnings: [],
-    restrictions: ['Max 1 CU from secondary electives']
+    restrictions: []
   },
   entrepreneurship: {
     id: 'entrepreneurship',
