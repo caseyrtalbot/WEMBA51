@@ -471,6 +471,24 @@ function generateAlerts() {
 }
 
 // Schedule conflict detection
+// Slots represent time slots within weekends: A, B, C for half-term courses, A,A or B,B for full-term courses
+// Courses in different slots can be taken together even if they meet on the same weekends
+function slotsConflict(slot1, slot2) {
+  if (!slot1 || !slot2) return true; // If no slot info, fall back to weekend-based detection
+
+  // Normalize slots for comparison (e.g., 'A,A' -> ['A'], 'A' -> ['A'])
+  const getSlotBases = (slot) => {
+    const parts = slot.split(',').map(s => s.trim());
+    return [...new Set(parts)]; // Unique base slots
+  };
+
+  const bases1 = getSlotBases(slot1);
+  const bases2 = getSlotBases(slot2);
+
+  // Courses conflict if they share any base slot letter
+  return bases1.some(b1 => bases2.includes(b1));
+}
+
 function getScheduleConflicts() {
   const conflicts = [];
   const cohort = state.selectedCohort;
@@ -515,7 +533,30 @@ function getScheduleConflicts() {
           continue;
         }
 
-        // Get weekend arrays (default to empty if not specified)
+        // Check slot-based conflicts first (if slot info available)
+        const slot1 = c1.offering.slot;
+        const slot2 = c2.offering.slot;
+
+        // If both have slot info, use slot-based conflict detection
+        if (slot1 && slot2) {
+          if (slotsConflict(slot1, slot2)) {
+            // Slots conflict - report the first overlapping weekend for display
+            const weekends1 = c1.offering.weekends || [];
+            const weekends2 = c2.offering.weekends || [];
+            const overlap = weekends1.filter(w => weekends2.includes(w));
+
+            conflicts.push({
+              course1: c1.course.code.replace('-', ' '),
+              course2: c2.course.code.replace('-', ' '),
+              term: SCHEDULE[cohort][term]?.name || term,
+              weekend: overlap.length > 0 ? overlap[0] : 0
+            });
+          }
+          // Different slots = no conflict, even if weekends overlap
+          continue;
+        }
+
+        // Fallback to weekend-based detection if slot info is missing
         const weekends1 = c1.offering.weekends || [];
         const weekends2 = c2.offering.weekends || [];
 

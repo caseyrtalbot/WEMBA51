@@ -385,6 +385,7 @@ const COURSES = {
       global: {
         term: 'T5',
         professor: 'Itay Goldstein',
+        slot: 'B,B',
         weekends: [0, 1, 2, 3, 4, 5, 6],
         evaluations: {
           instructorQuality: 3.36,
@@ -449,6 +450,7 @@ const COURSES = {
       global: {
         term: 'T4',
         professor: 'Christopher Geczy',
+        slot: 'A,A',
         weekends: [0, 1, 2, 3, 4, 5, 6, 7],
         evaluations: {
           instructorQuality: 3.04,
@@ -495,6 +497,7 @@ const COURSES = {
       global: {
         term: 'T5',
         professor: 'Kevin Kaiser',
+        slot: 'A,A',
         weekends: [0, 1, 2, 3, 4, 5, 6],
         evaluations: {
           instructorQuality: 3.72,
@@ -569,6 +572,7 @@ const COURSES = {
       global: {
         term: 'T4',
         professor: 'Gordon Bodnar',
+        slot: 'B,B',
         weekends: [0, 1, 2, 3, 4, 5, 6, 7],
         evaluations: {
           instructorQuality: 3.54,
@@ -643,7 +647,8 @@ const COURSES = {
       global: {
         term: 'T5',
         professor: 'David Musto',
-        weekends: [0, 1, 2],
+        slot: 'C',
+        weekends: [4, 5, 6],
         evaluations: {
           instructorQuality: 3.13,
           courseQuality: 2.97,
@@ -707,6 +712,7 @@ const COURSES = {
       global: {
         term: 'T6',
         professor: 'David Wessels',
+        slot: 'A',
         weekends: [0, 1, 2],
         evaluations: {
           instructorQuality: 3.78,
@@ -735,6 +741,7 @@ const COURSES = {
       global: {
         term: 'T5',
         professor: 'Burcu Esmer',
+        slot: 'C',
         weekends: [4, 5, 6],
         evaluations: {
           instructorQuality: 3.68,
@@ -966,7 +973,8 @@ const COURSES = {
       global: {
         term: 'T5',
         professor: 'Sonia Marciano',
-        weekends: [4, 5, 6],
+        slot: 'A',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 1.97,
           courseQuality: 1.85,
@@ -1122,7 +1130,8 @@ const COURSES = {
       global: {
         term: 'T5',
         professor: 'Rahul Kapoor',
-        weekends: [0, 1, 2],
+        slot: 'A',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 3.24,
           courseQuality: 2.82,
@@ -1172,6 +1181,7 @@ const COURSES = {
       global: {
         term: 'T4',
         professor: 'Michael Christensen',
+        slot: 'B',
         weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 2.73,
@@ -1208,8 +1218,8 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['STAT-6130'],
     offerings: {
-      philadelphia: { term: 'T5', professor: 'Matthew Bidwell', weekends: [0, 1, 2, 3] },
-      global: { term: 'T5', professor: 'Matthew Bidwell', weekends: [0, 1, 2, 3] }
+      philadelphia: { term: 'T5', professor: 'Matthew Bidwell', slot: 'B', weekends: [0, 1, 2, 3] },
+      global: { term: 'T5', professor: 'Matthew Bidwell', slot: 'C', weekends: [4, 5, 6] }
     }
   },
   'MGMT-7990': {
@@ -1220,9 +1230,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T6', professor: 'David Rhode', weekends: [0, 1, 2, 3, 4] },
-      san_francisco: { term: 'T6', professor: 'David Rhode', weekends: [0, 1, 2, 3, 4] },
-      global: { term: 'T6', professor: 'David Rhode', weekends: [0, 1, 2, 3, 4] }
+      philadelphia: { term: 'T6', professor: 'David Rhode', slot: 'C', weekends: [0, 1, 2, 3, 4] },
+      san_francisco: { term: 'T6', professor: 'David Rhode', slot: 'C', weekends: [0, 1, 2, 3, 4] },
+      global: { term: 'T6', professor: 'David Rhode', slot: 'C', weekends: [0, 1, 2, 3, 4] }
     }
   },
   'MGMT-8010': {
@@ -1272,7 +1282,8 @@ const COURSES = {
       global: {
         term: 'T4',
         professor: 'Karl Ulrich',
-        weekends: [0, 1, 2, 3],
+        slot: 'C',
+        weekends: [4, 5, 6],
         evaluations: {
           instructorQuality: 2.58,
           courseQuality: 2.20,
@@ -1297,9 +1308,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['MGMT-8010'],
     offerings: {
-      philadelphia: { term: 'T5', professor: 'Raffi Amit', weekends: [4, 5, 6, 7] },
-      san_francisco: { term: 'T5', professor: 'Raffi Amit', weekends: [4, 5, 6, 7] },
-      global: { term: 'T5', professor: 'Raffi Amit', weekends: [4, 5, 6] }
+      philadelphia: { term: 'T5', professor: 'Raffi Amit', slot: 'B', weekends: [0, 1, 2, 3] },
+      san_francisco: { term: 'T5', professor: 'Raffi Amit', slot: 'C', weekends: [4, 5, 6, 7] },
+      global: { term: 'T5', professor: 'Raffi Amit', slot: 'B', weekends: [0, 1, 2, 3] }
     }
   },
   'MGMT-8090': {
@@ -1310,8 +1321,8 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['FNCE-6110'],
     offerings: {
-      san_francisco: { term: 'T4', professor: 'Stephen Sammut', weekends: [4, 5, 6, 7] },
-      global: { term: 'T5', professor: 'Stephen Sammut', weekends: [4, 5, 6] }
+      san_francisco: { term: 'T4', professor: 'Stephen Sammut', slot: 'A', weekends: [0, 1, 2, 3] },
+      global: { term: 'T5', professor: 'Stephen Sammut', slot: 'C', weekends: [4, 5, 6] }
     }
   },
   'MGMT-8110': {
@@ -1343,7 +1354,8 @@ const COURSES = {
       global: {
         term: 'T5',
         professor: 'Robert Chalfin',
-        weekends: [0, 1, 2],
+        slot: 'B',
+        weekends: [0, 1, 2, 3],
         evaluations: {
           instructorQuality: 2.88,
           courseQuality: 2.58,
@@ -1390,9 +1402,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['MGMT-8010'],
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Tyler Wry', weekends: [4, 5, 6] },
-      san_francisco: { term: 'T6', professor: 'Tyler Wry', weekends: [3, 4] },
-      global: { term: 'T4', professor: 'Tyler Wry', weekends: [4, 5, 6, 7] }
+      philadelphia: { term: 'T4', professor: 'Tyler Wry', slot: 'B', weekends: [0, 1, 2, 3] },
+      san_francisco: { term: 'T6', professor: 'Tyler Wry', slot: 'A', weekends: [0, 1, 2] },
+      global: { term: 'T4', professor: 'Tyler Wry', slot: 'B', weekends: [0, 1, 2, 3] }
     }
   },
   'MGMT-8320': {
@@ -1736,6 +1748,7 @@ const COURSES = {
       global: {
         term: 'T6',
         professor: 'Pinar Yildirim',
+        slot: 'A',
         weekends: [0, 1, 2],
         evaluations: {
           instructorQuality: 2.54,
@@ -1784,7 +1797,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      global: { term: 'T6', professor: 'Stefano Puntoni', weekends: [3, 4] }
+      global: { term: 'T6', professor: 'Stefano Puntoni', slot: 'B', weekends: [3, 4] }
     }
   },
   'MKTG-8500': {
@@ -1867,9 +1880,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['STAT-6130'],
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Sergei Savin', weekends: [0, 1, 2] },
-      san_francisco: { term: 'T5', professor: 'Ziv Katalan', weekends: [0, 1, 2, 3] },
-      global: { term: 'T6', professor: 'Sergei Savin', weekends: [0, 1, 2] }
+      philadelphia: { term: 'T6', professor: 'Sergei Savin', slot: 'B', weekends: [3, 4] },
+      san_francisco: { term: 'T5', professor: 'Ziv Katalan', slot: 'C', weekends: [4, 5, 6, 7] },
+      global: { term: 'T6', professor: 'Sergei Savin', slot: 'B', weekends: [3, 4] }
     }
   },
   'OIDD-6140': {
@@ -1930,6 +1943,7 @@ const COURSES = {
       global: {
         term: 'T4',
         professor: 'Gad Allon',
+        slot: 'A,A',
         weekends: [0, 1, 2, 3, 4, 5, 6, 7],
         evaluations: {
           instructorQuality: 3.40,
@@ -1978,8 +1992,8 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      san_francisco: { term: 'T6', professor: 'Lynn Wu', weekends: [0, 1, 2] },
-      global: { term: 'T5', professor: 'Lynn Wu', weekends: [0, 1, 2] }
+      san_francisco: { term: 'T6', professor: 'Lynn Wu', slot: 'B', weekends: [0, 1, 2] },
+      global: { term: 'T5', professor: 'Lynn Wu', slot: 'C', weekends: [4, 5, 6] }
     }
   },
   'OIDD-6670': {
@@ -2013,9 +2027,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T5', professor: 'Cade Massey', weekends: [0, 1, 2, 3] },
+      philadelphia: { term: 'T5', professor: 'Cade Massey', slot: 'B', weekends: [0, 1, 2, 3] },
       san_francisco: { term: 'T6', professor: 'Cade Massey', dates: 'Feb 15-18, 2027' },
-      global: { term: 'T4', professor: 'Cade Massey', weekends: [0, 1, 2, 3] }
+      global: { term: 'T4', professor: 'Cade Massey', slot: 'C', weekends: [4, 5, 6] }
     }
   },
   'OIDD-6990': {
@@ -2169,6 +2183,7 @@ const COURSES = {
       global: {
         term: 'T4',
         professor: 'Nazli Bhatia',
+        slot: 'C,C',
         weekends: [0, 1, 2, 3, 4, 5, 6, 7],
         evaluations: {
           instructorQuality: 3.40,
@@ -2378,7 +2393,7 @@ const COURSES = {
     credits: 1.0,
     prerequisites: ['STAT-6130'],
     offerings: {
-      global: { term: 'T6', professor: 'Bob Stine', weekends: [0, 1, 2, 3, 4] }
+      global: { term: 'T6', professor: 'Bob Stine', slot: 'A,A', weekends: [0, 1, 2, 3, 4] }
     }
   },
   'STAT-7250': {
