@@ -1497,6 +1497,10 @@ body {
 }
 
 /* Drop Zones */
+#dropzones-layer {
+  pointer-events: none;
+}
+
 .term-dropzone {
   fill: transparent;
   stroke: transparent;
@@ -1504,6 +1508,12 @@ body {
   stroke-dasharray: 8 4;
   rx: 8;
   transition: fill 0.2s, stroke 0.2s;
+  pointer-events: none;
+}
+
+.term-column-header,
+.term-column-subheader {
+  pointer-events: none;
 }
 
 .term-dropzone.active {
@@ -2419,21 +2429,16 @@ body {
 /* Node Remove Button */
 .node-remove-btn {
   cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-
-.course-node:hover .node-remove-btn {
-  opacity: 1;
+  pointer-events: all;
 }
 
 .remove-btn-bg {
-  fill: #dc2626;
+  fill: #94a3b8;
   transition: fill 0.15s ease;
 }
 
 .node-remove-btn:hover .remove-btn-bg {
-  fill: #b91c1c;
+  fill: #dc2626;
 }
 
 .remove-btn-x {

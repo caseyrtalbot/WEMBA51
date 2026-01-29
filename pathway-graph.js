@@ -1287,9 +1287,10 @@ class PathwayGraph {
     const removeBg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     removeBg.setAttribute('cx', 0);
     removeBg.setAttribute('cy', 0);
-    removeBg.setAttribute('r', 8);
+    removeBg.setAttribute('r', 10);
     removeBg.setAttribute('class', 'remove-btn-bg');
-    removeBtn.appendChild(removeBg);
+    removeBg.style.pointerEvents = 'all';
+    removeBg.style.cursor = 'pointer';
 
     const removeX = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     removeX.setAttribute('x', 0);
@@ -1297,10 +1298,21 @@ class PathwayGraph {
     removeX.setAttribute('text-anchor', 'middle');
     removeX.setAttribute('class', 'remove-btn-x');
     removeX.textContent = '×';
+    removeX.style.pointerEvents = 'none';
+
+    removeBtn.appendChild(removeBg);
     removeBtn.appendChild(removeX);
 
-    removeBtn.addEventListener('click', (e) => {
+    // Handle all events on remove button to prevent bubbling
+    removeBg.addEventListener('mousedown', (e) => {
       e.stopPropagation();
+      e.preventDefault();
+    });
+
+    removeBg.addEventListener('mouseup', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      // Remove course on mouseup (more reliable than click in SVG)
       removeCourse(courseCode);
     });
 
@@ -1317,7 +1329,7 @@ class PathwayGraph {
       showCourseDetails(courseCode);
     });
 
-    // Make draggable within graph
+    // Make node draggable within graph
     this.makeNodeDraggable(g, courseCode);
 
     return g;
@@ -1450,6 +1462,12 @@ class PathwayGraph {
     return g;
   }
 
+  clearDropZoneHighlights() {
+    this.dropzonesLayer.querySelectorAll('.term-dropzone').forEach(zone => {
+      zone.classList.remove('active', 'invalid');
+    });
+  }
+
   makeNodeDraggable(nodeElement, courseCode) {
     let isDragging = false;
     let startX, startY;
@@ -1458,6 +1476,13 @@ class PathwayGraph {
 
     nodeElement.addEventListener('mousedown', (e) => {
       if (e.button !== 0) return; // Only left click
+
+      // Don't start drag if clicking the remove button
+      const target = e.target;
+      if (target.classList.contains('remove-btn-bg') ||
+          target.closest('.node-remove-btn')) {
+        return;
+      }
 
       isDragging = true;
       const transform = nodeElement.getAttribute('transform');
@@ -1509,7 +1534,7 @@ class PathwayGraph {
       if (targetTerm) {
         self.moveCourseToTerm(courseCode, targetTerm);
       } else {
-        // Snap back
+        // Snap back to original position
         nodeElement.setAttribute('transform', originalTransform);
       }
     };
@@ -1550,10 +1575,15 @@ class PathwayGraph {
     }
   }
 
-  clearDropZoneHighlights() {
-    this.dropzonesLayer.querySelectorAll('.term-dropzone').forEach(zone => {
-      zone.classList.remove('active', 'invalid');
-    });
+  isOverElement(clientX, clientY, element) {
+    const rect = element.getBoundingClientRect();
+    return clientX >= rect.left && clientX <= rect.right &&
+           clientY >= rect.top && clientY <= rect.bottom;
+  }
+
+  moveCourseToTerm(courseCode, term) {
+    // Course can only exist in its offered term, so just re-render
+    renderGraphView();
   }
 
   showDropZonesForCourse(courseCode) {
@@ -1626,12 +1656,6 @@ class PathwayGraph {
            py >= rect.y && py <= rect.y + rect.height;
   }
 
-  isOverElement(clientX, clientY, element) {
-    const rect = element.getBoundingClientRect();
-    return clientX >= rect.left && clientX <= rect.right &&
-           clientY >= rect.top && clientY <= rect.bottom;
-  }
-
   getDropTargetTerm(clientX, clientY, courseCode) {
     const course = COURSES[courseCode.replace(/\s+/g, '-')];
     if (!course) return null;
@@ -1654,12 +1678,6 @@ class PathwayGraph {
     }
 
     return null;
-  }
-
-  moveCourseToTerm(courseCode, term) {
-    // Course can only exist in its offered term, so this is really just a re-render
-    // The validation still applies based on offering
-    renderGraphView();
   }
 
   renderConnections() {
@@ -2093,9 +2111,6 @@ class CourseCatalog {
         e.dataTransfer.setData('text/plain', courseCode);
         e.dataTransfer.effectAllowed = 'copy';
 
-        // Show trash zone
-        document.getElementById('trash-dropzone')?.classList.remove('hidden');
-
         // Highlight valid drop zones
         this.graph.showDropZonesForCourse(courseCode);
       });
@@ -2103,8 +2118,6 @@ class CourseCatalog {
       courseEl.addEventListener('dragend', () => {
         courseEl.classList.remove('dragging');
         this.draggedCourse = null;
-
-        document.getElementById('trash-dropzone')?.classList.add('hidden');
         this.graph.clearDropZoneHighlights();
       });
     });
