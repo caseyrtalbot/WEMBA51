@@ -1128,11 +1128,11 @@ const MAJORS = {
     id: 'healthcare',
     name: 'Health Care Management',
     department: 'HCMG',
-    requiredCUs: 4.0,
+    requiredCUs: 3.0,
     stemCertified: false,
     description: 'Prepare for leadership roles in the healthcare industry.',
     coreRequirements: [],
-    electiveCUs: 4.0,
+    electiveCUs: 3.0,
     electiveCourses: ['HCMG-8410', 'HCMG-8450', 'HCMG-8500', 'HCMG-8520', 'HCMG-8590', 'HCMG-8600', 'HCMG-8670'],
     warnings: ['Special application required at time of Wharton MBA application'],
     restrictions: []
