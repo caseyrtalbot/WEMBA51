@@ -48,6 +48,109 @@ const DEPARTMENTS = {
   WHCP: { name: 'Wharton Communication Program', color: '#6366f1' }
 };
 
+// Course evaluation metrics metadata
+const EVALUATION_METRICS = {
+  instructorQuality: {
+    key: 'instructorQuality',
+    label: 'Overall Quality of Instructor',
+    shortLabel: 'Instructor',
+    description: 'Overall rating of instructor effectiveness',
+    scale: { min: 1, max: 4 },
+    higherIsBetter: true,
+    category: 'instructor'
+  },
+  courseQuality: {
+    key: 'courseQuality',
+    label: 'Overall Quality of Course',
+    shortLabel: 'Course',
+    description: 'Overall rating of course quality',
+    scale: { min: 1, max: 4 },
+    higherIsBetter: true,
+    category: 'course'
+  },
+  instructorCommunication: {
+    key: 'instructorCommunication',
+    label: 'Instructor Ability to Communicate',
+    shortLabel: 'Communication',
+    description: 'Clarity and effectiveness of teaching',
+    scale: { min: 1, max: 4 },
+    higherIsBetter: true,
+    category: 'instructor'
+  },
+  instructorStimulateInterest: {
+    key: 'instructorStimulateInterest',
+    label: 'Instructor Ability to Stimulate Interest',
+    shortLabel: 'Engagement',
+    description: 'Engagement and inspiration level',
+    scale: { min: 1, max: 4 },
+    higherIsBetter: true,
+    category: 'instructor'
+  },
+  instructorAccessibility: {
+    key: 'instructorAccessibility',
+    label: 'Instructor Accessibility',
+    shortLabel: 'Accessibility',
+    description: 'Willingness to discuss content/problems',
+    scale: { min: 1, max: 4 },
+    higherIsBetter: true,
+    category: 'instructor'
+  },
+  valueOfReadings: {
+    key: 'valueOfReadings',
+    label: 'Value of Assigned Readings',
+    shortLabel: 'Readings',
+    description: 'Usefulness of course materials',
+    scale: { min: 1, max: 4 },
+    higherIsBetter: true,
+    category: 'course'
+  },
+  knowledgeLearned: {
+    key: 'knowledgeLearned',
+    label: 'Knowledge/Concepts/Skills Learned',
+    shortLabel: 'Knowledge',
+    description: 'Concepts/skills/thinking ability gained',
+    scale: { min: 1, max: 4 },
+    higherIsBetter: true,
+    category: 'course'
+  },
+  courseDifficulty: {
+    key: 'courseDifficulty',
+    label: 'Course Difficulty',
+    shortLabel: 'Difficulty',
+    description: 'Perceived difficulty level (higher = harder)',
+    scale: { min: 1, max: 4 },
+    higherIsBetter: null,
+    category: 'workload'
+  },
+  workRequired: {
+    key: 'workRequired',
+    label: 'Work Required',
+    shortLabel: 'Workload',
+    description: 'Amount of work needed (higher = more)',
+    scale: { min: 1, max: 4 },
+    higherIsBetter: null,
+    category: 'workload'
+  },
+  recommendToMajor: {
+    key: 'recommendToMajor',
+    label: 'Recommend to Major',
+    shortLabel: 'Rec. Major',
+    description: 'Would recommend to students in major',
+    scale: { min: 1, max: 4 },
+    higherIsBetter: true,
+    category: 'recommendation'
+  },
+  recommendToNonMajor: {
+    key: 'recommendToNonMajor',
+    label: 'Recommend to Non-Major',
+    shortLabel: 'Rec. Non-Major',
+    description: 'Would recommend to students outside major',
+    scale: { min: 1, max: 4 },
+    higherIsBetter: true,
+    category: 'recommendation'
+  }
+};
+
 // Core curriculum for all cohorts (Terms 1-3)
 const CORE_CURRICULUM = {
   philadelphia: {
@@ -132,8 +235,42 @@ const COURSES = {
     credits: 1.0,
     prerequisites: ['FNCE-6110'],
     offerings: {
-      san_francisco: { term: 'T4', professor: 'Christopher Parsons', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
-      global: { term: 'T5', professor: 'Itay Goldstein', weekends: [0, 1, 2, 3, 4, 5, 6] }
+      san_francisco: {
+        term: 'T4',
+        professor: 'Christopher Parsons',
+        weekends: [0, 1, 2, 3, 4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 3.70,
+          courseQuality: 3.57,
+          instructorCommunication: 3.74,
+          instructorStimulateInterest: 3.62,
+          instructorAccessibility: 3.62,
+          valueOfReadings: 3.55,
+          knowledgeLearned: 3.59,
+          courseDifficulty: 2.90,
+          workRequired: 3.00,
+          recommendToMajor: 3.41,
+          recommendToNonMajor: 2.87
+        }
+      },
+      global: {
+        term: 'T5',
+        professor: 'Itay Goldstein',
+        weekends: [0, 1, 2, 3, 4, 5, 6],
+        evaluations: {
+          instructorQuality: 3.36,
+          courseQuality: 3.28,
+          instructorCommunication: 3.37,
+          instructorStimulateInterest: 3.12,
+          instructorAccessibility: 3.31,
+          valueOfReadings: 3.32,
+          knowledgeLearned: 3.34,
+          courseDifficulty: 3.05,
+          workRequired: 3.27,
+          recommendToMajor: 3.34,
+          recommendToNonMajor: 2.68
+        }
+      }
     }
   },
   'FNCE-7050': {
@@ -144,9 +281,60 @@ const COURSES = {
     credits: 1.0,
     prerequisites: ['FNCE-6110'],
     offerings: {
-      philadelphia: { term: 'T5', professor: 'Christopher Geczy', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
-      san_francisco: { term: 'T5', professor: 'Christopher Geczy', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
-      global: { term: 'T4', professor: 'Christopher Geczy', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+      philadelphia: {
+        term: 'T5',
+        professor: 'Christopher Geczy',
+        weekends: [0, 1, 2, 3, 4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 3.04,
+          courseQuality: 2.87,
+          instructorCommunication: 3.07,
+          instructorStimulateInterest: 2.86,
+          instructorAccessibility: 3.21,
+          valueOfReadings: 3.07,
+          knowledgeLearned: 3.00,
+          courseDifficulty: 3.57,
+          workRequired: 3.64,
+          recommendToMajor: 3.14,
+          recommendToNonMajor: 2.00
+        }
+      },
+      san_francisco: {
+        term: 'T5',
+        professor: 'Christopher Geczy',
+        weekends: [0, 1, 2, 3, 4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 3.04,
+          courseQuality: 2.87,
+          instructorCommunication: 3.07,
+          instructorStimulateInterest: 2.86,
+          instructorAccessibility: 3.21,
+          valueOfReadings: 3.07,
+          knowledgeLearned: 3.00,
+          courseDifficulty: 3.57,
+          workRequired: 3.64,
+          recommendToMajor: 3.14,
+          recommendToNonMajor: 2.00
+        }
+      },
+      global: {
+        term: 'T4',
+        professor: 'Christopher Geczy',
+        weekends: [0, 1, 2, 3, 4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 3.04,
+          courseQuality: 2.87,
+          instructorCommunication: 3.07,
+          instructorStimulateInterest: 2.86,
+          instructorAccessibility: 3.21,
+          valueOfReadings: 3.07,
+          knowledgeLearned: 3.00,
+          courseDifficulty: 3.57,
+          workRequired: 3.64,
+          recommendToMajor: 3.14,
+          recommendToNonMajor: 2.00
+        }
+      }
     }
   },
   'FNCE-7070': {
@@ -157,8 +345,42 @@ const COURSES = {
     credits: 1.0,
     prerequisites: ['FNCE-6110', 'ACCT-6130'],
     offerings: {
-      san_francisco: { term: 'T4', professor: 'Kevin Kaiser', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
-      global: { term: 'T5', professor: 'Kevin Kaiser', weekends: [0, 1, 2, 3, 4, 5, 6] }
+      san_francisco: {
+        term: 'T4',
+        professor: 'Kevin Kaiser',
+        weekends: [0, 1, 2, 3, 4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 3.72,
+          courseQuality: 3.56,
+          instructorCommunication: 3.77,
+          instructorStimulateInterest: 3.81,
+          instructorAccessibility: 3.65,
+          valueOfReadings: 3.58,
+          knowledgeLearned: 3.69,
+          courseDifficulty: 3.12,
+          workRequired: 3.31,
+          recommendToMajor: 3.68,
+          recommendToNonMajor: 3.48
+        }
+      },
+      global: {
+        term: 'T5',
+        professor: 'Kevin Kaiser',
+        weekends: [0, 1, 2, 3, 4, 5, 6],
+        evaluations: {
+          instructorQuality: 3.72,
+          courseQuality: 3.56,
+          instructorCommunication: 3.77,
+          instructorStimulateInterest: 3.81,
+          instructorAccessibility: 3.65,
+          valueOfReadings: 3.58,
+          knowledgeLearned: 3.69,
+          courseDifficulty: 3.12,
+          workRequired: 3.31,
+          recommendToMajor: 3.68,
+          recommendToNonMajor: 3.48
+        }
+      }
     }
   },
   'FNCE-7170': {
@@ -169,8 +391,42 @@ const COURSES = {
     credits: 1.0,
     prerequisites: ['FNCE-6110', 'STAT-6130'],
     offerings: {
-      philadelphia: { term: 'T5', professor: 'Michael Gibbons', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
-      san_francisco: { term: 'T5', professor: 'Michael Gibbons', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+      philadelphia: {
+        term: 'T5',
+        professor: 'Michael Gibbons',
+        weekends: [0, 1, 2, 3, 4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 3.13,
+          courseQuality: 2.87,
+          instructorCommunication: 3.00,
+          instructorStimulateInterest: 2.50,
+          instructorAccessibility: 3.08,
+          valueOfReadings: 2.64,
+          knowledgeLearned: 3.07,
+          courseDifficulty: 3.79,
+          workRequired: 3.79,
+          recommendToMajor: 3.00,
+          recommendToNonMajor: 1.00
+        }
+      },
+      san_francisco: {
+        term: 'T5',
+        professor: 'Michael Gibbons',
+        weekends: [0, 1, 2, 3, 4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 3.13,
+          courseQuality: 2.87,
+          instructorCommunication: 3.00,
+          instructorStimulateInterest: 2.50,
+          instructorAccessibility: 3.08,
+          valueOfReadings: 2.64,
+          knowledgeLearned: 3.07,
+          courseDifficulty: 3.79,
+          workRequired: 3.79,
+          recommendToMajor: 3.00,
+          recommendToNonMajor: 1.00
+        }
+      }
     }
   },
   'FNCE-7310': {
@@ -181,7 +437,24 @@ const COURSES = {
     credits: 1.0,
     prerequisites: ['FNCE-6110'],
     offerings: {
-      global: { term: 'T4', professor: 'Gordon Bodnar', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+      global: {
+        term: 'T4',
+        professor: 'Gordon Bodnar',
+        weekends: [0, 1, 2, 3, 4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 3.54,
+          courseQuality: 3.38,
+          instructorCommunication: 3.45,
+          instructorStimulateInterest: 2.90,
+          instructorAccessibility: 3.73,
+          valueOfReadings: 3.18,
+          knowledgeLearned: 3.36,
+          courseDifficulty: 3.64,
+          workRequired: 3.55,
+          recommendToMajor: 3.18,
+          recommendToNonMajor: 2.00
+        }
+      }
     }
   },
   'FNCE-7320': {
@@ -192,7 +465,24 @@ const COURSES = {
     credits: 1.0,
     prerequisites: ['FNCE-6110', 'FNCE-6130'],
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Itay Goldstein', weekends: [0, 1, 2, 3, 4, 5, 6] }
+      philadelphia: {
+        term: 'T4',
+        professor: 'Itay Goldstein',
+        weekends: [0, 1, 2, 3, 4, 5, 6],
+        evaluations: {
+          instructorQuality: 3.73,
+          courseQuality: 3.73,
+          instructorCommunication: 4.00,
+          instructorStimulateInterest: 4.00,
+          instructorAccessibility: 3.80,
+          valueOfReadings: 3.80,
+          knowledgeLearned: 3.80,
+          courseDifficulty: 2.20,
+          workRequired: 2.60,
+          recommendToMajor: 3.50,
+          recommendToNonMajor: 3.60
+        }
+      }
     }
   },
   'FNCE-7380': {
@@ -203,8 +493,42 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['FNCE-6110'],
     offerings: {
-      san_francisco: { term: 'T4', professor: 'David Musto', weekends: [0, 1, 2, 3] },
-      global: { term: 'T5', professor: 'David Musto', weekends: [0, 1, 2] }
+      san_francisco: {
+        term: 'T4',
+        professor: 'David Musto',
+        weekends: [0, 1, 2, 3],
+        evaluations: {
+          instructorQuality: 3.13,
+          courseQuality: 2.97,
+          instructorCommunication: 3.04,
+          instructorStimulateInterest: 2.92,
+          instructorAccessibility: 3.40,
+          valueOfReadings: 3.23,
+          knowledgeLearned: 2.77,
+          courseDifficulty: 2.54,
+          workRequired: 2.54,
+          recommendToMajor: 2.77,
+          recommendToNonMajor: 2.58
+        }
+      },
+      global: {
+        term: 'T5',
+        professor: 'David Musto',
+        weekends: [0, 1, 2],
+        evaluations: {
+          instructorQuality: 3.13,
+          courseQuality: 2.97,
+          instructorCommunication: 3.04,
+          instructorStimulateInterest: 2.92,
+          instructorAccessibility: 3.40,
+          valueOfReadings: 3.23,
+          knowledgeLearned: 2.77,
+          courseDifficulty: 2.54,
+          workRequired: 2.54,
+          recommendToMajor: 2.77,
+          recommendToNonMajor: 2.58
+        }
+      }
     }
   },
   'FNCE-7500': {
@@ -215,9 +539,60 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['FNCE-6110'],
     offerings: {
-      philadelphia: { term: 'T4', professor: 'David Wessels', weekends: [4, 5, 6] },
-      san_francisco: { term: 'T6', professor: 'David Wessels', weekends: [0, 1, 2] },
-      global: { term: 'T6', professor: 'David Wessels', weekends: [0, 1, 2] }
+      philadelphia: {
+        term: 'T4',
+        professor: 'David Wessels',
+        weekends: [4, 5, 6],
+        evaluations: {
+          instructorQuality: 3.78,
+          courseQuality: 3.69,
+          instructorCommunication: 3.74,
+          instructorStimulateInterest: 3.90,
+          instructorAccessibility: 3.26,
+          valueOfReadings: 3.53,
+          knowledgeLearned: 3.69,
+          courseDifficulty: 2.59,
+          workRequired: 2.69,
+          recommendToMajor: 3.72,
+          recommendToNonMajor: 3.13
+        }
+      },
+      san_francisco: {
+        term: 'T6',
+        professor: 'David Wessels',
+        weekends: [0, 1, 2],
+        evaluations: {
+          instructorQuality: 3.78,
+          courseQuality: 3.69,
+          instructorCommunication: 3.74,
+          instructorStimulateInterest: 3.90,
+          instructorAccessibility: 3.26,
+          valueOfReadings: 3.53,
+          knowledgeLearned: 3.69,
+          courseDifficulty: 2.59,
+          workRequired: 2.69,
+          recommendToMajor: 3.72,
+          recommendToNonMajor: 3.13
+        }
+      },
+      global: {
+        term: 'T6',
+        professor: 'David Wessels',
+        weekends: [0, 1, 2],
+        evaluations: {
+          instructorQuality: 3.78,
+          courseQuality: 3.69,
+          instructorCommunication: 3.74,
+          instructorStimulateInterest: 3.90,
+          instructorAccessibility: 3.26,
+          valueOfReadings: 3.53,
+          knowledgeLearned: 3.69,
+          courseDifficulty: 2.59,
+          workRequired: 2.69,
+          recommendToMajor: 3.72,
+          recommendToNonMajor: 3.13
+        }
+      }
     }
   },
   'FNCE-7510': {
@@ -228,7 +603,24 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['FNCE-6110'],
     offerings: {
-      global: { term: 'T5', professor: 'Burcu Esmer', weekends: [4, 5, 6] }
+      global: {
+        term: 'T5',
+        professor: 'Burcu Esmer',
+        weekends: [4, 5, 6],
+        evaluations: {
+          instructorQuality: 3.68,
+          courseQuality: 3.47,
+          instructorCommunication: 3.91,
+          instructorStimulateInterest: 3.79,
+          instructorAccessibility: 3.75,
+          valueOfReadings: 3.50,
+          knowledgeLearned: 3.67,
+          courseDifficulty: 2.67,
+          workRequired: 2.67,
+          recommendToMajor: 3.54,
+          recommendToNonMajor: 3.21
+        }
+      }
     }
   },
   'FNCE-7540': {
@@ -239,7 +631,24 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Christopher Geczy', weekends: [0, 1, 2] }
+      philadelphia: {
+        term: 'T6',
+        professor: 'Christopher Geczy',
+        weekends: [0, 1, 2],
+        evaluations: {
+          instructorQuality: 2.88,
+          courseQuality: 2.60,
+          instructorCommunication: 2.58,
+          instructorStimulateInterest: 2.50,
+          instructorAccessibility: 2.36,
+          valueOfReadings: 2.13,
+          knowledgeLearned: 2.38,
+          courseDifficulty: 1.96,
+          workRequired: 2.25,
+          recommendToMajor: 2.63,
+          recommendToNonMajor: 1.90
+        }
+      }
     }
   },
   'FNCE-7910': {
@@ -250,7 +659,24 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['FNCE-6110'],
     offerings: {
-      san_francisco: { term: 'T6', professor: 'Kevin Kaiser', weekends: [3, 4] }
+      san_francisco: {
+        term: 'T6',
+        professor: 'Kevin Kaiser',
+        weekends: [3, 4],
+        evaluations: {
+          instructorQuality: 3.31,
+          courseQuality: 2.75,
+          instructorCommunication: 3.37,
+          instructorStimulateInterest: 3.34,
+          instructorAccessibility: 3.40,
+          valueOfReadings: 3.07,
+          knowledgeLearned: 2.93,
+          courseDifficulty: 2.60,
+          workRequired: 2.53,
+          recommendToMajor: 3.03,
+          recommendToNonMajor: 2.57
+        }
+      }
     }
   },
   'FNCE-8010': {
@@ -275,6 +701,19 @@ const COURSES = {
       san_francisco: { term: 'BW', professor: 'Anthony Landry', dates: 'Apr 26-29, 2027' }
     }
   },
+  'FNCE-8960': {
+    code: 'FNCE 8960',
+    title: 'Finance in UAE',
+    description: 'Global Modular Course focused on finance in the UAE. Covers regional capital markets, sovereign wealth funds, and emerging market finance.',
+    department: 'FNCE',
+    credits: 0.5,
+    prerequisites: ['FNCE-6110'],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'David Musto, Burcu Esmer', dates: 'Jan 5-9, 2026', location: 'UAE' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'David Musto, Burcu Esmer', dates: 'Jan 5-9, 2026', location: 'UAE' },
+      global: { term: 'BW', category: 'GMC', professor: 'David Musto, Burcu Esmer', dates: 'Jan 5-9, 2026', location: 'UAE' }
+    }
+  },
 
   // MANAGEMENT
   'MGMT-6250': {
@@ -285,8 +724,42 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Mae McDonnell', weekends: [3, 4] },
-      san_francisco: { term: 'T4', professor: 'Mae McDonnell', weekends: [0, 1, 2] }
+      philadelphia: {
+        term: 'T6',
+        professor: 'Mae McDonnell',
+        weekends: [3, 4],
+        evaluations: {
+          instructorQuality: 3.38,
+          courseQuality: 2.95,
+          instructorCommunication: 3.59,
+          instructorStimulateInterest: 3.41,
+          instructorAccessibility: 3.14,
+          valueOfReadings: 3.00,
+          knowledgeLearned: 3.16,
+          courseDifficulty: 1.59,
+          workRequired: 1.56,
+          recommendToMajor: 3.13,
+          recommendToNonMajor: 2.97
+        }
+      },
+      san_francisco: {
+        term: 'T4',
+        professor: 'Mae McDonnell',
+        weekends: [0, 1, 2],
+        evaluations: {
+          instructorQuality: 3.38,
+          courseQuality: 2.95,
+          instructorCommunication: 3.59,
+          instructorStimulateInterest: 3.41,
+          instructorAccessibility: 3.14,
+          valueOfReadings: 3.00,
+          knowledgeLearned: 3.16,
+          courseDifficulty: 1.59,
+          workRequired: 1.56,
+          recommendToMajor: 3.13,
+          recommendToNonMajor: 2.97
+        }
+      }
     }
   },
   'MGMT-6910': {
@@ -297,8 +770,24 @@ const COURSES = {
     credits: 1.0,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T5', professor: 'Mae McDonnell', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
-      san_francisco: { term: 'T4', professor: 'Mae McDonnell', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+      philadelphia: {
+        term: 'T5',
+        professor: 'Mae McDonnell',
+        weekends: [0, 1, 2, 3, 4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 3.48,
+          courseQuality: 3.38
+        }
+      },
+      san_francisco: {
+        term: 'T4',
+        professor: 'Mae McDonnell',
+        weekends: [0, 1, 2, 3, 4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 3.48,
+          courseQuality: 3.38
+        }
+      }
     }
   },
   'MGMT-7010': {
@@ -309,9 +798,60 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['MGMT-6130'],
     offerings: {
-      philadelphia: { term: 'T5', professor: 'Sonia Marciano', weekends: [4, 5, 6] },
-      san_francisco: { term: 'T4', professor: 'Sonia Marciano', weekends: [4, 5, 6, 7] },
-      global: { term: 'T5', professor: 'Sonia Marciano', weekends: [4, 5, 6] }
+      philadelphia: {
+        term: 'T5',
+        professor: 'Sonia Marciano',
+        weekends: [4, 5, 6],
+        evaluations: {
+          instructorQuality: 1.97,
+          courseQuality: 1.85,
+          instructorCommunication: 1.76,
+          instructorStimulateInterest: 1.72,
+          instructorAccessibility: 3.08,
+          valueOfReadings: 2.20,
+          knowledgeLearned: 1.84,
+          courseDifficulty: 1.96,
+          workRequired: 2.04,
+          recommendToMajor: 1.52,
+          recommendToNonMajor: 1.36
+        }
+      },
+      san_francisco: {
+        term: 'T4',
+        professor: 'Sonia Marciano',
+        weekends: [4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 1.97,
+          courseQuality: 1.85,
+          instructorCommunication: 1.76,
+          instructorStimulateInterest: 1.72,
+          instructorAccessibility: 3.08,
+          valueOfReadings: 2.20,
+          knowledgeLearned: 1.84,
+          courseDifficulty: 1.96,
+          workRequired: 2.04,
+          recommendToMajor: 1.52,
+          recommendToNonMajor: 1.36
+        }
+      },
+      global: {
+        term: 'T5',
+        professor: 'Sonia Marciano',
+        weekends: [4, 5, 6],
+        evaluations: {
+          instructorQuality: 1.97,
+          courseQuality: 1.85,
+          instructorCommunication: 1.76,
+          instructorStimulateInterest: 1.72,
+          instructorAccessibility: 3.08,
+          valueOfReadings: 2.20,
+          knowledgeLearned: 1.84,
+          courseDifficulty: 1.96,
+          workRequired: 2.04,
+          recommendToMajor: 1.52,
+          recommendToNonMajor: 1.36
+        }
+      }
     }
   },
   'MGMT-7150': {
@@ -322,8 +862,42 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Vit Henisz', weekends: [0, 1, 2] },
-      san_francisco: { term: 'T5', professor: 'Vit Henisz', weekends: [0, 1, 2] }
+      philadelphia: {
+        term: 'T6',
+        professor: 'Vit Henisz',
+        weekends: [0, 1, 2],
+        evaluations: {
+          instructorQuality: 3.21,
+          courseQuality: 2.92,
+          instructorCommunication: 3.44,
+          instructorStimulateInterest: 3.44,
+          instructorAccessibility: 3.33,
+          valueOfReadings: 3.22,
+          knowledgeLearned: 3.13,
+          courseDifficulty: 2.11,
+          workRequired: 2.11,
+          recommendToMajor: 3.00,
+          recommendToNonMajor: 3.33
+        }
+      },
+      san_francisco: {
+        term: 'T5',
+        professor: 'Vit Henisz',
+        weekends: [0, 1, 2],
+        evaluations: {
+          instructorQuality: 3.21,
+          courseQuality: 2.92,
+          instructorCommunication: 3.44,
+          instructorStimulateInterest: 3.44,
+          instructorAccessibility: 3.33,
+          valueOfReadings: 3.22,
+          knowledgeLearned: 3.13,
+          courseDifficulty: 2.11,
+          workRequired: 2.11,
+          recommendToMajor: 3.00,
+          recommendToNonMajor: 3.33
+        }
+      }
     }
   },
   'MGMT-7210': {
@@ -334,8 +908,42 @@ const COURSES = {
     credits: 1.0,
     prerequisites: ['FNCE-6110'],
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Emilie Feldman', weekends: [0, 1, 2, 3, 4, 5, 6] },
-      san_francisco: { term: 'T5', professor: 'Harbir Singh', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+      philadelphia: {
+        term: 'T4',
+        professor: 'Emilie Feldman',
+        weekends: [0, 1, 2, 3, 4, 5, 6],
+        evaluations: {
+          instructorQuality: 3.33,
+          courseQuality: 3.06,
+          instructorCommunication: 3.51,
+          instructorStimulateInterest: 3.37,
+          instructorAccessibility: 3.54,
+          valueOfReadings: 3.32,
+          knowledgeLearned: 3.20,
+          courseDifficulty: 2.25,
+          workRequired: 2.60,
+          recommendToMajor: 3.05,
+          recommendToNonMajor: 2.88
+        }
+      },
+      san_francisco: {
+        term: 'T5',
+        professor: 'Harbir Singh',
+        weekends: [0, 1, 2, 3, 4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 2.67,
+          courseQuality: 2.54,
+          instructorCommunication: 2.92,
+          instructorStimulateInterest: 2.21,
+          instructorAccessibility: 3.50,
+          valueOfReadings: 3.08,
+          knowledgeLearned: 2.71,
+          courseDifficulty: 2.04,
+          workRequired: 2.71,
+          recommendToMajor: 2.54,
+          recommendToNonMajor: 1.96
+        }
+      }
     }
   },
   'MGMT-7310': {
@@ -346,9 +954,60 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['MGMT-6130'],
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Rahul Kapoor', weekends: [0, 1, 2] },
-      san_francisco: { term: 'T5', professor: 'Lori Rosenkopf', weekends: [4, 5, 6] },
-      global: { term: 'T5', professor: 'Rahul Kapoor', weekends: [0, 1, 2] }
+      philadelphia: {
+        term: 'T6',
+        professor: 'Rahul Kapoor',
+        weekends: [0, 1, 2],
+        evaluations: {
+          instructorQuality: 3.24,
+          courseQuality: 2.82,
+          instructorCommunication: 3.45,
+          instructorStimulateInterest: 3.05,
+          instructorAccessibility: 3.14,
+          valueOfReadings: 2.95,
+          knowledgeLearned: 2.82,
+          courseDifficulty: 2.09,
+          workRequired: 2.36,
+          recommendToMajor: 2.71,
+          recommendToNonMajor: 2.36
+        }
+      },
+      san_francisco: {
+        term: 'T5',
+        professor: 'Lori Rosenkopf',
+        weekends: [4, 5, 6],
+        evaluations: {
+          instructorQuality: 2.36,
+          courseQuality: 2.00,
+          instructorCommunication: 2.50,
+          instructorStimulateInterest: 2.68,
+          instructorAccessibility: 3.10,
+          valueOfReadings: 2.55,
+          knowledgeLearned: 1.86,
+          courseDifficulty: 1.45,
+          workRequired: 2.23,
+          recommendToMajor: 1.82,
+          recommendToNonMajor: 1.50
+        }
+      },
+      global: {
+        term: 'T5',
+        professor: 'Rahul Kapoor',
+        weekends: [0, 1, 2],
+        evaluations: {
+          instructorQuality: 3.24,
+          courseQuality: 2.82,
+          instructorCommunication: 3.45,
+          instructorStimulateInterest: 3.05,
+          instructorAccessibility: 3.14,
+          valueOfReadings: 2.95,
+          knowledgeLearned: 2.82,
+          courseDifficulty: 2.09,
+          workRequired: 2.36,
+          recommendToMajor: 2.71,
+          recommendToNonMajor: 2.36
+        }
+      }
     }
   },
   'MGMT-7640': {
@@ -381,7 +1040,24 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['MGMT-6130'],
     offerings: {
-      global: { term: 'T4', professor: 'Michael Christensen', weekends: [0, 1, 2, 3] }
+      global: {
+        term: 'T4',
+        professor: 'Michael Christensen',
+        weekends: [0, 1, 2, 3],
+        evaluations: {
+          instructorQuality: 2.73,
+          courseQuality: 2.45,
+          instructorCommunication: 2.67,
+          instructorStimulateInterest: 2.67,
+          instructorAccessibility: 3.22,
+          valueOfReadings: 2.67,
+          knowledgeLearned: 2.00,
+          courseDifficulty: 2.00,
+          workRequired: 2.56,
+          recommendToMajor: 2.11,
+          recommendToNonMajor: 2.00
+        }
+      }
     }
   },
   'MGMT-7830': {
@@ -428,9 +1104,60 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Henning Piezunka', weekends: [0, 1, 2, 3] },
-      san_francisco: { term: 'T5', professor: 'Karl Ulrich', weekends: [0, 1, 2, 3] },
-      global: { term: 'T4', professor: 'Karl Ulrich', weekends: [0, 1, 2, 3] }
+      philadelphia: {
+        term: 'T4',
+        professor: 'Henning Piezunka',
+        weekends: [0, 1, 2, 3],
+        evaluations: {
+          instructorQuality: 3.85,
+          courseQuality: 3.76,
+          instructorCommunication: 3.81,
+          instructorStimulateInterest: 3.91,
+          instructorAccessibility: 3.54,
+          valueOfReadings: 3.26,
+          knowledgeLearned: 3.64,
+          courseDifficulty: 1.40,
+          workRequired: 1.79,
+          recommendToMajor: 3.67,
+          recommendToNonMajor: 3.60
+        }
+      },
+      san_francisco: {
+        term: 'T5',
+        professor: 'Karl Ulrich',
+        weekends: [0, 1, 2, 3],
+        evaluations: {
+          instructorQuality: 2.58,
+          courseQuality: 2.20,
+          instructorCommunication: 2.81,
+          instructorStimulateInterest: 2.45,
+          instructorAccessibility: 2.59,
+          valueOfReadings: 2.48,
+          knowledgeLearned: 2.31,
+          courseDifficulty: 2.31,
+          workRequired: 3.19,
+          recommendToMajor: 2.25,
+          recommendToNonMajor: 1.91
+        }
+      },
+      global: {
+        term: 'T4',
+        professor: 'Karl Ulrich',
+        weekends: [0, 1, 2, 3],
+        evaluations: {
+          instructorQuality: 2.58,
+          courseQuality: 2.20,
+          instructorCommunication: 2.81,
+          instructorStimulateInterest: 2.45,
+          instructorAccessibility: 2.59,
+          valueOfReadings: 2.48,
+          knowledgeLearned: 2.31,
+          courseDifficulty: 2.31,
+          workRequired: 3.19,
+          recommendToMajor: 2.25,
+          recommendToNonMajor: 1.91
+        }
+      }
     }
   },
   'MGMT-8040': {
@@ -466,8 +1193,53 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['FNCE-6110'],
     offerings: {
-      san_francisco: { term: 'T6', professor: 'Robert Chalfin', weekends: [0, 1, 2] },
-      global: { term: 'T5', professor: 'Robert Chalfin', weekends: [0, 1, 2] }
+      san_francisco: {
+        term: 'T6',
+        professor: 'Robert Chalfin',
+        weekends: [0, 1, 2],
+        evaluations: {
+          instructorQuality: 2.88,
+          courseQuality: 2.58,
+          instructorCommunication: 3.23,
+          instructorStimulateInterest: 3.16,
+          instructorAccessibility: 3.82,
+          valueOfReadings: 2.47,
+          knowledgeLearned: 2.89,
+          courseDifficulty: 2.09,
+          workRequired: 2.11,
+          recommendToMajor: 2.68,
+          recommendToNonMajor: 2.14
+        }
+      },
+      global: {
+        term: 'T5',
+        professor: 'Robert Chalfin',
+        weekends: [0, 1, 2],
+        evaluations: {
+          instructorQuality: 2.88,
+          courseQuality: 2.58,
+          instructorCommunication: 3.23,
+          instructorStimulateInterest: 3.16,
+          instructorAccessibility: 3.82,
+          valueOfReadings: 2.47,
+          knowledgeLearned: 2.89,
+          courseDifficulty: 2.09,
+          workRequired: 2.11,
+          recommendToMajor: 2.68,
+          recommendToNonMajor: 2.14
+        }
+      }
+    }
+  },
+  'MGMT-8130': {
+    code: 'MGMT 8130',
+    title: 'Vibefounding: Entrepreneurship with AI',
+    description: 'Entrepreneurship course focused on building AI-native ventures. Covers founder-market fit, product iteration, and go-to-market for AI products.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', professor: 'Ethan Mollick', dates: 'Jan 12-15, 2026' }
     }
   },
   'MGMT-8160': {
@@ -502,8 +1274,42 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['MGMT-6130'],
     offerings: {
-      philadelphia: { term: 'T5', professor: 'Michael Christensen', weekends: [0, 1, 2, 3] },
-      san_francisco: { term: 'T4', professor: 'Michael Christensen', weekends: [0, 1, 2, 3] }
+      philadelphia: {
+        term: 'T5',
+        professor: 'Michael Christensen',
+        weekends: [0, 1, 2, 3],
+        evaluations: {
+          instructorQuality: 2.73,
+          courseQuality: 2.45,
+          instructorCommunication: 2.67,
+          instructorStimulateInterest: 2.67,
+          instructorAccessibility: 3.22,
+          valueOfReadings: 2.67,
+          knowledgeLearned: 2.00,
+          courseDifficulty: 2.00,
+          workRequired: 2.56,
+          recommendToMajor: 2.11,
+          recommendToNonMajor: 2.00
+        }
+      },
+      san_francisco: {
+        term: 'T4',
+        professor: 'Michael Christensen',
+        weekends: [0, 1, 2, 3],
+        evaluations: {
+          instructorQuality: 2.73,
+          courseQuality: 2.45,
+          instructorCommunication: 2.67,
+          instructorStimulateInterest: 2.67,
+          instructorAccessibility: 3.22,
+          valueOfReadings: 2.67,
+          knowledgeLearned: 2.00,
+          courseDifficulty: 2.00,
+          workRequired: 2.56,
+          recommendToMajor: 2.11,
+          recommendToNonMajor: 2.00
+        }
+      }
     }
   },
   'MGMT-8710': {
@@ -514,9 +1320,60 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['MGMT-6130'],
     offerings: {
-      philadelphia: { term: 'T5', professor: 'Zeke Hernandez', weekends: [4, 5, 6, 7] },
-      san_francisco: { term: 'T6', professor: 'Zeke Hernandez', weekends: [0, 1, 2] },
-      global: { term: 'BW', professor: 'Zeke Hernandez', dates: 'Dec 7-10, 2026' }
+      philadelphia: {
+        term: 'T5',
+        professor: 'Zeke Hernandez',
+        weekends: [4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 3.69,
+          courseQuality: 3.28,
+          instructorCommunication: 3.71,
+          instructorStimulateInterest: 3.59,
+          instructorAccessibility: 3.33,
+          valueOfReadings: 3.02,
+          knowledgeLearned: 3.05,
+          courseDifficulty: 2.11,
+          workRequired: 2.53,
+          recommendToMajor: 3.26,
+          recommendToNonMajor: 2.91
+        }
+      },
+      san_francisco: {
+        term: 'T6',
+        professor: 'Zeke Hernandez',
+        weekends: [0, 1, 2],
+        evaluations: {
+          instructorQuality: 3.69,
+          courseQuality: 3.28,
+          instructorCommunication: 3.71,
+          instructorStimulateInterest: 3.59,
+          instructorAccessibility: 3.33,
+          valueOfReadings: 3.02,
+          knowledgeLearned: 3.05,
+          courseDifficulty: 2.11,
+          workRequired: 2.53,
+          recommendToMajor: 3.26,
+          recommendToNonMajor: 2.91
+        }
+      },
+      global: {
+        term: 'BW',
+        professor: 'Zeke Hernandez',
+        dates: 'Dec 7-10, 2026',
+        evaluations: {
+          instructorQuality: 3.69,
+          courseQuality: 3.28,
+          instructorCommunication: 3.71,
+          instructorStimulateInterest: 3.59,
+          instructorAccessibility: 3.33,
+          valueOfReadings: 3.02,
+          knowledgeLearned: 3.05,
+          courseDifficulty: 2.11,
+          workRequired: 2.53,
+          recommendToMajor: 3.26,
+          recommendToNonMajor: 2.91
+        }
+      }
     }
   },
   'MGMT-XXXX': {
@@ -528,6 +1385,82 @@ const COURSES = {
     prerequisites: [],
     offerings: {
       global: { term: 'BW', professor: 'Henning Piezunka', dates: 'Jun 29 - Jul 3, 2026', location: 'Bologna' }
+    }
+  },
+  'MGMT-XXXX-IMPACT': {
+    code: 'MGMT XXXX-IMPACT',
+    title: 'Impact Investing',
+    description: 'Block week course on impact investing. Covers impact thesis design, measurement, and portfolio construction.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', professor: 'Vit Henisz', dates: 'May 4-7, 2026', location: 'Philadelphia/NY' }
+    }
+  },
+  'MGMT-8970-INDIA': {
+    code: 'MGMT 8970-INDIA',
+    title: 'Enterprise Growth Through Innovation & Ecosystems: The Indian Perspective',
+    description: 'Global Modular Course on enterprise growth and innovation ecosystems in India. Cross-listed as WH 2120.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' },
+      global: { term: 'BW', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' }
+    }
+  },
+  'WH-2120': {
+    code: 'WH 2120',
+    title: 'Enterprise Growth Through Innovation & Ecosystems: The Indian Perspective',
+    description: 'Global Modular Course on enterprise growth and innovation ecosystems in India. Cross-listed with MGMT 8970.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' },
+      global: { term: 'BW', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' }
+    }
+  },
+  'MGMT-8970-GERMANY': {
+    code: 'MGMT 8970-GERMANY',
+    title: 'Environmental Sustainability, Mobility & Innovation in Germany',
+    description: 'Global Modular Course on sustainability, mobility, and innovation in Germany. Company visits and ecosystem analysis.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'John Paul MacDuffie, Nicolaj Siggelkow', dates: 'May 4-8, 2026', location: 'Germany' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'John Paul MacDuffie, Nicolaj Siggelkow', dates: 'May 4-8, 2026', location: 'Germany' },
+      global: { term: 'BW', category: 'GMC', professor: 'John Paul MacDuffie, Nicolaj Siggelkow', dates: 'May 4-8, 2026', location: 'Germany' }
+    }
+  },
+  'MGMT-8980-SOUTH-AFRICA': {
+    code: 'MGMT 8980-SOUTH-AFRICA',
+    title: 'South Africa: The Role of Business in Societal Opportunity',
+    description: 'Global Modular Course exploring the role of business in societal opportunity in South Africa. Cross-listed with LGST 8980.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' },
+      global: { term: 'BW', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' }
+    }
+  },
+  'MGMT-XXX3-LONDON': {
+    code: 'MGMT XXX3-LONDON',
+    title: 'London Calling: Driving Innovation in Traditional Economies',
+    description: 'Global Modular Course examining innovation in traditional industries in London and the UK.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Henning Piezunka', dates: 'May 4-8, 2026', location: 'UK (London)' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Henning Piezunka', dates: 'May 4-8, 2026', location: 'UK (London)' },
+      global: { term: 'BW', category: 'GMC', professor: 'Henning Piezunka', dates: 'May 4-8, 2026', location: 'UK (London)' }
     }
   },
 
@@ -549,12 +1482,66 @@ const COURSES = {
     title: 'Marketing Research',
     description: 'Design and analysis of marketing research studies. Covers survey methods, experimental design, conjoint analysis, and qualitative research techniques.',
     department: 'MKTG',
-    credits: 0.5,
+    credits: 1.0,
     prerequisites: ['MKTG-6110', 'STAT-6130'],
     offerings: {
       philadelphia: { term: 'T6', professor: 'Raghu Iyengar', weekends: [3, 4] },
       san_francisco: { term: 'T4', professor: 'Raghu Iyengar', weekends: [4, 5, 6, 7] }
     }
+  },
+  'MKTG-7710': {
+    code: 'MKTG 7710',
+    title: 'Models for Marketing Strategy',
+    description: 'Analytical models for marketing strategy and decision-making.',
+    department: 'MKTG',
+    credits: 1.0,
+    prerequisites: ['MKTG-6110', 'STAT-6130'],
+    offerings: {}
+  },
+  'MKTG-8090': {
+    code: 'MKTG 8090',
+    title: 'Experiments for Business Decision Making',
+    description: 'Design and analysis of experiments for business and marketing decisions.',
+    department: 'MKTG',
+    credits: 1.0,
+    prerequisites: ['MKTG-6110', 'STAT-6130'],
+    offerings: {}
+  },
+  'MKTG-9400': {
+    code: 'MKTG 9400',
+    title: 'Measurement and Data Analysis in Marketing I',
+    description: 'Doctoral-level marketing measurement and data analysis (part 1).',
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {}
+  },
+  'MKTG-9410': {
+    code: 'MKTG 9410',
+    title: 'Measurement and Data Analysis in Marketing II',
+    description: 'Doctoral-level marketing measurement and data analysis (part 2).',
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {}
+  },
+  'MKTG-9420': {
+    code: 'MKTG 9420',
+    title: 'Research Methods in Marketing I',
+    description: 'Doctoral-level research methods in marketing (part 1).',
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {}
+  },
+  'MKTG-9430': {
+    code: 'MKTG 9430',
+    title: 'Research Methods in Marketing II',
+    description: 'Doctoral-level research methods in marketing (part 2).',
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {}
   },
   'MKTG-7340': {
     code: 'MKTG 7340',
@@ -599,8 +1586,42 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['MKTG-6110'],
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Pinar Yildirim', weekends: [4, 5, 6] },
-      global: { term: 'T6', professor: 'Pinar Yildirim', weekends: [0, 1, 2] }
+      philadelphia: {
+        term: 'T4',
+        professor: 'Pinar Yildirim',
+        weekends: [4, 5, 6],
+        evaluations: {
+          instructorQuality: 2.54,
+          courseQuality: 2.54,
+          instructorCommunication: 2.67,
+          instructorStimulateInterest: 1.92,
+          instructorAccessibility: 3.18,
+          valueOfReadings: 2.67,
+          knowledgeLearned: 2.33,
+          courseDifficulty: 2.08,
+          workRequired: 2.50,
+          recommendToMajor: 2.33,
+          recommendToNonMajor: 1.92
+        }
+      },
+      global: {
+        term: 'T6',
+        professor: 'Pinar Yildirim',
+        weekends: [0, 1, 2],
+        evaluations: {
+          instructorQuality: 2.54,
+          courseQuality: 2.54,
+          instructorCommunication: 2.67,
+          instructorStimulateInterest: 1.92,
+          instructorAccessibility: 3.18,
+          valueOfReadings: 2.67,
+          knowledgeLearned: 2.33,
+          courseDifficulty: 2.08,
+          workRequired: 2.50,
+          recommendToMajor: 2.33,
+          recommendToNonMajor: 1.92
+        }
+      }
     }
   },
   'MKTG-7770-BW': {
@@ -659,6 +1680,32 @@ const COURSES = {
       philadelphia: { term: 'BW', professor: 'Annie Wilson', dates: 'Mar 8-11, 2027' }
     }
   },
+  'MKTG-8960-SAUDI': {
+    code: 'MKTG 8960-SAUDI',
+    title: 'Saudi Arabia: Understanding its Transformation',
+    description: "Global Modular Course on Saudi Arabia's economic and social transformation. Focus on consumer markets, policy changes, and business opportunities.",
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Peter Fader', dates: 'Jan 4-8, 2026', location: 'Saudi Arabia' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Peter Fader', dates: 'Jan 4-8, 2026', location: 'Saudi Arabia' },
+      global: { term: 'BW', category: 'GMC', professor: 'Peter Fader', dates: 'Jan 4-8, 2026', location: 'Saudi Arabia' }
+    }
+  },
+  'MKTG-8960-KOREA': {
+    code: 'MKTG 8960-KOREA',
+    title: 'South Korea as a Window into Creative Practices',
+    description: "Global Modular Course exploring South Korea's creative industries and innovation practices.",
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Gideon Nave, Stefano Puntoni', dates: 'May 25-29, 2026', location: 'South Korea' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Gideon Nave, Stefano Puntoni', dates: 'May 25-29, 2026', location: 'South Korea' },
+      global: { term: 'BW', category: 'GMC', professor: 'Gideon Nave, Stefano Puntoni', dates: 'May 25-29, 2026', location: 'South Korea' }
+    }
+  },
   'MKTG-8970': {
     code: 'MKTG 8970',
     title: 'Luxury Branding and Retailing in Paris',
@@ -715,9 +1762,60 @@ const COURSES = {
     credits: 1.0,
     prerequisites: ['OIDD-6110'],
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Gad Allon', weekends: [0, 1, 2, 3, 4, 5, 6] },
-      san_francisco: { term: 'T5', professor: 'Gad Allon', weekends: [0, 1, 2, 3, 4, 5, 6, 7] },
-      global: { term: 'T4', professor: 'Gad Allon', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+      philadelphia: {
+        term: 'T4',
+        professor: 'Gad Allon',
+        weekends: [0, 1, 2, 3, 4, 5, 6],
+        evaluations: {
+          instructorQuality: 3.40,
+          courseQuality: 3.50,
+          instructorCommunication: 3.67,
+          instructorStimulateInterest: 3.67,
+          instructorAccessibility: 3.78,
+          valueOfReadings: 3.33,
+          knowledgeLearned: 3.67,
+          courseDifficulty: 3.00,
+          workRequired: 3.00,
+          recommendToMajor: 3.33,
+          recommendToNonMajor: 3.11
+        }
+      },
+      san_francisco: {
+        term: 'T5',
+        professor: 'Gad Allon',
+        weekends: [0, 1, 2, 3, 4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 3.40,
+          courseQuality: 3.50,
+          instructorCommunication: 3.67,
+          instructorStimulateInterest: 3.67,
+          instructorAccessibility: 3.78,
+          valueOfReadings: 3.33,
+          knowledgeLearned: 3.67,
+          courseDifficulty: 3.00,
+          workRequired: 3.00,
+          recommendToMajor: 3.33,
+          recommendToNonMajor: 3.11
+        }
+      },
+      global: {
+        term: 'T4',
+        professor: 'Gad Allon',
+        weekends: [0, 1, 2, 3, 4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 3.40,
+          courseQuality: 3.50,
+          instructorCommunication: 3.67,
+          instructorStimulateInterest: 3.67,
+          instructorAccessibility: 3.78,
+          valueOfReadings: 3.33,
+          knowledgeLearned: 3.67,
+          courseDifficulty: 3.00,
+          workRequired: 3.00,
+          recommendToMajor: 3.33,
+          recommendToNonMajor: 3.11
+        }
+      }
     }
   },
   'OIDD-6530': {
@@ -802,6 +1900,71 @@ const COURSES = {
       san_francisco: { term: 'BW', professor: 'Serguei Netessine', dates: 'Mar 8-11, 2027', location: 'Seattle' }
     }
   },
+  'OIDD-8970-INDIA': {
+    code: 'OIDD 8970-INDIA',
+    title: 'Operations & Business in India: From Gandhi to Globalization',
+    description: 'Global Modular Course examining operations and business transformation in India.',
+    department: 'OIDD',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Senthil Veeraghavan, Ziv Katalan', dates: 'Dec 29, 2025 - Jan 2, 2026', location: 'India' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Senthil Veeraghavan, Ziv Katalan', dates: 'Dec 29, 2025 - Jan 2, 2026', location: 'India' },
+      global: { term: 'BW', category: 'GMC', professor: 'Senthil Veeraghavan, Ziv Katalan', dates: 'Dec 29, 2025 - Jan 2, 2026', location: 'India' }
+    }
+  },
+  'OIDD-8970-INDONESIA': {
+    code: 'OIDD 8970-INDONESIA',
+    title: "Indonesia Rising: Sustainable Growth in ASEAN's Largest Economy",
+    description: "Global Modular Course on Indonesia's growth and sustainability challenges.",
+    department: 'OIDD',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Sergei Savin', dates: 'Jan 12-17, 2026', location: 'Indonesia' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Sergei Savin', dates: 'Jan 12-17, 2026', location: 'Indonesia' },
+      global: { term: 'BW', category: 'GMC', professor: 'Sergei Savin', dates: 'Jan 12-17, 2026', location: 'Indonesia' }
+    }
+  },
+  'OIDD-8970-MEXICO': {
+    code: 'OIDD 8970-MEXICO',
+    title: "Global Supply Chain Management in Mexico's Industrial Hub",
+    description: "Global Modular Course on supply chain management in Mexico's industrial corridor.",
+    department: 'OIDD',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Santiago Gallino', dates: 'Mar 9-13, 2026', location: 'Mexico' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Santiago Gallino', dates: 'Mar 9-13, 2026', location: 'Mexico' },
+      global: { term: 'BW', category: 'GMC', professor: 'Santiago Gallino', dates: 'Mar 9-13, 2026', location: 'Mexico' }
+    }
+  },
+  'OIDD-8970-TAIWAN-HK': {
+    code: 'OIDD 8970-TAIWAN-HK',
+    title: 'Technology and Innovation: Role of Taiwan & Hong Kong in the Global Marketplace',
+    description: 'Global Modular Course on technology and innovation ecosystems in Taiwan and Hong Kong.',
+    department: 'OIDD',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Senthil Veeraraghavan, Edwin Keh', dates: 'Mar 9-13, 2026', location: 'Taiwan & Hong Kong' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Senthil Veeraraghavan, Edwin Keh', dates: 'Mar 9-13, 2026', location: 'Taiwan & Hong Kong' },
+      global: { term: 'BW', category: 'GMC', professor: 'Senthil Veeraraghavan, Edwin Keh', dates: 'Mar 9-13, 2026', location: 'Taiwan & Hong Kong' }
+    }
+  },
+  'OIDD-XXX2-NIGERIA': {
+    code: 'OIDD XXX2-NIGERIA',
+    title: "Nigeria: Innovation and Growth in West Africa's Largest Economy",
+    description: 'Global Modular Course on innovation and growth in Nigeria.',
+    department: 'OIDD',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Hummy Song, Eric Kacou', dates: 'May 4-8, 2026', location: 'Nigeria' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Hummy Song, Eric Kacou', dates: 'May 4-8, 2026', location: 'Nigeria' },
+      global: { term: 'BW', category: 'GMC', professor: 'Hummy Song, Eric Kacou', dates: 'May 4-8, 2026', location: 'Nigeria' }
+    }
+  },
 
   // LEGAL STUDIES
   'LGST-6420': {
@@ -837,8 +2000,8 @@ const COURSES = {
       philadelphia: { term: 'BW', professor: 'Peter Conti-Brown', dates: 'Oct 12-15, 2026' }
     }
   },
-  'LGST-7820': {
-    code: 'LGST 7820',
+  'LGST-XXXX': {
+    code: 'LGST XXXX',
     title: 'Corrupted Information',
     description: 'Misinformation, disinformation, and their business impacts. Covers information integrity, social media dynamics, and organizational responses.',
     department: 'LGST',
@@ -856,9 +2019,33 @@ const COURSES = {
     credits: 1.0,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Nazli Bhatia', weekends: [0, 1, 2, 3, 4] },
-      san_francisco: { term: 'T6', professor: 'Mori Taheripour', weekends: [0, 1, 2, 3, 4] },
-      global: { term: 'T4', professor: 'Nazli Bhatia', weekends: [0, 1, 2, 3, 4, 5, 6, 7] }
+      philadelphia: {
+        term: 'T6',
+        professor: 'Nazli Bhatia',
+        weekends: [0, 1, 2, 3, 4],
+        evaluations: {
+          instructorQuality: 3.40,
+          courseQuality: 3.32
+        }
+      },
+      san_francisco: {
+        term: 'T6',
+        professor: 'Mori Taheripour',
+        weekends: [0, 1, 2, 3, 4],
+        evaluations: {
+          instructorQuality: 3.21,
+          courseQuality: 3.22
+        }
+      },
+      global: {
+        term: 'T4',
+        professor: 'Nazli Bhatia',
+        weekends: [0, 1, 2, 3, 4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 3.40,
+          courseQuality: 3.32
+        }
+      }
     }
   },
   'LGST-8090': {
@@ -881,6 +2068,71 @@ const COURSES = {
     prerequisites: [],
     offerings: {
       philadelphia: { term: 'T4', professor: 'Bob Borghese', weekends: [0, 1, 2, 3] }
+    }
+  },
+  'LGST-8980-BRAZIL': {
+    code: 'LGST 8980-BRAZIL',
+    title: 'Brazil: The Business, Politics, and Institutions of (Uneven) Economic Development',
+    description: "Global Modular Course on Brazil's business environment, political economy, and institutions.",
+    department: 'LGST',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Peter Conti-Brown', dates: 'Jan 12-16, 2026', location: 'Brazil' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Peter Conti-Brown', dates: 'Jan 12-16, 2026', location: 'Brazil' },
+      global: { term: 'BW', category: 'GMC', professor: 'Peter Conti-Brown', dates: 'Jan 12-16, 2026', location: 'Brazil' }
+    }
+  },
+  'LGST-8980-VIETNAM': {
+    code: 'LGST 8980-VIETNAM',
+    title: 'Vietnam: Anticipating Business in an Emerging Socialist Country',
+    description: "Global Modular Course on Vietnam's evolving economy and business landscape. Cross-listed with OIDD 8970.",
+    department: 'LGST',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Philip Nichols, Edwin Keh', dates: 'Jan 12-16, 2026', location: 'Vietnam' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Philip Nichols, Edwin Keh', dates: 'Jan 12-16, 2026', location: 'Vietnam' },
+      global: { term: 'BW', category: 'GMC', professor: 'Philip Nichols, Edwin Keh', dates: 'Jan 12-16, 2026', location: 'Vietnam' }
+    }
+  },
+  'LGST-8980-THAILAND': {
+    code: 'LGST 8980-THAILAND',
+    title: 'Thailand: Disruptive Technology, Innovation & Sustainability',
+    description: 'Global Modular Course on technology, innovation, and sustainability in Thailand. Cross-listed with OIDD 8970.',
+    department: 'LGST',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' },
+      global: { term: 'BW', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' }
+    }
+  },
+  'LGST-8980-CHINA': {
+    code: 'LGST 8980-CHINA',
+    title: 'Tech and AI in China',
+    description: 'Global Modular Course on technology and AI in China, covering innovation ecosystems and policy context.',
+    department: 'LGST',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Kevin Werbach', dates: 'May 4-8, 2026', location: 'China' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Kevin Werbach', dates: 'May 4-8, 2026', location: 'China' },
+      global: { term: 'BW', category: 'GMC', professor: 'Kevin Werbach', dates: 'May 4-8, 2026', location: 'China' }
+    }
+  },
+  'LGST-8980-SOUTH-AFRICA': {
+    code: 'LGST 8980-SOUTH-AFRICA',
+    title: 'South Africa: The Role of Business in Societal Opportunity',
+    description: 'Global Modular Course exploring business and societal opportunity in South Africa. Cross-listed with MGMT 8980.',
+    department: 'LGST',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' },
+      global: { term: 'BW', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' }
     }
   },
 
@@ -963,6 +2215,19 @@ const COURSES = {
       philadelphia: { term: 'T5', professor: 'Stephen Sammut', weekends: [0, 1, 2, 3] }
     }
   },
+  'HCMG-8980-ROMANIA-SWEDEN': {
+    code: 'HCMG 8980-ROMANIA-SWEDEN',
+    title: 'Universal Health Care in Romania and Sweden',
+    description: 'Global Modular Course comparing universal health systems in Romania and Sweden.',
+    department: 'HCMG',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'BW', category: 'GMC', professor: 'Guy David', dates: 'May 25-29, 2026', location: 'Sweden, Romania' },
+      san_francisco: { term: 'BW', category: 'GMC', professor: 'Guy David', dates: 'May 25-29, 2026', location: 'Sweden, Romania' },
+      global: { term: 'BW', category: 'GMC', professor: 'Guy David', dates: 'May 25-29, 2026', location: 'Sweden, Romania' }
+    }
+  },
 
   // STATISTICS
   'STAT-7220': {
@@ -1008,8 +2273,24 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['FNCE-6110'],
     offerings: {
-      philadelphia: { term: 'T5', professor: 'Todd Sinai', weekends: [4, 5, 6, 7] },
-      san_francisco: { term: 'T6', professor: 'Todd Sinai', weekends: [0, 1, 2] }
+      philadelphia: {
+        term: 'T5',
+        professor: 'Todd Sinai',
+        weekends: [4, 5, 6, 7],
+        evaluations: {
+          instructorQuality: 3.09,
+          courseQuality: 2.91
+        }
+      },
+      san_francisco: {
+        term: 'T6',
+        professor: 'Todd Sinai',
+        weekends: [0, 1, 2],
+        evaluations: {
+          instructorQuality: 3.09,
+          courseQuality: 2.91
+        }
+      }
     }
   },
   'REAL-8910': {
@@ -1033,8 +2314,42 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['ACCT-6130'],
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Brian Bushee', weekends: [0, 1, 2, 3] },
-      san_francisco: { term: 'T5', professor: 'Brian Bushee', weekends: [0, 1, 2, 3] }
+      philadelphia: {
+        term: 'T4',
+        professor: 'Brian Bushee',
+        weekends: [0, 1, 2, 3],
+        evaluations: {
+          instructorQuality: 3.74,
+          courseQuality: 3.74,
+          instructorCommunication: 3.63,
+          instructorStimulateInterest: 3.56,
+          instructorAccessibility: 3.64,
+          valueOfReadings: 3.54,
+          knowledgeLearned: 3.63,
+          courseDifficulty: 2.38,
+          workRequired: 2.06,
+          recommendToMajor: 3.50,
+          recommendToNonMajor: 3.25
+        }
+      },
+      san_francisco: {
+        term: 'T5',
+        professor: 'Brian Bushee',
+        weekends: [0, 1, 2, 3],
+        evaluations: {
+          instructorQuality: 3.74,
+          courseQuality: 3.74,
+          instructorCommunication: 3.63,
+          instructorStimulateInterest: 3.56,
+          instructorAccessibility: 3.64,
+          valueOfReadings: 3.54,
+          knowledgeLearned: 3.63,
+          courseDifficulty: 2.38,
+          workRequired: 2.06,
+          recommendToMajor: 3.50,
+          recommendToNonMajor: 3.25
+        }
+      }
     }
   }
 };
@@ -1050,9 +2365,76 @@ const MAJORS = {
     description: 'Comprehensive study of corporate finance, investments, and financial markets.',
     coreRequirements: ['FNCE-6110', 'FNCE-6130'],
     electiveCUs: 4.0,
-    electiveCourses: ['FNCE-7030', 'FNCE-7050', 'FNCE-7070', 'FNCE-7170', 'FNCE-7310', 'FNCE-7320', 'FNCE-7380', 'FNCE-7500', 'FNCE-7510', 'FNCE-7540', 'FNCE-7910', 'FNCE-8010'],
+    electiveCourses: [
+      'ACCT-7471',
+      'FNCE-7030', 'FNCE-7050', 'FNCE-7070', 'FNCE-7170', 'FNCE-7310', 'FNCE-7320',
+      'FNCE-7380', 'FNCE-7401', 'FNCE-7500', 'FNCE-7510', 'FNCE-7540', 'FNCE-7910',
+      'FNCE-8010', 'FNCE-8960', 'REAL-7210'
+    ],
     warnings: ['Must take FNCE 6110 (1.0 CU) in Term 3 - the 0.5 CU option (FNCE 6210) does not qualify'],
     restrictions: ['Cannot declare both Finance and Quantitative Finance majors']
+  },
+  ai_business: {
+    id: 'ai_business',
+    name: 'Artificial Intelligence in Business',
+    department: 'OIDD',
+    requiredCUs: 4.0,
+    stemCertified: true,
+    description: 'Explore AI foundations and business impact, spanning analytics, ethics, and strategy.',
+    coreRequirements: [],
+    electiveCUs: 4.0,
+    electiveCourses: ['LGST-6420', 'MGMT-7310', 'MKTG-7120', 'MKTG-7340', 'MKTG-7790', 'OIDD-6620', 'OIDD-6670', 'STAT-7230'],
+    warnings: ['AI major typically requires STAT 7230 and LGST 6420 plus additional pillar courses. Confirm requirements with your advisor.'],
+    restrictions: []
+  },
+  marketing_operations: {
+    id: 'marketing_operations',
+    name: 'Marketing & Operational Management (M&O)',
+    department: 'MKTG',
+    requiredCUs: 7.0,
+    stemCertified: false,
+    description: 'Joint major integrating marketing and operations with required core, research, and elective coursework.',
+    coreRequirements: [],
+    electiveCUs: 4.0,
+    requirements: {
+      marketingCore: {
+        requiredCredits: 1.0,
+        requiredCourses: ['MKTG-6110'],
+        oneOfCourses: ['MKTG-6120', 'MKTG-6130']
+      },
+      oiddCore: {
+        requiredCredits: 1.0,
+        courses: ['OIDD-6110', 'OIDD-6120', 'OIDD-6130', 'OIDD-6140', 'OIDD-6150', 'OIDD-6620', 'OIDD-6900']
+      },
+      marketingResearch: {
+        requiredCredits: 1.0,
+        oneOfCourses: ['MKTG-7120', 'MKTG-7710', 'MKTG-7760', 'MKTG-8090'],
+        pairedCourses: [['MKTG-9400', 'MKTG-9410'], ['MKTG-9420', 'MKTG-9430']]
+      },
+      electives: {
+        requiredCredits: 4.0,
+        minDeptCredits: { MKTG: 1.0, OIDD: 2.0 },
+        eligibleDepartments: ['MKTG', 'OIDD'],
+        eligibleOutsideDepartments: ['LGST-8060', 'MGMT-6910', 'LGST-8980-VIETNAM', 'LGST-8980-THAILAND'],
+        deptOverrides: {
+          'LGST-8980-VIETNAM': 'OIDD',
+          'LGST-8980-THAILAND': 'OIDD'
+        }
+      }
+    },
+    electiveCourses: [
+      'LGST-8060', 'MGMT-6910', 'LGST-8980-VIETNAM', 'LGST-8980-THAILAND',
+      'MKTG-7110', 'MKTG-7120', 'MKTG-7710', 'MKTG-7760', 'MKTG-8090', 'MKTG-9400', 'MKTG-9410', 'MKTG-9420', 'MKTG-9430',
+      'MKTG-7340', 'MKTG-7540', 'MKTG-7770', 'MKTG-7770-BW', 'MKTG-7780', 'MKTG-7790',
+      'MKTG-8500', 'MKTG-8530', 'MKTG-8970', 'MKTG-8960-SAUDI', 'MKTG-8960-KOREA', 'MKTG-XXXX',
+      'OIDD-6120', 'OIDD-6140', 'OIDD-6360', 'OIDD-6530', 'OIDD-6540', 'OIDD-6620', 'OIDD-6670', 'OIDD-6920', 'OIDD-6930', 'OIDD-6990',
+      'OIDD-8970-INDIA', 'OIDD-8970-INDONESIA', 'OIDD-8970-MEXICO', 'OIDD-8970-TAIWAN-HK', 'OIDD-XXX2-NIGERIA'
+    ],
+    warnings: [
+      'Requires Marketing core (MKTG 6110 + MKTG 6120/6130), OIDD core (1.0 CU from flex-core list), and a Marketing research course.',
+      'Electives must total 4.0 CU with at least 1.0 CU from MKTG and 2.0 CU from OIDD.'
+    ],
+    restrictions: []
   },
   marketing: {
     id: 'marketing',
@@ -1063,8 +2445,8 @@ const MAJORS = {
     description: 'Develop expertise in marketing strategy, consumer behavior, and brand management.',
     coreRequirements: ['MKTG-6110'],
     electiveCUs: 4.0,
-    electiveCourses: ['MKTG-7110', 'MKTG-7120', 'MKTG-7340', 'MKTG-7540', 'MKTG-7760', 'MKTG-7770', 'MKTG-7780', 'MKTG-7790', 'MKTG-8500', 'MKTG-8530'],
-    warnings: [],
+    electiveCourses: ['MKTG-7110', 'MKTG-7120', 'MKTG-7340', 'MKTG-7540', 'MKTG-7760', 'MKTG-7770', 'MKTG-7770-BW', 'MKTG-7780', 'MKTG-7790', 'MKTG-8500', 'MKTG-8530'],
+    warnings: ['WEMBA majors include Marketing & Operational Management (M&O). Consider M&O for official requirements.'],
     restrictions: []
   },
   management: {
@@ -1076,7 +2458,16 @@ const MAJORS = {
     description: 'Focus on leadership, organizational behavior, and strategic management.',
     coreRequirements: ['MGMT-6100', 'MGMT-6130'],
     electiveCUs: 3.0,
-    electiveCourses: ['MGMT-6250', 'MGMT-6910', 'MGMT-7010', 'MGMT-7150', 'MGMT-7210', 'MGMT-7310', 'MGMT-7720', 'MGMT-7820', 'MGMT-7930', 'MGMT-7990', 'MGMT-8010', 'MGMT-8040', 'MGMT-8090', 'MGMT-8110', 'MGMT-8310', 'MGMT-8320', 'MGMT-8710'],
+    electiveCourses: [
+      'LGST-8060', 'LGST-8090',
+      'MGMT-6250', 'MGMT-6910', 'MGMT-7010', 'MGMT-7150', 'MGMT-7210', 'MGMT-7310',
+      'MGMT-7640', 'MGMT-7720', 'MGMT-7820', 'MGMT-7930', 'MGMT-7990', 'MGMT-8010',
+      'MGMT-8040', 'MGMT-8090', 'MGMT-8110', 'MGMT-8130', 'MGMT-8160', 'MGMT-8310',
+      'MGMT-8320', 'MGMT-8710', 'MGMT-XXXX', 'MGMT-XXXX-IMPACT',
+      'OIDD-6920',
+      'MGMT-8970-INDIA', 'WH-2120', 'MGMT-8970-GERMANY', 'MGMT-8980-SOUTH-AFRICA', 'MGMT-XXX3-LONDON',
+      'LGST-8980-SOUTH-AFRICA'
+    ],
     warnings: [],
     restrictions: []
   },
@@ -1090,10 +2481,9 @@ const MAJORS = {
     coreRequirements: ['MGMT-6100', 'MGMT-6130'],
     electiveCUs: 4.0,
     electiveCourses: [
-      'MGMT-6250', 'MGMT-7010', 'MGMT-7110', 'MGMT-7140', 'MGMT-7150', 'MGMT-7170',
-      'MGMT-7200', 'MGMT-7210', 'MGMT-7230', 'MGMT-7310', 'MGMT-7730', 'MGMT-7820',
-      'MGMT-8010', 'MGMT-8020', 'MGMT-8110', 'MGMT-8140', 'MGMT-8320', 'MGMT-8710',
-      'MGMT-8920', 'MKTG-7770', 'OIDD-6360', 'LGST-7290', 'LGST-8150'
+      'MGMT-6250', 'MGMT-7010', 'MGMT-7150', 'MGMT-7210', 'MGMT-7310', 'MGMT-7820',
+      'MGMT-8010', 'MGMT-8110', 'MGMT-8320', 'MGMT-8710', 'MKTG-7770', 'MKTG-7770-BW',
+      'OIDD-6360'
     ],
     warnings: [],
     restrictions: []
@@ -1107,7 +2497,13 @@ const MAJORS = {
     description: 'Learn to start and grow new ventures.',
     coreRequirements: ['MGMT-8010'],
     electiveCUs: 3.5,
-    electiveCourses: ['FNCE-7500', 'FNCE-7510', 'LGST-8060', 'LGST-8130', 'MGMT-6910', 'MGMT-7210', 'MGMT-7310', 'MGMT-8040', 'MGMT-8090', 'MGMT-8110', 'MGMT-8310', 'MGMT-8320', 'OIDD-6360', 'OIDD-6540', 'OIDD-6620', 'REAL-8910'],
+    electiveCourses: [
+      'FNCE-7500', 'FNCE-7510', 'HCMG-8670', 'LGST-8060', 'LGST-8130',
+      'MGMT-6910', 'MGMT-7210', 'MGMT-7310', 'MGMT-8040', 'MGMT-8090', 'MGMT-8110',
+      'MGMT-8160', 'MGMT-8310', 'MGMT-8320', 'MKTG-7340',
+      'OIDD-6140', 'OIDD-6360', 'OIDD-6540', 'OIDD-6620', 'OIDD-6670', 'OIDD-6920', 'OIDD-6930',
+      'REAL-8910'
+    ],
     warnings: ['MGMT 8010 (Entrepreneurship) is required and cannot be waived or substituted'],
     restrictions: []
   },
@@ -1121,7 +2517,7 @@ const MAJORS = {
     coreRequirements: [],
     electiveCUs: 5.0,
     electiveCourses: ['OIDD-6120', 'OIDD-6140', 'OIDD-6360', 'OIDD-6530', 'OIDD-6540', 'OIDD-6620', 'OIDD-6670', 'OIDD-6920', 'OIDD-6930', 'OIDD-6990'],
-    warnings: [],
+    warnings: ['WEMBA majors include Marketing & Operational Management (M&O). Consider M&O for official requirements.'],
     restrictions: []
   },
   healthcare: {

@@ -13,6 +13,16 @@ let state = {
   selectedDepartment: null
 };
 
+function getTermLabel(offering) {
+  if (!offering) return '';
+  if (offering.term === 'BW') {
+    if (offering.category === 'GMC') return 'Global Modular Course';
+    if (offering.category === 'GIP') return 'Global Immersion Program';
+    return 'Block Week';
+  }
+  return `Term ${offering.term.slice(1)}`;
+}
+
 // Initialize application
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
@@ -315,6 +325,56 @@ function generateAlerts() {
         message: `${major.name} major: Need ${needed} more CU to complete`
       });
     }
+
+    if (majorId === 'marketing_operations' && progress.details) {
+      const details = progress.details;
+      if (!details.marketingCore.hasRequiredCourse) {
+        alerts.push({
+          type: 'warning',
+          message: 'M&O major: Marketing core requires MKTG 6110'
+        });
+      }
+      if (!details.marketingCore.hasOptionCourse) {
+        alerts.push({
+          type: 'warning',
+          message: 'M&O major: Complete MKTG 6120 or MKTG 6130 for the marketing core'
+        });
+      }
+      if (details.oiddCore.credits < details.oiddCore.required) {
+        const needed = (details.oiddCore.required - details.oiddCore.credits).toFixed(1);
+        alerts.push({
+          type: 'warning',
+          message: `M&O major: Need ${needed} more CU from OIDD core (flex-core list)`
+        });
+      }
+      if (!details.research.met) {
+        alerts.push({
+          type: 'warning',
+          message: 'M&O major: Add a Marketing research course (e.g., MKTG 7120 or MKTG 7760)'
+        });
+      }
+      if (details.electives.credits < details.electives.required) {
+        const needed = (details.electives.required - details.electives.credits).toFixed(1);
+        alerts.push({
+          type: 'info',
+          message: `M&O major: Need ${needed} more elective CU from MKTG/OIDD`
+        });
+      }
+      const mktgNeeded = Math.max(0, 1.0 - details.electives.deptCredits.MKTG);
+      if (mktgNeeded > 0) {
+        alerts.push({
+          type: 'info',
+          message: `M&O major: Need ${mktgNeeded.toFixed(1)} more MKTG elective CU`
+        });
+      }
+      const oiddNeeded = Math.max(0, 2.0 - details.electives.deptCredits.OIDD);
+      if (oiddNeeded > 0) {
+        alerts.push({
+          type: 'info',
+          message: `M&O major: Need ${oiddNeeded.toFixed(1)} more OIDD elective CU`
+        });
+      }
+    }
   });
 
   // Check if exceeding max CU
@@ -597,7 +657,8 @@ function createCourseCard(course) {
   // Check both hyphen and space formats for backwards compatibility
   const normalizedCode = course.code.replace(/\s+/g, '-');
   const inPlan = state.plannedCourses.some(c => c.replace(/\s+/g, '-') === normalizedCode);
-  const termLabel = offering.term === 'BW' ? 'Block Week' : `Term ${offering.term.slice(1)}`;
+  const termLabel = getTermLabel(offering);
+  const evaluations = offering.evaluations || null;
 
   return `
     <div class="course-card ${inPlan ? 'in-plan' : ''}" data-course="${course.code}">
@@ -611,6 +672,7 @@ function createCourseCard(course) {
         ${offering.dates ? `<br>${offering.dates}` : ''}
         ${offering.location ? ` | ${offering.location}` : ''}
       </div>
+      ${createMiniEvalChart(evaluations)}
       <div class="course-actions">
         ${inPlan ?
           `<button class="course-btn remove" onclick="removeCourse('${course.code}')">Remove</button>` :
@@ -921,25 +983,27 @@ function closeAddCourseModal() {
 
 // Course Details Modal
 function showCourseDetails(courseCode) {
-  const course = COURSES[courseCode];
+  const normalizedCode = courseCode.replace(/\s+/g, '-');
+  const course = COURSES[normalizedCode];
   const offering = course.offerings[state.selectedCohort];
   const modal = document.getElementById('course-modal');
   const body = document.getElementById('modal-body');
 
-  const inPlan = state.plannedCourses.includes(courseCode);
-  const termLabel = offering.term === 'BW' ? 'Block Week' : `Term ${offering.term.slice(1)}`;
+  const inPlan = state.plannedCourses.includes(normalizedCode);
+  const termLabel = getTermLabel(offering);
+  const evaluations = offering.evaluations || null;
 
   // Find which majors this course applies to
   const applicableMajors = Object.entries(MAJORS)
     .filter(([id, major]) =>
-      major.electiveCourses?.includes(courseCode) ||
-      major.primaryCourses?.includes(courseCode) ||
-      major.secondaryCourses?.includes(courseCode)
+      major.electiveCourses?.includes(normalizedCode) ||
+      major.primaryCourses?.includes(normalizedCode) ||
+      major.secondaryCourses?.includes(normalizedCode)
     )
     .map(([id, major]) => major.name);
 
   // Check prerequisites
-  const prereqInfo = getPrerequisiteInfo(courseCode);
+  const prereqInfo = getPrerequisiteInfo(normalizedCode);
 
   body.innerHTML = `
     <h2 class="dept-${course.department}">${course.code.replace('-', ' ')}</h2>
@@ -975,10 +1039,12 @@ function showCourseDetails(courseCode) {
       </div>
     ` : ''}
 
+    ${createFullEvalSection(evaluations, offering.professor)}
+
     <div style="margin-top: 1.5rem;">
       ${inPlan ?
-        `<button class="btn-secondary" onclick="removeCourse('${courseCode}'); closeModal();" style="width: 100%;">Remove from Plan</button>` :
-        `<button class="btn-primary" onclick="addCourse('${courseCode}'); closeModal();" style="width: 100%;">Add to Plan</button>`
+        `<button class="btn-secondary" onclick="removeCourse('${normalizedCode}'); closeModal();" style="width: 100%;">Remove from Plan</button>` :
+        `<button class="btn-primary" onclick="addCourse('${normalizedCode}'); closeModal();" style="width: 100%;">Add to Plan</button>`
       }
     </div>
   `;
@@ -1084,7 +1150,167 @@ function calculateTotalCU() {
   return total;
 }
 
+function normalizeCourseCode(code) {
+  return code.replace(/\s+/g, '-');
+}
+
+function getCoreCourseCredits(code) {
+  const cohortCore = CORE_CURRICULUM[state.selectedCohort];
+  if (!cohortCore) return 0;
+
+  if (code === 'FNCE-6110') {
+    if (state.selectedCohort === 'global' || state.financeChoice === 'FNCE-6110') {
+      return 1.0;
+    }
+    return 0;
+  }
+
+  const coreEntry = ['T1', 'T2', 'T3']
+    .flatMap(term => cohortCore[term] || [])
+    .find(c => c.code === code);
+
+  return coreEntry ? coreEntry.credits : 0;
+}
+
+function getCoreOnlyCredits(code) {
+  const cohortCore = CORE_CURRICULUM[state.selectedCohort];
+  if (!cohortCore) return 0;
+
+  if (code === 'FNCE-6110') {
+    if (state.selectedCohort === 'global' || state.financeChoice === 'FNCE-6110') {
+      return 1.0;
+    }
+    return 0;
+  }
+
+  const coreEntry = ['T1', 'T2', 'T3']
+    .flatMap(term => cohortCore[term] || [])
+    .find(c => c.code === code);
+
+  return coreEntry ? coreEntry.credits : 0;
+}
+
+function getCourseCreditsIfTaken(code) {
+  const normalizedCode = normalizeCourseCode(code);
+  if (state.plannedCourses.includes(normalizedCode)) {
+    const course = COURSES[normalizedCode];
+    return course ? course.credits : 0;
+  }
+  return getCoreCourseCredits(normalizedCode);
+}
+
+function calculateMarketingOperationsProgress() {
+  const major = MAJORS.marketing_operations;
+  const requirements = major.requirements;
+  const details = {
+    marketingCore: {
+      credits: 0,
+      required: requirements.marketingCore.requiredCredits,
+      hasRequiredCourse: false,
+      hasOptionCourse: false
+    },
+    oiddCore: { credits: 0, required: requirements.oiddCore.requiredCredits },
+    research: { credits: 0, required: requirements.marketingResearch.requiredCredits, met: false },
+    electives: { credits: 0, required: requirements.electives.requiredCredits, deptCredits: { MKTG: 0, OIDD: 0 } }
+  };
+
+  const hasMarketingCore = requirements.marketingCore.requiredCourses
+    .some(code => getCourseCreditsIfTaken(code) > 0);
+  if (hasMarketingCore) {
+    details.marketingCore.credits += 0.5;
+    details.marketingCore.hasRequiredCourse = true;
+  }
+
+  const hasMarketingOption = requirements.marketingCore.oneOfCourses
+    .some(code => getCourseCreditsIfTaken(code) > 0);
+  if (hasMarketingOption) {
+    details.marketingCore.credits += 0.5;
+    details.marketingCore.hasOptionCourse = true;
+  }
+  details.marketingCore.credits = Math.min(details.marketingCore.credits, details.marketingCore.required);
+
+  requirements.oiddCore.courses.forEach(code => {
+    details.oiddCore.credits += getCoreOnlyCredits(code);
+  });
+  details.oiddCore.credits = Math.min(details.oiddCore.credits, details.oiddCore.required);
+
+  let researchCredits = 0;
+  requirements.marketingResearch.pairedCourses.forEach(pair => {
+    const hasPair = pair.every(code => getCourseCreditsIfTaken(code) > 0);
+    if (hasPair) {
+      researchCredits = Math.max(researchCredits, 1.0);
+    }
+  });
+
+  if (researchCredits < requirements.marketingResearch.requiredCredits) {
+    requirements.marketingResearch.oneOfCourses.forEach(code => {
+      researchCredits += getCourseCreditsIfTaken(code);
+    });
+  }
+  details.research.credits = Math.min(researchCredits, details.research.required);
+  details.research.met = details.research.credits >= details.research.required;
+
+  let plannedOiddCoreCredits = 0;
+  const plannedElectiveCourses = [];
+
+  state.plannedCourses.forEach(code => {
+    const normalizedCode = normalizeCourseCode(code);
+    const course = COURSES[normalizedCode];
+    if (!course) return;
+    const eligibleOutside = requirements.electives.eligibleOutsideDepartments || [];
+    const deptOverrides = requirements.electives.deptOverrides || {};
+    const isEligibleDepartment = requirements.electives.eligibleDepartments.includes(course.department);
+    const isEligibleOutside = eligibleOutside.includes(normalizedCode);
+    if (!isEligibleDepartment && !isEligibleOutside) return;
+
+    plannedElectiveCourses.push({ code: normalizedCode, course });
+
+    if (requirements.oiddCore.courses.includes(normalizedCode)) {
+      plannedOiddCoreCredits += course.credits;
+    }
+  });
+
+  const remainingOiddCore = Math.max(0, details.oiddCore.required - details.oiddCore.credits);
+  const oiddCoreFromPlanned = Math.min(remainingOiddCore, plannedOiddCoreCredits);
+  details.oiddCore.credits += oiddCoreFromPlanned;
+
+  plannedElectiveCourses.forEach(({ code, course }) => {
+    const isResearchCourse = requirements.marketingResearch.oneOfCourses.includes(code) ||
+      requirements.marketingResearch.pairedCourses.flat().includes(code);
+    if (isResearchCourse) return;
+
+    details.electives.credits += course.credits;
+    const deptOverrides = requirements.electives.deptOverrides || {};
+    const eligibleOutside = requirements.electives.eligibleOutsideDepartments || [];
+    const deptForCounting = deptOverrides[code] || course.department;
+    if (!eligibleOutside.includes(code) && requirements.electives.eligibleDepartments.includes(deptForCounting)) {
+      details.electives.deptCredits[deptForCounting] =
+        (details.electives.deptCredits[deptForCounting] || 0) + course.credits;
+    }
+  });
+
+  if (oiddCoreFromPlanned > 0) {
+    details.electives.credits = Math.max(0, details.electives.credits - oiddCoreFromPlanned);
+    details.electives.deptCredits.OIDD = Math.max(0, details.electives.deptCredits.OIDD - oiddCoreFromPlanned);
+  }
+
+  const completed = details.marketingCore.credits +
+    details.oiddCore.credits +
+    details.research.credits +
+    Math.min(details.electives.credits, details.electives.required);
+
+  return {
+    completed: Math.min(completed, major.requiredCUs),
+    required: major.requiredCUs,
+    details
+  };
+}
+
 function calculateMajorProgress(majorId) {
+  if (majorId === 'marketing_operations') {
+    return calculateMarketingOperationsProgress();
+  }
+
   const major = MAJORS[majorId];
   let completed = 0;
 
@@ -1188,6 +1414,141 @@ function clearElectives() {
   }
 }
 
+// Evaluation Helper Functions
+function getEvaluationData(courseCode, cohort) {
+  const normalizedCode = courseCode.replace(/\s+/g, '-');
+  const course = COURSES[normalizedCode];
+  if (!course || !course.offerings || !course.offerings[cohort]) {
+    return null;
+  }
+  return course.offerings[cohort].evaluations || null;
+}
+
+function getEvaluationColorClass(score, metric) {
+  // Difficulty and Work Required are neutral metrics
+  const neutralMetrics = ['courseDifficulty', 'workRequired'];
+  if (neutralMetrics.includes(metric)) {
+    return 'eval-neutral';
+  }
+
+  // For other metrics, higher is better
+  if (score >= 3.5) return 'eval-excellent';
+  if (score >= 3.0) return 'eval-good';
+  if (score >= 2.5) return 'eval-average';
+  return 'eval-poor';
+}
+
+function formatEvaluationScore(score) {
+  if (score === null || score === undefined) return 'N/A';
+  return score.toFixed(2);
+}
+
+function createMiniEvalChart(evaluations) {
+  if (!evaluations) {
+    return '<div class="eval-mini-chart eval-no-data">No ratings available</div>';
+  }
+
+  const keyMetrics = [
+    { key: 'instructorQuality', label: 'Instructor' },
+    { key: 'courseQuality', label: 'Course' },
+    { key: 'courseDifficulty', label: 'Difficulty' },
+    { key: 'workRequired', label: 'Workload' }
+  ];
+
+  const bars = keyMetrics.map(({ key, label }) => {
+    const score = evaluations[key];
+    if (score === undefined || score === null) return '';
+
+    const pct = (score / 4) * 100;
+    const colorClass = getEvaluationColorClass(score, key);
+
+    return `
+      <div class="mini-bar-row">
+        <span class="mini-bar-label">${label}</span>
+        <div class="mini-bar-track">
+          <div class="mini-bar-fill ${colorClass}" style="width: ${pct}%"></div>
+        </div>
+        <span class="mini-bar-score">${score.toFixed(1)}</span>
+      </div>
+    `;
+  }).filter(Boolean).join('');
+
+  if (!bars) {
+    return '<div class="eval-mini-chart eval-no-data">No ratings available</div>';
+  }
+
+  return `<div class="eval-mini-chart">${bars}</div>`;
+}
+
+function createFullEvalSection(evaluations, professor) {
+  if (!evaluations) {
+    return `
+      <div class="eval-section">
+        <h4>Course Evaluations</h4>
+        <p class="eval-no-data">No evaluation data available for this course.</p>
+      </div>
+    `;
+  }
+
+  const categories = {
+    instructor: {
+      label: 'Instructor Ratings',
+      metrics: ['instructorQuality', 'instructorCommunication', 'instructorStimulateInterest', 'instructorAccessibility']
+    },
+    course: {
+      label: 'Course Ratings',
+      metrics: ['courseQuality', 'valueOfReadings', 'knowledgeLearned']
+    },
+    workload: {
+      label: 'Workload & Difficulty',
+      metrics: ['courseDifficulty', 'workRequired']
+    },
+    recommendations: {
+      label: 'Recommendations',
+      metrics: ['recommendToMajor', 'recommendToNonMajor']
+    }
+  };
+
+  let html = `
+    <div class="eval-section">
+      <h4>Course Evaluations</h4>
+      <p class="eval-professor-note">Ratings for ${professor}</p>
+  `;
+
+  for (const [catKey, cat] of Object.entries(categories)) {
+    const availableMetrics = cat.metrics.filter(m => evaluations[m] !== undefined);
+    if (availableMetrics.length === 0) continue;
+
+    html += `<div class="eval-category"><h5>${cat.label}</h5>`;
+
+    for (const metricKey of availableMetrics) {
+      const metric = EVALUATION_METRICS[metricKey];
+      const score = evaluations[metricKey];
+      const pct = (score / 4) * 100;
+      const colorClass = getEvaluationColorClass(score, metricKey);
+
+      html += `
+        <div class="eval-bar-row">
+          <span class="eval-bar-label">${metric.label}</span>
+          <div class="eval-bar-track">
+            <div class="eval-bar-fill ${colorClass}" style="width: ${pct}%"></div>
+          </div>
+          <span class="eval-bar-score">${score.toFixed(2)}</span>
+        </div>
+      `;
+    }
+
+    html += '</div>';
+  }
+
+  html += `
+      <p class="eval-scale-note">Scale: 1.0 (Low) - 4.0 (High)</p>
+    </div>
+  `;
+
+  return html;
+}
+
 // State Management
 function saveState() {
   localStorage.setItem('wemba-pathway-state', JSON.stringify(state));
@@ -1198,6 +1559,15 @@ function loadState() {
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
+      const courseAliases = {
+        'LGST-7820': 'LGST-XXXX'
+      };
+      if (parsed.plannedCourses) {
+        parsed.plannedCourses = parsed.plannedCourses.map(code => courseAliases[code] || code);
+      }
+      if (parsed.waivedCourses) {
+        parsed.waivedCourses = parsed.waivedCourses.map(code => courseAliases[code] || code);
+      }
       state = { ...state, ...parsed };
     } catch (e) {
       console.error('Failed to load state:', e);

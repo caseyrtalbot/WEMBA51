@@ -1474,6 +1474,36 @@ body {
   position: relative;
 }
 
+.graph-alerts {
+  position: absolute;
+  top: 4.25rem;
+  right: 1rem;
+  max-width: 320px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 0.6rem 0.75rem;
+  z-index: 12;
+}
+
+.graph-alerts.hidden {
+  display: none;
+}
+
+.graph-alerts h4 {
+  margin: 0 0 0.4rem 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.graph-alerts .alert-item {
+  font-size: 0.75rem;
+  padding: 0.45rem 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
 .pathway-graph {
   width: 100%;
   height: 100%;
@@ -2325,6 +2355,22 @@ body {
   font-size: 0.65rem;
 }
 
+.conflict-item {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+}
+
+.conflict-course {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.conflict-detail {
+  color: var(--text-secondary);
+  font-size: 0.65rem;
+}
+
 /* Ghost Nodes */
 .ghost-node {
   opacity: 0.5;
@@ -2446,4 +2492,188 @@ body {
   font-size: 14px;
   font-weight: bold;
   pointer-events: none;
+}
+
+/* ===== Course Evaluation Styles ===== */
+
+/* Mini Chart on Course Cards */
+.eval-mini-chart {
+  margin: 0.75rem 0;
+  padding: 0.5rem;
+  background: var(--background);
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+}
+
+.eval-mini-chart.eval-no-data {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 0.5rem;
+  font-style: italic;
+}
+
+.mini-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.mini-bar-row:last-child {
+  margin-bottom: 0;
+}
+
+.mini-bar-label {
+  width: 60px;
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+.mini-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.mini-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.mini-bar-score {
+  width: 24px;
+  text-align: right;
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* Full Evaluation Section in Modal */
+.eval-section {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: var(--background);
+  border-radius: var(--radius);
+}
+
+.eval-section h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.eval-professor-note {
+  margin: 0 0 1rem 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.eval-section .eval-no-data {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.eval-category {
+  margin-bottom: 1rem;
+}
+
+.eval-category:last-child {
+  margin-bottom: 0;
+}
+
+.eval-category h5 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.25rem;
+}
+
+.eval-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.eval-bar-row:last-child {
+  margin-bottom: 0;
+}
+
+.eval-bar-label {
+  width: 180px;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.eval-bar-track {
+  flex: 1;
+  height: 10px;
+  background: var(--border);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.eval-bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+
+.eval-bar-score {
+  width: 36px;
+  text-align: right;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.eval-scale-note {
+  margin: 1rem 0 0 0;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Evaluation Color Classes */
+.eval-excellent {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.eval-good {
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+}
+
+.eval-average {
+  background: linear-gradient(90deg, #eab308, #ca8a04);
+}
+
+.eval-poor {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+.eval-neutral {
+  background: linear-gradient(90deg, #94a3b8, #64748b);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+  .eval-bar-label {
+    width: 120px;
+    font-size: 0.75rem;
+  }
+
+  .mini-bar-label {
+    width: 50px;
+  }
 }
