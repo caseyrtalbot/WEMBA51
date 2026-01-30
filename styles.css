@@ -1864,6 +1864,7 @@ body {
   padding: 0.5rem;
   border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
+  z-index: 15; /* Above graph legend (z-index: 10) */
 }
 
 .graph-control-btn {
@@ -3398,11 +3399,13 @@ body {
 }
 
 .progress-drawer.partial {
-  transform: translateY(calc(100% - 180px - var(--tab-bar-height)));
+  transform: translateY(calc(100% - 320px - var(--tab-bar-height)));
+  z-index: 110; /* Above bottom tab bar (z-index: 100) when open */
 }
 
 .progress-drawer.full {
   transform: translateY(var(--tab-bar-height));
+  z-index: 110; /* Above bottom tab bar (z-index: 100) when open */
 }
 
 .drawer-handle {

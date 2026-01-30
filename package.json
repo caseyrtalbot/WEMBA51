@@ -1,0 +1,31 @@
+{
+  "name": "wemba-pathway-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:chromium": "playwright test --project=chromium",
+    "test:mobile": "playwright test --project='Mobile Safari'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caseyrtalbot/WEMBA51.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/caseyrtalbot/WEMBA51/issues"
+  },
+  "homepage": "https://github.com/caseyrtalbot/WEMBA51#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.0"
+  }
+}
