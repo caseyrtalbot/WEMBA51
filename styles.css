@@ -1093,17 +1093,31 @@ body {
 
 .modal-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: var(--background);
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   cursor: pointer;
   color: var(--text-secondary);
+  /* Ensure 44x44px minimum touch target */
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.15s ease, color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .modal-close:hover {
   color: var(--text);
+  background: var(--border);
+}
+
+.modal-close:active {
+  transform: scale(0.95);
 }
 
 /* Add Course Modal */
@@ -1225,6 +1239,111 @@ body {
   .pathway-stats {
     width: 100%;
     justify-content: space-around;
+  }
+}
+
+/* ============================================
+   MOBILE MODAL/POPUP FIXES
+   ============================================ */
+
+/* Body scroll lock when modal is open */
+body.modal-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  /* Preserve scroll position */
+  top: var(--scroll-top, 0);
+}
+
+/* Z-index hierarchy:
+   - Base content: auto
+   - Course cards: 1
+   - Modal backdrop: 50
+   - Modal content: 100
+   - Settings panel: 200
+   - Onboarding: 300
+*/
+
+/* Ensure proper z-index stacking */
+.modal {
+  z-index: 100;
+}
+
+.modal-backdrop {
+  z-index: -1; /* Below modal-content but fills modal container */
+}
+
+.modal-content {
+  z-index: 1; /* Above backdrop within modal */
+}
+
+/* Mobile-specific modal styles - convert to bottom sheet */
+@media (max-width: 768px) {
+  /* Course detail modal becomes bottom sheet on mobile */
+  .modal:not(.modal-onboarding) {
+    align-items: flex-end;
+  }
+
+  .modal:not(.modal-onboarding) .modal-content {
+    width: 100%;
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 16px 16px 0 0;
+    padding: 1rem 1.25rem;
+    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+    margin: 0;
+    animation: mobileSheetSlideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .modal:not(.modal-onboarding) .modal-content::before {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 auto 1rem;
+  }
+
+  .modal:not(.modal-onboarding) .modal-close {
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  /* Add Course Modal bottom sheet adjustments */
+  .modal-large {
+    max-width: 100% !important;
+  }
+}
+
+@keyframes mobileSheetSlideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* iOS Safari position:fixed fix - avoid inside scrollable containers */
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari specific fixes */
+  .modal,
+  .course-sheet,
+  .catalog-sheet,
+  .settings-panel,
+  .progress-drawer {
+    /* Use transform3d to create new stacking context and prevent rendering issues */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* Ensure smooth scrolling in sheets */
+  .sheet-body,
+  .catalog-sheet-list,
+  .modal-content {
+    -webkit-overflow-scrolling: touch;
   }
 }
 
@@ -2340,6 +2459,60 @@ body {
   display: none;
 }
 
+/* Mobile: Convert info panel to bottom sheet */
+@media (max-width: 768px) {
+  .course-info-panel {
+    position: fixed;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-height: 50vh;
+    border-radius: 16px 16px 0 0;
+    border: none;
+    border-top: 1px solid var(--border);
+    z-index: 150;
+    animation: mobileSheetSlideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .course-info-panel::before {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0.75rem auto 0;
+  }
+}
+
+/* Info panel backdrop for mobile */
+.info-panel-backdrop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .info-panel-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 140;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .info-panel-backdrop.hidden {
+    display: none;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .info-panel-header {
   display: flex;
   justify-content: space-between;
@@ -2352,6 +2525,13 @@ body {
   top: 0;
 }
 
+@media (max-width: 768px) {
+  .info-panel-header {
+    padding-top: 0.5rem;
+    border-radius: 0;
+  }
+}
+
 .info-panel-header h4 {
   font-size: 0.85rem;
   font-weight: 600;
@@ -2360,17 +2540,30 @@ body {
 }
 
 .info-panel-close {
-  background: none;
+  background: var(--background);
   border: none;
   font-size: 1.25rem;
   color: var(--text-secondary);
   cursor: pointer;
-  padding: 0;
-  line-height: 1;
+  /* Ensure 44x44px minimum touch target */
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.15s ease, color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  margin: -0.5rem -0.5rem -0.5rem 0;
 }
 
 .info-panel-close:hover {
   color: var(--text);
+  background: var(--border);
+}
+
+.info-panel-close:active {
+  transform: scale(0.95);
 }
 
 .info-panel-content {
@@ -3803,12 +3996,29 @@ body {
 }
 
 .settings-close {
-  background: transparent;
+  background: var(--background);
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
   cursor: pointer;
-  padding: 0.25rem;
+  /* Ensure 44x44px minimum touch target */
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.15s ease, color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.settings-close:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.settings-close:active {
+  transform: scale(0.95);
 }
 
 .settings-body {
@@ -4162,11 +4372,29 @@ body {
 }
 
 .catalog-sheet-close {
-  background: transparent;
+  background: var(--background);
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
   cursor: pointer;
+  /* Ensure 44x44px minimum touch target */
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.15s ease, color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.catalog-sheet-close:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.catalog-sheet-close:active {
+  transform: scale(0.95);
 }
 
 .catalog-sheet-search {
