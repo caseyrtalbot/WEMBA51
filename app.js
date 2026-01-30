@@ -25,6 +25,71 @@ function getTermLabel(offering) {
   return `Term ${offering.term.slice(1)}`;
 }
 
+/**
+ * Get course offering for a given cohort, handling Block Week courses.
+ * Block Week courses (isBlockWeek: true) use 'all' key and are available to all cohorts.
+ * Returns the appropriate offering object or null if not available.
+ */
+function getCourseOffering(course, cohort) {
+  if (!course || !course.offerings) return null;
+
+  // For block week courses, check for 'all' key or 'all_*' keys
+  if (course.isBlockWeek) {
+    // Check for single 'all' key
+    if (course.offerings.all) return course.offerings.all;
+
+    // Check for multiple 'all_*' keys (e.g., all_phl, all_sf for courses offered at multiple locations)
+    const allKeys = Object.keys(course.offerings).filter(k => k.startsWith('all'));
+    if (allKeys.length > 0) {
+      // Return the first one - all offerings will be shown in course details modal
+      return course.offerings[allKeys[0]];
+    }
+
+    // Also check for cohort-specific regular offerings if this is a hybrid course
+    if (course.offerings[cohort]) return course.offerings[cohort];
+  }
+
+  // Standard cohort-specific lookup for non-block week courses
+  return course.offerings[cohort] || null;
+}
+
+/**
+ * Get ALL offerings for a block week course (for display in modals).
+ * Returns array of {key, offering} objects.
+ */
+function getAllBlockWeekOfferings(course) {
+  if (!course || !course.offerings || !course.isBlockWeek) return [];
+
+  const offerings = [];
+  Object.entries(course.offerings).forEach(([key, offering]) => {
+    if (key.startsWith('all')) {
+      offerings.push({ key, offering });
+    }
+  });
+  return offerings;
+}
+
+/**
+ * Check if a course is available for a given cohort.
+ * Block Week courses are available to all cohorts.
+ */
+function isCourseAvailableForCohort(course, cohort) {
+  if (!course || !course.offerings) return false;
+
+  // Block week courses are available to all cohorts
+  if (course.isBlockWeek) {
+    // Check for 'all' key or any 'all_*' keys
+    if (course.offerings.all) return true;
+    if (Object.keys(course.offerings).some(k => k.startsWith('all'))) return true;
+    // Hybrid course - also check for cohort-specific offering
+    if (course.offerings[cohort]) return true;
+    return false;
+  }
+
+  // Standard cohort-specific check
+  return !!course.offerings[cohort];
+}
+
 // Initialize application
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
@@ -661,7 +726,7 @@ function getScheduleConflicts() {
     const course = COURSES[normalizedCode];
     if (!course) return;
 
-    const offering = course.offerings[cohort];
+    const offering = getCourseOffering(course, cohort);
     if (!offering) return;
 
     const term = offering.term;
@@ -885,7 +950,7 @@ function displayMajorCourses(majorId) {
   const courses = major.electiveCourses || [];
   const availableCourses = courses
     .map(code => ({ code, ...COURSES[code] }))
-    .filter(course => course && course.offerings && course.offerings[state.selectedCohort]);
+    .filter(course => course && isCourseAvailableForCohort(course, state.selectedCohort));
 
   if (availableCourses.length === 0) {
     container.innerHTML = '<p class="empty-state">No courses available for this major in your cohort.</p>';
@@ -935,14 +1000,13 @@ function getCoursesForDepartment(deptCode) {
   return Object.entries(COURSES)
     .filter(([code, course]) => {
       return course.department === deptCode &&
-             course.offerings &&
-             course.offerings[state.selectedCohort];
+             isCourseAvailableForCohort(course, state.selectedCohort);
     })
     .map(([code, course]) => ({ code, ...course }));
 }
 
 function createCourseCard(course) {
-  const offering = course.offerings[state.selectedCohort];
+  const offering = getCourseOffering(course, state.selectedCohort);
   // Check both hyphen and space formats for backwards compatibility
   const normalizedCode = course.code.replace(/\s+/g, '-');
   const inPlan = state.plannedCourses.some(c => c.replace(/\s+/g, '-') === normalizedCode);
@@ -1002,7 +1066,7 @@ function filterCourses(query) {
     .filter(([code, course]) => {
       const matchesQuery = code.toLowerCase().includes(query) ||
                           course.title.toLowerCase().includes(query);
-      const availableForCohort = course.offerings && course.offerings[state.selectedCohort];
+      const availableForCohort = isCourseAvailableForCohort(course, state.selectedCohort);
       return matchesQuery && availableForCohort;
     })
     .map(([code, course]) => ({ code, ...course }));
@@ -1323,7 +1387,7 @@ function getPlannedCoursesForTerm(term) {
       const normalizedCode = code.replace(/\s+/g, '-');
       const course = COURSES[normalizedCode];
       if (!course) return null;
-      const offering = course.offerings[state.selectedCohort];
+      const offering = getCourseOffering(course, state.selectedCohort);
       if (!offering || offering.term !== term) return null;
       return { code: normalizedCode, ...course };
     })
@@ -1394,7 +1458,7 @@ function addCourseToTerm(term) {
   // Get available courses for this term
   const availableCourses = Object.entries(COURSES)
     .filter(([code, course]) => {
-      const offering = course.offerings && course.offerings[state.selectedCohort];
+      const offering = getCourseOffering(course, state.selectedCohort);
       return offering && offering.term === term && !state.plannedCourses.includes(code);
     })
     .map(([code, course]) => ({ code, ...course }));
@@ -1403,12 +1467,13 @@ function addCourseToTerm(term) {
     list.innerHTML = '<p class="empty-state">No more courses available for this term.</p>';
   } else {
     list.innerHTML = availableCourses.map(course => {
-      const offering = course.offerings[state.selectedCohort];
+      const offering = getCourseOffering(course, state.selectedCohort);
+      const locationInfo = course.isBlockWeek && offering.location ? ` | ${offering.location}` : '';
       return `
         <div class="add-course-item" onclick="addCourseAndClose('${course.code}')">
           <div class="add-course-info">
             <h4>${course.code.replace('-', ' ')}: ${course.title}</h4>
-            <p>${course.credits} CU | ${offering.professor}${offering.dates ? ` | ${offering.dates}` : ''}</p>
+            <p>${course.credits} CU | ${offering.professor}${offering.dates ? ` | ${offering.dates}` : ''}${locationInfo}</p>
           </div>
         </div>
       `;
@@ -1431,7 +1496,7 @@ function closeAddCourseModal() {
 function showCourseDetails(courseCode) {
   const normalizedCode = courseCode.replace(/\s+/g, '-');
   const course = COURSES[normalizedCode];
-  const offering = course.offerings[state.selectedCohort];
+  const offering = getCourseOffering(course, state.selectedCohort);
   const modal = document.getElementById('course-modal');
   const body = document.getElementById('modal-body');
 
@@ -1939,8 +2004,9 @@ function exportPlan() {
       const termLabel = term === 'BW' ? 'Block Weeks' : `Term ${term.slice(1)}`;
       text += `${termLabel}:\n`;
       courses.forEach(c => {
-        const offering = c.offerings[state.selectedCohort];
-        text += `  - ${c.code.replace('-', ' ')}: ${c.title} (${c.credits} CU)\n`;
+        const offering = getCourseOffering(c, state.selectedCohort);
+        const locationInfo = c.isBlockWeek && offering.location ? ` (${offering.location})` : '';
+        text += `  - ${c.code.replace('-', ' ')}: ${c.title} (${c.credits} CU)${locationInfo}\n`;
         text += `    Professor: ${offering.professor}\n`;
       });
       text += `\n`;
@@ -1980,10 +2046,10 @@ function clearElectives() {
 function getEvaluationData(courseCode, cohort) {
   const normalizedCode = courseCode.replace(/\s+/g, '-');
   const course = COURSES[normalizedCode];
-  if (!course || !course.offerings || !course.offerings[cohort]) {
-    return null;
-  }
-  return course.offerings[cohort].evaluations || null;
+  if (!course) return null;
+  const offering = getCourseOffering(course, cohort);
+  if (!offering) return null;
+  return offering.evaluations || null;
 }
 
 function getEvaluationColorClass(score, metric) {

@@ -834,8 +834,9 @@ const COURSES = {
     department: 'FNCE',
     credits: 0.5,
     prerequisites: ['FNCE-6110'],
+    isBlockWeek: true,
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Burcu Esmer', dates: 'May 3-6, 2027' }
+      all: { term: 'T6', professor: 'Burcu Esmer', dates: 'May 3-6, 2027', location: 'Philadelphia' }
     }
   },
   'FNCE-7401': {
@@ -845,8 +846,9 @@ const COURSES = {
     department: 'FNCE',
     credits: 0.5,
     prerequisites: ['FNCE-6110', 'FNCE-6130'],
+    isBlockWeek: true,
     offerings: {
-      san_francisco: { term: 'T6', professor: 'Anthony Landry', dates: 'Apr 26-29, 2027' }
+      all: { term: 'T6', professor: 'Anthony Landry', dates: 'Apr 26-29, 2027', location: 'San Francisco' }
     }
   },
   'FNCE-8960': {
@@ -1179,8 +1181,9 @@ const COURSES = {
     department: 'MGMT',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      san_francisco: { term: 'T6', professor: 'Lori Rosenkopf', dates: 'Mar 8-11, 2027' }
+      all: { term: 'T6', professor: 'Lori Rosenkopf', dates: 'Mar 8-11, 2027', location: 'San Francisco' }
     }
   },
   'MGMT-7720': {
@@ -1190,8 +1193,9 @@ const COURSES = {
     department: 'MGMT',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Samir Nurmohamed', dates: 'Jan 11-14, 2027' }
+      all: { term: 'T6', professor: 'Samir Nurmohamed', dates: 'Jan 11-14, 2027', location: 'Philadelphia' }
     }
   },
   'MGMT-7820': {
@@ -1230,8 +1234,9 @@ const COURSES = {
     department: 'MGMT',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Vit Henisz', dates: 'May 3-6, 2027' }
+      all: { term: 'T6', professor: 'Vit Henisz', dates: 'May 3-6, 2027', location: 'Philadelphia' }
     }
   },
   'MGMT-7930': {
@@ -1406,8 +1411,9 @@ const COURSES = {
     department: 'MGMT',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Ethan Mollick', dates: 'Jan 12-15, 2026' }
+      all: { term: 'T4', professor: 'Ethan Mollick', dates: 'Jan 12-15, 2026', location: 'Philadelphia' }
     }
   },
   'MGMT-8160': {
@@ -1417,8 +1423,9 @@ const COURSES = {
     department: 'MGMT',
     credits: 0.5,
     prerequisites: ['MGMT-8010'],
+    isBlockWeek: true,
     offerings: {
-      san_francisco: { term: 'T6', professor: 'Valery Yakubovich', dates: 'May 3-6, 2027' }
+      all: { term: 'T6', professor: 'Valery Yakubovich', dates: 'May 3-6, 2027', location: 'San Francisco' }
     }
   },
   'MGMT-8310': {
@@ -1555,8 +1562,9 @@ const COURSES = {
     department: 'MGMT',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      global: { term: 'T4', professor: 'Henning Piezunka', dates: 'Jun 29 - Jul 3, 2026', location: 'Bologna' }
+      all: { term: 'T4', professor: 'Henning Piezunka', dates: 'Jun 29 - Jul 3, 2026', location: 'Philadelphia' }
     }
   },
   'MGMT-XXXX-IMPACT': {
@@ -1566,8 +1574,9 @@ const COURSES = {
     department: 'MGMT',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Vit Henisz', dates: 'May 4-7, 2026', location: 'Philadelphia/NY' }
+      all: { term: 'T4', professor: 'Vit Henisz', dates: 'May 4-7, 2026', location: 'Philadelphia/NY' }
     }
   },
   'MGMT-8970-INDIA': {
@@ -1722,8 +1731,9 @@ const COURSES = {
     department: 'MKTG',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      san_francisco: { term: 'T5', professor: 'Gideon Nave', dates: 'Oct 12-15, 2026' }
+      all: { term: 'T5', professor: 'Gideon Nave', dates: 'Oct 12-15, 2026', location: 'San Francisco' }
     }
   },
   'MKTG-7540': {
@@ -1805,8 +1815,9 @@ const COURSES = {
     department: 'MKTG',
     credits: 0.5,
     prerequisites: ['MKTG-6110'],
+    isBlockWeek: true,
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Pinar Yildirim', dates: 'Jan 11-14, 2027' }
+      all: { term: 'T6', professor: 'Pinar Yildirim', dates: 'Jan 11-14, 2027', location: 'Philadelphia' }
     }
   },
   'MKTG-7780': {
@@ -1839,8 +1850,9 @@ const COURSES = {
     department: 'MKTG',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      san_francisco: { term: 'T4', professor: 'Americus Reed', dates: 'Aug 3-6, 2026' }
+      all: { term: 'T4', professor: 'Americus Reed', dates: 'Aug 3-6, 2026', location: 'San Francisco' }
     }
   },
   'MKTG-8530': {
@@ -1850,8 +1862,9 @@ const COURSES = {
     department: 'MKTG',
     credits: 0.5,
     prerequisites: ['MKTG-6110'],
+    isBlockWeek: true,
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Annie Wilson', dates: 'Mar 8-11, 2027' }
+      all: { term: 'T6', professor: 'Annie Wilson', dates: 'Mar 8-11, 2027', location: 'Philadelphia' }
     }
   },
   'MKTG-8960-SAUDI': {
@@ -1887,8 +1900,9 @@ const COURSES = {
     department: 'MKTG',
     credits: 0.5,
     prerequisites: ['MKTG-6110'],
+    isBlockWeek: true,
     offerings: {
-      san_francisco: { term: 'T6', professor: 'Barbara Kahn', dates: 'May 3-7, 2027', location: 'Paris' }
+      all: { term: 'T6', professor: 'Barbara Kahn', dates: 'May 3-7, 2027', location: 'Paris' }
     }
   },
   'MKTG-XXXX': {
@@ -1898,8 +1912,9 @@ const COURSES = {
     department: 'MKTG',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      philadelphia: { term: 'T5', professor: 'Sohiit Karol', dates: 'Oct 12-15, 2026' }
+      all: { term: 'T5', professor: 'Sohiit Karol', dates: 'Oct 12-15, 2026', location: 'Philadelphia' }
     }
   },
 
@@ -1924,8 +1939,9 @@ const COURSES = {
     department: 'OIDD',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      san_francisco: { term: 'T5', professor: 'Serguei Netessine', dates: 'Nov 30 - Dec 3, 2026' }
+      all: { term: 'T5', professor: 'Serguei Netessine', dates: 'Nov 30 - Dec 3, 2026', location: 'San Francisco' }
     }
   },
   'OIDD-6360': {
@@ -2002,8 +2018,9 @@ const COURSES = {
     department: 'OIDD',
     credits: 0.5,
     prerequisites: ['STAT-6130', 'FNCE-6110'],
+    isBlockWeek: true,
     offerings: {
-      san_francisco: { term: 'T5', professor: 'Ziv Katalan', dates: 'Oct 12-15, 2026' }
+      all: { term: 'T5', professor: 'Ziv Katalan', dates: 'Oct 12-15, 2026', location: 'San Francisco' }
     }
   },
   'OIDD-6540': {
@@ -2013,9 +2030,10 @@ const COURSES = {
     department: 'OIDD',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
       san_francisco: { term: 'T5', professor: 'Karl Ulrich', slot: 'A', weekends: [0, 1, 2, 3] },
-      global: { term: 'T5', professor: 'Karl Ulrich', dates: 'Dec 7-10, 2026' }
+      all: { term: 'T5', professor: 'Karl Ulrich', dates: 'Dec 7-10, 2026', location: 'Global' }
     }
   },
   'OIDD-6620': {
@@ -2037,9 +2055,10 @@ const COURSES = {
     department: 'OIDD',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Priyanka Vergadia', dates: 'May 3-6, 2027' },
-      san_francisco: { term: 'T6', professor: 'Kartik Hosanagar', dates: 'Mar 8-11, 2027' }
+      all_phl: { term: 'T6', professor: 'Priyanka Vergadia', dates: 'May 3-6, 2027', location: 'Philadelphia' },
+      all_sf: { term: 'T6', professor: 'Kartik Hosanagar', dates: 'Mar 8-11, 2027', location: 'San Francisco' }
     }
   },
   'OIDD-6920': {
@@ -2049,8 +2068,9 @@ const COURSES = {
     department: 'OIDD',
     credits: 0.5,
     prerequisites: ['MGMT-6910'],
+    isBlockWeek: true,
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Maurice Schweitzer', dates: 'Mar 8-11, 2027' }
+      all: { term: 'T6', professor: 'Maurice Schweitzer', dates: 'Mar 8-11, 2027', location: 'Philadelphia' }
     }
   },
   'OIDD-6930': {
@@ -2060,9 +2080,10 @@ const COURSES = {
     department: 'OIDD',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
       philadelphia: { term: 'T5', professor: 'Cade Massey', slot: 'B', weekends: [0, 1, 2, 3] },
-      san_francisco: { term: 'T6', professor: 'Cade Massey', dates: 'Feb 15-18, 2027' },
+      all: { term: 'T6', professor: 'Cade Massey', dates: 'Feb 15-18, 2027', location: 'San Francisco' },
       global: { term: 'T4', professor: 'Cade Massey', slot: 'C', weekends: [4, 5, 6] }
     }
   },
@@ -2073,8 +2094,9 @@ const COURSES = {
     department: 'OIDD',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      san_francisco: { term: 'T6', professor: 'Serguei Netessine', dates: 'Mar 8-11, 2027', location: 'Seattle' }
+      all: { term: 'T6', professor: 'Serguei Netessine', dates: 'Mar 8-11, 2027', location: 'Seattle' }
     }
   },
   'OIDD-8970-INDIA': {
@@ -2151,8 +2173,9 @@ const COURSES = {
     department: 'LGST',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      san_francisco: { term: 'T5', professor: 'Kevin Werbach', dates: 'Fall 2026 (TBD)' }
+      all: { term: 'T5', professor: 'Kevin Werbach', dates: 'Dec 14-17, 2026', location: 'San Francisco' }
     }
   },
   'LGST-7500': {
@@ -2173,8 +2196,9 @@ const COURSES = {
     department: 'LGST',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      philadelphia: { term: 'T5', professor: 'Peter Conti-Brown', dates: 'Oct 12-15, 2026' }
+      all: { term: 'T5', professor: 'Peter Conti-Brown', dates: 'Oct 12-15, 2026', location: 'Philadelphia' }
     }
   },
   'LGST-XXXX': {
@@ -2184,8 +2208,9 @@ const COURSES = {
     department: 'LGST',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Nina Strohminger', dates: 'Jun 15-18, 2026' }
+      all: { term: 'T4', professor: 'Nina Strohminger', dates: 'Jun 15-18, 2026', location: 'Philadelphia' }
     }
   },
   'LGST-8060': {
@@ -2235,8 +2260,9 @@ const COURSES = {
     department: 'LGST',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      san_francisco: { term: 'T4', professor: 'Rob DiGisi', dates: 'Aug 3-6, 2026' }
+      all: { term: 'T4', professor: 'Rob DiGisi', dates: 'Aug 3-6, 2026', location: 'San Francisco' }
     }
   },
   'LGST-8130': {
@@ -2324,8 +2350,9 @@ const COURSES = {
     department: 'HCMG',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Robert Burns', dates: 'Jun 15-18, 2026' }
+      all: { term: 'T4', professor: 'Robert Burns', dates: 'Jun 15-18, 2026', location: 'Philadelphia' }
     }
   },
   'HCMG-8450': {
@@ -2346,8 +2373,9 @@ const COURSES = {
     department: 'HCMG',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      san_francisco: { term: 'T6', professor: 'Ezekiel Emanuel', dates: 'Spring 2027 (TBD)' }
+      all: { term: 'T6', professor: 'Ezekiel Emanuel', dates: 'Spring 2027 (TBD)', location: 'San Francisco' }
     }
   },
   'HCMG-8520': {
@@ -2380,8 +2408,9 @@ const COURSES = {
     department: 'HCMG',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      philadelphia: { term: 'T5', professor: 'Ingrid Nembhard', dates: 'Nov 30 - Dec 3, 2026' }
+      all: { term: 'T5', professor: 'Ingrid Nembhard', dates: 'Nov 30 - Dec 3, 2026', location: 'Philadelphia' }
     }
   },
   'HCMG-8670': {
@@ -2439,8 +2468,9 @@ const COURSES = {
     department: 'STAT',
     credits: 0.5,
     prerequisites: ['STAT-6130'],
+    isBlockWeek: true,
     offerings: {
-      philadelphia: { term: 'T6', professor: 'Adi Wyner', dates: 'May 3-6, 2027' }
+      all: { term: 'T6', professor: 'Adi Wyner', dates: 'May 3-6, 2027', location: 'Philadelphia' }
     }
   },
 
@@ -2482,8 +2512,9 @@ const COURSES = {
     department: 'REAL',
     credits: 0.5,
     prerequisites: [],
+    isBlockWeek: true,
     offerings: {
-      philadelphia: { term: 'T4', professor: 'Bob Chalfin', dates: 'Jun 15-18, 2026' }
+      all: { term: 'T4', professor: 'Bob Chalfin', dates: 'Jun 15-18, 2026', location: 'Philadelphia' }
     }
   },
 

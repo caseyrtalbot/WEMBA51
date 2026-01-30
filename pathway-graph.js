@@ -883,7 +883,7 @@ class PathwayGraph {
 
     Object.entries(COURSES).forEach(([code, course]) => {
       if (!course.prerequisites) return;
-      if (!course.offerings?.[cohort]) return;
+      if (!isCourseAvailableForCohort(course, cohort)) return;
 
       if (course.prerequisites.includes(courseCode)) {
         unlocks.push(code);
@@ -981,7 +981,7 @@ class PathwayGraph {
       if (!prereqCourse) return;
 
       // Check if prereq is available for this cohort
-      if (!prereqCourse.offerings?.[cohort]) return;
+      if (!isCourseAvailableForCohort(prereqCourse, cohort)) return;
 
       const ghostX = selectedNodePos.left - GRAPH_CONFIG.columnWidth - 20;
       const ghostY = selectedNodePos.top + index * (GRAPH_CONFIG.nodeHeight + 20);
@@ -1229,7 +1229,7 @@ class PathwayGraph {
       const normalizedCode = code.replace(/\s+/g, '-');
       const course = COURSES[normalizedCode];
       if (!course) return false;
-      const offering = course.offerings?.[cohort];
+      const offering = getCourseOffering(course, cohort);
       return offering?.term === term;
     });
   }
@@ -1343,7 +1343,7 @@ class PathwayGraph {
 
     // Term badge
     const cohort = this.state.selectedCohort;
-    const offering = course.offerings?.[cohort];
+    const offering = getCourseOffering(course, cohort);
     const termText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     termText.setAttribute('class', 'node-term');
     termText.setAttribute('x', width - 10);
@@ -1664,7 +1664,7 @@ class PathwayGraph {
       const rect = this.getSvgElementBounds(zone);
       if (this.isPointInRect(clientX, clientY, rect)) {
         const term = zone.getAttribute('data-term');
-        const offering = course.offerings?.[cohort];
+        const offering = getCourseOffering(course, cohort);
 
         if (offering?.term === term) {
           zone.classList.add('active');
@@ -1699,7 +1699,7 @@ class PathwayGraph {
     if (!course) return;
 
     const cohort = this.state.selectedCohort;
-    const offering = course.offerings?.[cohort];
+    const offering = getCourseOffering(course, cohort);
     if (!offering) return;
 
     const dropzones = this.dropzonesLayer.querySelectorAll('.term-dropzone');
@@ -1732,7 +1732,7 @@ class PathwayGraph {
       if (!course) return;
 
       const cohort = this.state.selectedCohort;
-      const offering = course.offerings?.[cohort];
+      const offering = getCourseOffering(course, cohort);
       if (!offering) return;
 
       // Check if dropped on valid term
@@ -1769,7 +1769,7 @@ class PathwayGraph {
     if (!course) return null;
 
     const cohort = this.state.selectedCohort;
-    const offering = course.offerings?.[cohort];
+    const offering = getCourseOffering(course, cohort);
     if (!offering) return null;
 
     const dropzones = this.dropzonesLayer.querySelectorAll('.term-dropzone');
@@ -2109,11 +2109,11 @@ class CourseCatalog {
         // Filter to courses available for this cohort
         const availableCourses = allMajorCourses
           .map(code => ({ code, course: COURSES[code] }))
-          .filter(({ course }) => course?.offerings?.[cohort])
+          .filter(({ course }) => isCourseAvailableForCohort(course, cohort))
           .map(({ code, course }) => {
             const inPlan = plannedSet.has(code);
             const prereqsMet = this.arePrereqsMet(code, allPlannedCourses);
-            const offering = course.offerings[cohort];
+            const offering = getCourseOffering(course, cohort);
             return { code, course, inPlan, prereqsMet, offering };
           });
 
@@ -2139,13 +2139,13 @@ class CourseCatalog {
       const coursesByDept = {};
 
       Object.entries(COURSES).forEach(([code, course]) => {
-        if (!course.offerings?.[cohort]) return;
+        if (!isCourseAvailableForCohort(course, cohort)) return;
         const dept = course.department;
         if (!coursesByDept[dept]) coursesByDept[dept] = [];
 
         const inPlan = plannedSet.has(code);
         const prereqsMet = this.arePrereqsMet(code, allPlannedCourses);
-        const offering = course.offerings[cohort];
+        const offering = getCourseOffering(course, cohort);
         coursesByDept[dept].push({ code, course, inPlan, prereqsMet, offering });
       });
 
