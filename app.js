@@ -60,9 +60,15 @@ function initRouter() {
       // Show landing page
       const cohortSelection = document.getElementById('cohort-selection');
       const mainApp = document.getElementById('main-app');
-      cohortSelection.classList.remove('hidden');
+      // Clean up all transition classes when returning to landing
+      cohortSelection.classList.remove('hidden', 'transitioning', 'sliding-up');
       cohortSelection.classList.add('active');
       mainApp.classList.remove('active');
+
+      // Reset any selected card states if returning
+      document.querySelectorAll('.cohort-card.selected').forEach(card => {
+        card.classList.remove('selected');
+      });
     } else if (route.screen === 'main-app' && route.view) {
       // Show main app with specific view
       const cohortSelection = document.getElementById('cohort-selection');
