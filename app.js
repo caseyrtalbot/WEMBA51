@@ -148,6 +148,13 @@ function updateCohortDisplay() {
   const cohort = COHORTS[state.selectedCohort];
   document.getElementById('current-cohort-name').textContent = cohort.name;
 
+  // Update sidebar cohort icon
+  const cohortIcon = document.getElementById('cohort-icon-display');
+  if (cohortIcon) {
+    const iconMap = { philadelphia: 'PHL', san_francisco: 'SF', global: 'GLO' };
+    cohortIcon.textContent = iconMap[state.selectedCohort] || 'PHL';
+  }
+
   // Hide finance decision for Global cohort
   const financeCard = document.getElementById('finance-decision-card');
   if (state.selectedCohort === 'global') {
@@ -224,6 +231,14 @@ function updateDashboard() {
   document.getElementById('progress-bar').style.width = `${Math.min(progress, 100)}%`;
   document.getElementById('progress-percent').textContent = `(${Math.round(progress)}%)`;
 
+  // Update sidebar progress (new design)
+  const sidebarCu = document.getElementById('sidebar-cu-display');
+  const sidebarPercent = document.getElementById('sidebar-progress-percent');
+  const sidebarFill = document.getElementById('sidebar-progress-fill');
+  if (sidebarCu) sidebarCu.textContent = totalCU.toFixed(1);
+  if (sidebarPercent) sidebarPercent.textContent = `${Math.round(progress)}%`;
+  if (sidebarFill) sidebarFill.style.width = `${Math.min(progress, 100)}%`;
+
   // Update graduation status
   const statusEl = document.getElementById('graduation-status');
   if (totalCU >= PROGRAM_RULES.graduationMinimum) {
@@ -277,6 +292,17 @@ function updateMajorProgress() {
   });
 
   container.innerHTML = html;
+
+  // Update sidebar major status
+  const sidebarMajor = document.getElementById('sidebar-major-status');
+  if (sidebarMajor) {
+    if (state.targetMajors.length === 0) {
+      sidebarMajor.innerHTML = '<span class="major-label">Major</span><span class="major-value">Not Selected</span>';
+    } else {
+      const majorNames = state.targetMajors.map(id => MAJORS[id].name).join(', ');
+      sidebarMajor.innerHTML = `<span class="major-label">Major</span><span class="major-value">${majorNames}</span>`;
+    }
+  }
 }
 
 function updateCompletedBlockCourses() {

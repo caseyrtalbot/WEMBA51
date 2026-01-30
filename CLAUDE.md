@@ -6,21 +6,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 The WEMBA 51 Pathway Planner is a static web application that helps Wharton Executive MBA students plan their academic pathway to graduation. Students select their cohort (Philadelphia, San Francisco, or Global), explore courses by major or department, and build a hypothetical course plan to track progress toward 19.0 CU graduation requirements.
 
-**Technology:** Plain HTML/CSS/JavaScript with no build tools or dependencies. Just open `index.html` in a browser.
+**Technology:** Plain HTML/CSS/JavaScript with no build tools or dependencies.
 
-## Running the App
+## Commands
 
 ```bash
-# Python 3
-python -m http.server 8000
+# Run local server
+python -m http.server 8000   # or: npx http-server
 
-# Or Node.js
-npx http-server
+# Run Playwright tests (if test files exist)
+npx playwright test
+npx playwright test --ui              # interactive mode
+npx playwright test tests/foo.spec.js # single file
 ```
 
-Then open `http://localhost:8000` in a browser.
-
-**Deployment:** Hosted on Vercel (see `.vercel/` config). Deploy by pushing to the connected repository.
+**Deployment:** Hosted on Vercel. Deploy by pushing to the connected repository.
 
 ## Architecture
 
@@ -132,7 +132,13 @@ Department colors are defined in `DEPT_COLORS` object matching `DEPARTMENTS` in 
 
 ## Validation Features
 
-**Schedule Conflicts:** Courses in the same term with overlapping `weekends` arrays trigger warnings. Checked via `getScheduleConflicts()`.
+**Schedule Conflicts (Slot-Based):** Courses use Wharton's slot system (A, B, C) for conflict detection:
+- Same term + same slot letter → **conflict** (e.g., two slot A courses in T4)
+- Same term + different slots → **no conflict** (e.g., slot A + slot B in T4)
+- Slot-to-weekends mapping: Slot A/B = weekends `[0,1,2,3]`, Slot C = `[4,5,6]`
+- GMC/Block Week courses use date-based detection instead
+
+Checked via `slotsConflict()` and `getScheduleConflicts()` in app.js.
 
 **Prerequisites:** Each course can have a `prerequisites` array of course codes. `getMissingPrerequisites()` checks against planned courses + core curriculum.
 
@@ -146,3 +152,8 @@ All course availability filters through `state.selectedCohort`. The Global cohor
 ## Curriculum Data Source
 
 Data in `data.js` was synthesized from markdown files in the parent directory. When those source files are updated, `data.js` should be manually updated to reflect changes.
+
+## Documentation
+
+- `HANDOFF.md` - Context handoff notes for recent features (e.g., slot-based conflict detection)
+- `docs/plans/` - Design documents for major features like Graph Builder
