@@ -426,8 +426,12 @@
 
           <!-- Graph Legend -->
           <div class="graph-legend-box" id="graph-legend">
-            <h4>Legend</h4>
-            <div class="legend-row">
+            <div class="legend-header">
+              <h4>Legend</h4>
+              <button class="legend-toggle" id="legend-toggle-btn" type="button" aria-expanded="true" aria-controls="legend-content">Hide</button>
+            </div>
+            <div class="legend-content" id="legend-content">
+              <div class="legend-row">
               <div class="legend-section">
                 <h5>Departments</h5>
                 <div class="legend-items legend-depts">
@@ -477,6 +481,7 @@
                     <span>Locked</span>
                   </div>
                 </div>
+              </div>
               </div>
             </div>
           </div>

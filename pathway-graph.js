@@ -51,6 +51,8 @@ class PathwayGraph {
     this.isPanning = false;
     this.showConflictsMode = false;
     this.majorDisplayMode = 'all'; // 'all', 'highlight', 'filter'
+    this.pointerEventsSupported = typeof window !== 'undefined' && 'PointerEvent' in window;
+    this.activePanPointerId = null;
 
     // Node positions cache
     this.nodePositions = new Map();
@@ -61,6 +63,7 @@ class PathwayGraph {
     this.setupConflictToggle();
     this.setupMajorModeSelector();
     this.setupInteractiveLegend();
+    this.setupLegendToggle();
     this.setupMajorsDisplay();
   }
 
@@ -301,6 +304,36 @@ class PathwayGraph {
         }
       });
     });
+  }
+
+  setupLegendToggle() {
+    const legendBox = document.getElementById('graph-legend');
+    const toggleBtn = document.getElementById('legend-toggle-btn');
+    if (!legendBox || !toggleBtn) return;
+
+    const applyState = (collapsed) => {
+      legendBox.classList.toggle('is-collapsed', collapsed);
+      toggleBtn.textContent = collapsed ? 'Show' : 'Hide';
+      toggleBtn.setAttribute('aria-expanded', String(!collapsed));
+    };
+
+    const handleBreakpoint = () => {
+      if (window.matchMedia('(max-width: 768px)').matches) {
+        if (!legendBox.dataset.userToggled) {
+          applyState(true);
+        }
+      } else {
+        applyState(false);
+      }
+    };
+
+    toggleBtn.addEventListener('click', () => {
+      legendBox.dataset.userToggled = 'true';
+      applyState(!legendBox.classList.contains('is-collapsed'));
+    });
+
+    handleBreakpoint();
+    window.addEventListener('resize', handleBreakpoint);
   }
 
   applyLegendHighlight(type) {
@@ -682,11 +715,19 @@ class PathwayGraph {
     document.getElementById('zoom-out-btn')?.addEventListener('click', () => this.zoomOut());
     document.getElementById('zoom-reset-btn')?.addEventListener('click', () => this.resetView());
 
-    // Pan with mouse drag on SVG background
-    this.svg.addEventListener('mousedown', (e) => this.handlePanStart(e));
-    this.svg.addEventListener('mousemove', (e) => this.handlePanMove(e));
-    this.svg.addEventListener('mouseup', () => this.handlePanEnd());
-    this.svg.addEventListener('mouseleave', () => this.handlePanEnd());
+    // Pan with drag on SVG background (pointer-aware)
+    if (this.pointerEventsSupported) {
+      this.svg.addEventListener('pointerdown', (e) => this.handlePanStart(e));
+      this.svg.addEventListener('pointermove', (e) => this.handlePanMove(e));
+      this.svg.addEventListener('pointerup', (e) => this.handlePanEnd(e));
+      this.svg.addEventListener('pointercancel', (e) => this.handlePanEnd(e));
+      this.svg.addEventListener('pointerleave', (e) => this.handlePanEnd(e));
+    } else {
+      this.svg.addEventListener('mousedown', (e) => this.handlePanStart(e));
+      this.svg.addEventListener('mousemove', (e) => this.handlePanMove(e));
+      this.svg.addEventListener('mouseup', () => this.handlePanEnd());
+      this.svg.addEventListener('mouseleave', () => this.handlePanEnd());
+    }
 
     // Click to deselect
     this.svg.addEventListener('click', (e) => {
@@ -728,25 +769,45 @@ class PathwayGraph {
 
   // Pan methods
   handlePanStart(e) {
+    if (this.isDragging) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
     if (e.target === this.svg || e.target.classList.contains('term-dropzone')) {
       this.isPanning = true;
       this.panStartX = e.clientX - this.panX;
       this.panStartY = e.clientY - this.panY;
       this.svg.classList.add('panning');
+      if (e.pointerId !== undefined) {
+        this.activePanPointerId = e.pointerId;
+        this.svg.setPointerCapture?.(e.pointerId);
+      }
+      if (e.pointerType === 'touch') {
+        e.preventDefault();
+      }
     }
   }
 
   handlePanMove(e) {
     if (this.isPanning) {
+      if (this.activePanPointerId !== null && e.pointerId !== undefined &&
+          e.pointerId !== this.activePanPointerId) {
+        return;
+      }
       this.panX = e.clientX - this.panStartX;
       this.panY = e.clientY - this.panStartY;
       this.updateTransform();
+      if (e.pointerType === 'touch') {
+        e.preventDefault();
+      }
     }
   }
 
-  handlePanEnd() {
+  handlePanEnd(e) {
     this.isPanning = false;
     this.svg.classList.remove('panning');
+    if (e && e.pointerId !== undefined) {
+      this.svg.releasePointerCapture?.(e.pointerId);
+    }
+    this.activePanPointerId = null;
   }
 
   // Selection
@@ -1407,17 +1468,34 @@ class PathwayGraph {
     removeBtn.appendChild(removeX);
 
     // Handle all events on remove button to prevent bubbling
-    removeBg.addEventListener('mousedown', (e) => {
-      e.stopPropagation();
-      e.preventDefault();
-    });
+    if (this.pointerEventsSupported) {
+      removeBg.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        if (e.pointerType === 'touch') {
+          e.preventDefault();
+        }
+      });
 
-    removeBg.addEventListener('mouseup', (e) => {
-      e.stopPropagation();
-      e.preventDefault();
-      // Remove course on mouseup (more reliable than click in SVG)
-      removeCourse(courseCode);
-    });
+      removeBg.addEventListener('pointerup', (e) => {
+        e.stopPropagation();
+        if (e.pointerType === 'touch') {
+          e.preventDefault();
+        }
+        removeCourse(courseCode);
+      });
+    } else {
+      removeBg.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      });
+
+      removeBg.addEventListener('mouseup', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        // Remove course on mouseup (more reliable than click in SVG)
+        removeCourse(courseCode);
+      });
+    }
 
     g.appendChild(removeBtn);
 
@@ -1578,38 +1656,25 @@ class PathwayGraph {
 
   makeNodeDraggable(nodeElement, courseCode) {
     let isDragging = false;
+    let pendingDrag = false;
     let startX, startY;
     let originalTransform;
+    let activePointerId = null;
+    const dragThreshold = 6;
     const self = this;
 
-    nodeElement.addEventListener('mousedown', (e) => {
-      if (e.button !== 0) return; // Only left click
-
-      // Don't start drag if clicking the remove button
-      const target = e.target;
-      if (target.classList.contains('remove-btn-bg') ||
-          target.closest('.node-remove-btn')) {
-        return;
-      }
-
+    const beginDrag = (clientX, clientY) => {
       isDragging = true;
-      const transform = nodeElement.getAttribute('transform');
-      startX = e.clientX;
-      startY = e.clientY;
-      originalTransform = transform;
-
+      self.isDragging = true;
+      startX = clientX;
+      startY = clientY;
       nodeElement.classList.add('dragging');
       document.getElementById('trash-dropzone')?.classList.remove('hidden');
+    };
 
-      e.preventDefault();
-      e.stopPropagation();
-    });
-
-    const handleMouseMove = (e) => {
-      if (!isDragging) return;
-
-      const dx = (e.clientX - startX) / self.zoom;
-      const dy = (e.clientY - startY) / self.zoom;
+    const updateDrag = (clientX, clientY) => {
+      const dx = (clientX - startX) / self.zoom;
+      const dy = (clientY - startY) / self.zoom;
 
       const match = originalTransform.match(/translate\(([^,]+),\s*([^)]+)\)/);
       if (match) {
@@ -1618,37 +1683,145 @@ class PathwayGraph {
         nodeElement.setAttribute('transform', `translate(${newX}, ${newY})`);
       }
 
-      // Highlight drop zones
-      self.highlightDropZone(e.clientX, e.clientY, courseCode);
+      self.highlightDropZone(clientX, clientY, courseCode);
     };
 
-    const handleMouseUp = (e) => {
-      if (!isDragging) return;
+    const endDrag = (clientX, clientY) => {
       isDragging = false;
+      pendingDrag = false;
+      self.isDragging = false;
 
       nodeElement.classList.remove('dragging');
       document.getElementById('trash-dropzone')?.classList.add('hidden');
       self.clearDropZoneHighlights();
 
-      // Check if dropped on trash
       const trashZone = document.getElementById('trash-dropzone');
-      if (trashZone && self.isOverElement(e.clientX, e.clientY, trashZone)) {
+      if (trashZone && self.isOverElement(clientX, clientY, trashZone)) {
         removeCourse(courseCode);
         return;
       }
 
-      // Check if dropped on a valid term column
-      const targetTerm = self.getDropTargetTerm(e.clientX, e.clientY, courseCode);
+      const targetTerm = self.getDropTargetTerm(clientX, clientY, courseCode);
       if (targetTerm) {
         self.moveCourseToTerm(courseCode, targetTerm);
       } else {
-        // Snap back to original position
         nodeElement.setAttribute('transform', originalTransform);
       }
     };
 
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
+    const cancelDrag = () => {
+      isDragging = false;
+      pendingDrag = false;
+      self.isDragging = false;
+      nodeElement.classList.remove('dragging');
+      document.getElementById('trash-dropzone')?.classList.add('hidden');
+      self.clearDropZoneHighlights();
+      if (originalTransform) {
+        nodeElement.setAttribute('transform', originalTransform);
+      }
+    };
+
+    if (this.pointerEventsSupported) {
+      nodeElement.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+        const target = e.target;
+        if (target.classList.contains('remove-btn-bg') ||
+            target.closest('.node-remove-btn')) {
+          return;
+        }
+
+        const transform = nodeElement.getAttribute('transform');
+        originalTransform = transform;
+        activePointerId = e.pointerId;
+        pendingDrag = e.pointerType === 'touch';
+
+        if (!pendingDrag) {
+          beginDrag(e.clientX, e.clientY);
+        } else {
+          startX = e.clientX;
+          startY = e.clientY;
+        }
+
+        nodeElement.setPointerCapture?.(e.pointerId);
+        e.stopPropagation();
+      });
+
+      nodeElement.addEventListener('pointermove', (e) => {
+        if (activePointerId !== e.pointerId) return;
+
+        if (!isDragging && pendingDrag) {
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          if (Math.hypot(dx, dy) >= dragThreshold) {
+            beginDrag(e.clientX, e.clientY);
+          } else {
+            return;
+          }
+        }
+
+        if (!isDragging) return;
+        updateDrag(e.clientX, e.clientY);
+
+        if (e.pointerType === 'touch') {
+          e.preventDefault();
+        }
+      });
+
+      nodeElement.addEventListener('pointerup', (e) => {
+        if (activePointerId !== e.pointerId) return;
+        if (isDragging) {
+          endDrag(e.clientX, e.clientY);
+        } else {
+          pendingDrag = false;
+        }
+        nodeElement.releasePointerCapture?.(e.pointerId);
+        activePointerId = null;
+      });
+
+      nodeElement.addEventListener('pointercancel', (e) => {
+        if (activePointerId !== e.pointerId) return;
+        cancelDrag();
+        nodeElement.releasePointerCapture?.(e.pointerId);
+        activePointerId = null;
+      });
+    } else {
+      nodeElement.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+
+        const target = e.target;
+        if (target.classList.contains('remove-btn-bg') ||
+            target.closest('.node-remove-btn')) {
+          return;
+        }
+
+        isDragging = true;
+        self.isDragging = true;
+        const transform = nodeElement.getAttribute('transform');
+        startX = e.clientX;
+        startY = e.clientY;
+        originalTransform = transform;
+
+        nodeElement.classList.add('dragging');
+        document.getElementById('trash-dropzone')?.classList.remove('hidden');
+
+        e.preventDefault();
+        e.stopPropagation();
+      });
+
+      const handleMouseMove = (e) => {
+        if (!isDragging) return;
+        updateDrag(e.clientX, e.clientY);
+      };
+
+      const handleMouseUp = (e) => {
+        if (!isDragging) return;
+        endDrag(e.clientX, e.clientY);
+      };
+
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
   }
 
   highlightDropZone(clientX, clientY, courseCode) {
@@ -2075,6 +2248,19 @@ class CourseCatalog {
     this.state = state;
     this.graph = graph;
     this.draggedCourse = null;
+    this.pointerEventsSupported = typeof window !== 'undefined' && 'PointerEvent' in window;
+    this.isTouchInput = typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(pointer: coarse)').matches;
+    this.touchDrag = {
+      active: false,
+      pointerId: null,
+      courseCode: null,
+      sourceEl: null,
+      ghostEl: null,
+      startX: 0,
+      startY: 0
+    };
   }
 
   render() {
@@ -2229,6 +2415,125 @@ class CourseCatalog {
         this.graph.clearDropZoneHighlights();
       });
     });
+
+    this.setupTouchDragListeners(catalogCourses);
+  }
+
+  setupTouchDragListeners(catalogCourses) {
+    if (!this.pointerEventsSupported || !this.isTouchInput) return;
+
+    catalogCourses.forEach(courseEl => {
+      courseEl.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse') return;
+        if (this.touchDrag.active) return;
+
+        const courseCode = courseEl.getAttribute('data-course');
+        if (!courseCode) return;
+
+        this.touchDrag.pointerId = e.pointerId;
+        this.touchDrag.courseCode = courseCode;
+        this.touchDrag.sourceEl = courseEl;
+        this.touchDrag.startX = e.clientX;
+        this.touchDrag.startY = e.clientY;
+
+        courseEl.setPointerCapture?.(e.pointerId);
+      });
+
+      courseEl.addEventListener('pointermove', (e) => {
+        if (this.touchDrag.pointerId !== e.pointerId) return;
+        if (!this.touchDrag.courseCode) return;
+
+        const dx = e.clientX - this.touchDrag.startX;
+        const dy = e.clientY - this.touchDrag.startY;
+
+        if (!this.touchDrag.active) {
+          if (Math.hypot(dx, dy) < 8) {
+            return;
+          }
+          this.startTouchDrag(e.clientX, e.clientY);
+        }
+
+        if (!this.touchDrag.active) return;
+        this.updateTouchDrag(e.clientX, e.clientY);
+        e.preventDefault();
+      });
+
+      courseEl.addEventListener('pointerup', (e) => {
+        if (this.touchDrag.pointerId !== e.pointerId) return;
+        if (this.touchDrag.active) {
+          this.endTouchDrag(e.clientX, e.clientY);
+        } else {
+          this.cleanupTouchDrag();
+        }
+        courseEl.releasePointerCapture?.(e.pointerId);
+      });
+
+      courseEl.addEventListener('pointercancel', (e) => {
+        if (this.touchDrag.pointerId !== e.pointerId) return;
+        this.cleanupTouchDrag();
+        courseEl.releasePointerCapture?.(e.pointerId);
+      });
+    });
+  }
+
+  startTouchDrag(clientX, clientY) {
+    const { sourceEl, courseCode } = this.touchDrag;
+    if (!sourceEl || !courseCode) return;
+
+    this.touchDrag.active = true;
+    this.draggedCourse = courseCode;
+    sourceEl.classList.add('dragging');
+    this.createDragGhost(sourceEl, clientX, clientY);
+    this.graph?.showDropZonesForCourse(courseCode);
+  }
+
+  updateTouchDrag(clientX, clientY) {
+    if (!this.touchDrag.active || !this.touchDrag.ghostEl) return;
+    this.touchDrag.ghostEl.style.left = `${clientX}px`;
+    this.touchDrag.ghostEl.style.top = `${clientY}px`;
+    this.graph?.highlightDropZone(clientX, clientY, this.touchDrag.courseCode);
+  }
+
+  endTouchDrag(clientX, clientY) {
+    const courseCode = this.touchDrag.courseCode;
+    if (courseCode) {
+      const course = COURSES[courseCode.replace(/\s+/g, '-')];
+      const cohort = this.state.selectedCohort;
+      const offering = course?.offerings?.[cohort];
+      const targetTerm = this.graph?.getDropTargetTerm(clientX, clientY, courseCode);
+
+      if (offering && targetTerm && targetTerm === offering.term) {
+        addCourse(courseCode);
+      }
+    }
+
+    this.cleanupTouchDrag();
+  }
+
+  createDragGhost(sourceEl, clientX, clientY) {
+    const ghost = sourceEl.cloneNode(true);
+    ghost.classList.add('drag-ghost');
+    ghost.style.width = `${sourceEl.offsetWidth}px`;
+    ghost.style.left = `${clientX}px`;
+    ghost.style.top = `${clientY}px`;
+    document.body.appendChild(ghost);
+    this.touchDrag.ghostEl = ghost;
+  }
+
+  cleanupTouchDrag() {
+    if (this.touchDrag.sourceEl) {
+      this.touchDrag.sourceEl.classList.remove('dragging');
+    }
+    if (this.touchDrag.ghostEl) {
+      this.touchDrag.ghostEl.remove();
+    }
+    this.graph?.clearDropZoneHighlights();
+    this.draggedCourse = null;
+    this.touchDrag.active = false;
+    this.touchDrag.pointerId = null;
+    this.touchDrag.courseCode = null;
+    this.touchDrag.sourceEl = null;
+    this.touchDrag.ghostEl = null;
   }
 }
 
