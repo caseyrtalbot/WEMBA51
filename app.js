@@ -8,10 +8,17 @@ let state = {
   waivedCourses: [],
   completedBlockCourses: [], // Early block courses completed during T1-T3
   financeChoice: null, // 'FNCE-6110' or 'FNCE-6210'
-  currentView: 'dashboard',
+  currentView: 'explore', // 'explore' or 'build' (simplified from 4 options)
   explorerMode: 'majors',
   selectedMajor: null,
-  selectedDepartment: null
+  selectedDepartment: null,
+  // New state for redesigned UI
+  hasCompletedOnboarding: false,
+  progressDrawerState: 'collapsed', // 'collapsed', 'partial', 'full'
+  settingsPanelOpen: false,
+  courseSheetOpen: false,
+  catalogSheetOpen: false,
+  selectedCourseCode: null
 };
 
 function getTermLabel(offering) {
@@ -28,8 +35,12 @@ function getTermLabel(offering) {
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
   initEventListeners();
+  initNewUIListeners();
 
-  if (state.selectedCohort) {
+  // Check if onboarding is needed
+  if (!state.hasCompletedOnboarding || !state.selectedCohort) {
+    showOnboarding();
+  } else {
     showMainApp();
   }
 });
@@ -78,6 +89,1069 @@ function initEventListeners() {
   });
 }
 
+// New UI Event Listeners for redesigned dual-mode interface
+function initNewUIListeners() {
+  // Bottom tab bar navigation (mobile)
+  document.querySelectorAll('.bottom-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      switchToMode(tab.dataset.view);
+    });
+  });
+
+  // Desktop sidebar navigation
+  document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      switchToMode(item.dataset.view);
+    });
+  });
+
+  // Header CU trigger (opens progress drawer)
+  const headerCuTrigger = document.getElementById('header-cu-trigger');
+  if (headerCuTrigger) {
+    headerCuTrigger.addEventListener('click', toggleProgressDrawer);
+  }
+
+  // Progress drawer handle (drag to expand/collapse)
+  const drawerHandle = document.getElementById('drawer-handle');
+  if (drawerHandle) {
+    drawerHandle.addEventListener('click', cycleProgressDrawer);
+    initDrawerGestures();
+  }
+
+  // Settings button in drawer
+  const settingsBtn = document.getElementById('drawer-settings-btn');
+  if (settingsBtn) {
+    settingsBtn.addEventListener('click', openSettings);
+  }
+
+  // Export button in drawer
+  const exportBtn = document.getElementById('drawer-export-btn');
+  if (exportBtn) {
+    exportBtn.addEventListener('click', exportPlan);
+  }
+
+  // Settings panel close
+  const settingsClose = document.getElementById('settings-close');
+  if (settingsClose) {
+    settingsClose.addEventListener('click', closeSettings);
+  }
+
+  const settingsBackdrop = document.getElementById('settings-backdrop');
+  if (settingsBackdrop) {
+    settingsBackdrop.addEventListener('click', closeSettings);
+  }
+
+  // Settings finance buttons
+  document.querySelectorAll('.settings-finance-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setFinanceChoice(btn.dataset.choice);
+      updateSettingsFinanceDisplay();
+    });
+  });
+
+  // Settings danger buttons
+  const clearPlanBtn = document.getElementById('settings-clear-plan');
+  if (clearPlanBtn) {
+    clearPlanBtn.addEventListener('click', () => {
+      if (confirm('Clear all planned electives?')) {
+        clearElectives();
+        closeSettings();
+      }
+    });
+  }
+
+  const resetAppBtn = document.getElementById('settings-reset-app');
+  if (resetAppBtn) {
+    resetAppBtn.addEventListener('click', () => {
+      if (confirm('Reset all app data? This cannot be undone.')) {
+        resetApp();
+      }
+    });
+  }
+
+  // Change cohort from settings
+  const changeCohortBtn = document.getElementById('settings-change-cohort');
+  if (changeCohortBtn) {
+    changeCohortBtn.addEventListener('click', () => {
+      if (confirm('Changing cohort will reset your planned courses. Continue?')) {
+        closeSettings();
+        state.hasCompletedOnboarding = false;
+        saveState();
+        showOnboarding();
+      }
+    });
+  }
+
+  // Sidebar cohort button
+  const sidebarCohortBtn = document.getElementById('sidebar-cohort-btn');
+  if (sidebarCohortBtn) {
+    sidebarCohortBtn.addEventListener('click', openSettings);
+  }
+
+  // Onboarding cohort selection
+  document.querySelectorAll('.onboarding-cohort-card').forEach(card => {
+    card.addEventListener('click', () => {
+      handleOnboardingCohortSelect(card.dataset.cohort);
+    });
+  });
+
+  // Onboarding start buttons
+  const startExploreBtn = document.getElementById('onboarding-start-explore');
+  if (startExploreBtn) {
+    startExploreBtn.addEventListener('click', () => {
+      completeOnboarding('explore');
+    });
+  }
+
+  const startBuildBtn = document.getElementById('onboarding-start-build');
+  if (startBuildBtn) {
+    startBuildBtn.addEventListener('click', () => {
+      completeOnboarding('build');
+    });
+  }
+
+  // Course sheet close
+  const sheetBackdrop = document.getElementById('sheet-backdrop');
+  if (sheetBackdrop) {
+    sheetBackdrop.addEventListener('click', closeCourseSheet);
+  }
+
+  // Course sheet add/remove buttons
+  const sheetAddBtn = document.getElementById('sheet-add-btn');
+  if (sheetAddBtn) {
+    sheetAddBtn.addEventListener('click', () => {
+      if (state.selectedCourseCode) {
+        addCourse(state.selectedCourseCode);
+        updateCourseSheetButtons();
+        updateAllDisplays();
+      }
+    });
+  }
+
+  const sheetRemoveBtn = document.getElementById('sheet-remove-btn');
+  if (sheetRemoveBtn) {
+    sheetRemoveBtn.addEventListener('click', () => {
+      if (state.selectedCourseCode) {
+        removeCourse(state.selectedCourseCode);
+        updateCourseSheetButtons();
+        updateAllDisplays();
+      }
+    });
+  }
+
+  // Catalog sheet
+  const catalogBackdrop = document.getElementById('catalog-sheet-backdrop');
+  if (catalogBackdrop) {
+    catalogBackdrop.addEventListener('click', closeCatalogSheet);
+  }
+
+  const catalogClose = document.getElementById('catalog-sheet-close');
+  if (catalogClose) {
+    catalogClose.addEventListener('click', closeCatalogSheet);
+  }
+
+  // Add major button in drawer
+  const addMajorBtn = document.getElementById('drawer-add-major');
+  if (addMajorBtn) {
+    addMajorBtn.addEventListener('click', () => {
+      closeProgressDrawer();
+      switchToMode('explore');
+    });
+  }
+
+  // Filter button in header
+  const filterBtn = document.getElementById('header-filter-btn');
+  if (filterBtn) {
+    filterBtn.addEventListener('click', () => {
+      // Toggle major filter mode in graph view
+      if (state.currentView === 'build' && typeof cycleMajorMode === 'function') {
+        cycleMajorMode();
+      }
+    });
+  }
+
+  // Quick add button in graph view (mobile FAB)
+  const quickAddBtn = document.getElementById('graph-quick-add');
+  if (quickAddBtn) {
+    quickAddBtn.addEventListener('click', openCatalogSheet);
+  }
+
+  // Catalog sheet filter listeners
+  const catalogTermFilter = document.getElementById('catalog-filter-term');
+  if (catalogTermFilter) {
+    catalogTermFilter.addEventListener('change', populateCatalogSheet);
+  }
+
+  const catalogMajorFilter = document.getElementById('catalog-filter-major');
+  if (catalogMajorFilter) {
+    catalogMajorFilter.addEventListener('change', populateCatalogSheet);
+  }
+
+  const catalogSearchInput = document.getElementById('catalog-sheet-search');
+  if (catalogSearchInput) {
+    catalogSearchInput.addEventListener('input', populateCatalogSheet);
+  }
+
+  // Keyboard shortcuts (desktop)
+  document.addEventListener('keydown', handleKeyboardShortcuts);
+}
+
+// Keyboard shortcuts handler
+function handleKeyboardShortcuts(e) {
+  // Don't trigger shortcuts when typing in inputs
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+    return;
+  }
+
+  // Only on desktop (≥1024px)
+  if (window.innerWidth < 1024) return;
+
+  switch (e.key.toLowerCase()) {
+    case 'e':
+      // E = Explore mode
+      if (!e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        switchToMode('explore');
+      }
+      break;
+
+    case 'b':
+      // B = Build mode
+      if (!e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        switchToMode('build');
+      }
+      break;
+
+    case '/':
+      // / = Focus search
+      e.preventDefault();
+      const searchInput = document.getElementById('course-search');
+      if (searchInput) {
+        searchInput.focus();
+      }
+      break;
+
+    case 'escape':
+      // Esc = Close modals/sheets
+      if (state.courseSheetOpen) {
+        closeCourseSheet();
+      } else if (state.catalogSheetOpen) {
+        closeCatalogSheet();
+      } else if (state.settingsPanelOpen) {
+        closeSettings();
+      } else {
+        closeProgressDrawer();
+      }
+      break;
+
+    case 'p':
+      // P = Toggle progress drawer
+      if (!e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        toggleProgressDrawer();
+      }
+      break;
+  }
+}
+
+// Onboarding Functions
+function showOnboarding() {
+  const onboardingModal = document.getElementById('onboarding-modal');
+  const mainApp = document.getElementById('main-app');
+  const cohortSelection = document.getElementById('cohort-selection');
+
+  if (onboardingModal) {
+    onboardingModal.classList.remove('hidden');
+  }
+  if (mainApp) {
+    mainApp.classList.remove('active');
+  }
+  if (cohortSelection) {
+    cohortSelection.classList.add('hidden');
+    cohortSelection.classList.remove('active');
+  }
+
+  // Reset to step 1
+  document.querySelectorAll('.onboarding-step').forEach(step => {
+    step.classList.remove('active');
+  });
+  const step1 = document.getElementById('onboarding-step-1');
+  if (step1) {
+    step1.classList.add('active');
+  }
+}
+
+function handleOnboardingCohortSelect(cohortId) {
+  // Update visual selection
+  document.querySelectorAll('.onboarding-cohort-card').forEach(card => {
+    card.classList.toggle('selected', card.dataset.cohort === cohortId);
+  });
+
+  // Set cohort in state
+  state.selectedCohort = cohortId;
+  if (cohortId === 'global') {
+    state.financeChoice = 'FNCE-6110';
+  }
+  saveState();
+
+  // Update confirmation text
+  const cohort = COHORTS[cohortId];
+  const confirmText = document.getElementById('onboarding-cohort-confirm');
+  if (confirmText) {
+    confirmText.textContent = `Your ${cohort.name} core curriculum is loaded.`;
+  }
+
+  // Move to step 2 after brief delay
+  setTimeout(() => {
+    document.querySelectorAll('.onboarding-step').forEach(step => {
+      step.classList.remove('active');
+    });
+    const step2 = document.getElementById('onboarding-step-2');
+    if (step2) {
+      step2.classList.add('active');
+    }
+  }, 200);
+}
+
+function completeOnboarding(startMode) {
+  state.hasCompletedOnboarding = true;
+  state.currentView = startMode;
+  saveState();
+
+  const onboardingModal = document.getElementById('onboarding-modal');
+  if (onboardingModal) {
+    onboardingModal.classList.add('hidden');
+  }
+
+  showMainApp();
+}
+
+// Mode Switching (Explore/Build)
+function switchToMode(mode) {
+  state.currentView = mode;
+  saveState();
+
+  // Update bottom tabs
+  document.querySelectorAll('.bottom-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.view === mode);
+  });
+
+  // Update sidebar nav
+  document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.view === mode);
+  });
+
+  // Map mode to view
+  const viewMap = {
+    'explore': 'explorer',
+    'build': 'graph'
+  };
+
+  const viewName = viewMap[mode] || mode;
+
+  // Update views
+  document.querySelectorAll('.view').forEach(view => {
+    view.classList.remove('active');
+  });
+
+  const targetView = document.getElementById(`${viewName}-view`);
+  if (targetView) {
+    targetView.classList.add('active');
+  }
+
+  // Refresh content
+  if (mode === 'explore') {
+    populateSidebar();
+  } else if (mode === 'build') {
+    if (typeof initGraphBuilder === 'function') {
+      initGraphBuilder();
+    }
+  }
+
+  // Close progress drawer if open
+  closeProgressDrawer();
+}
+
+// Progress Drawer Functions
+function toggleProgressDrawer() {
+  const drawer = document.getElementById('progress-drawer');
+  if (!drawer) return;
+
+  if (state.progressDrawerState === 'collapsed') {
+    state.progressDrawerState = 'partial';
+    drawer.classList.add('partial');
+    drawer.classList.remove('full');
+  } else {
+    state.progressDrawerState = 'collapsed';
+    drawer.classList.remove('partial', 'full');
+  }
+
+  updateProgressDrawer();
+}
+
+function cycleProgressDrawer() {
+  const drawer = document.getElementById('progress-drawer');
+  if (!drawer) return;
+
+  if (state.progressDrawerState === 'collapsed') {
+    state.progressDrawerState = 'partial';
+    drawer.classList.add('partial');
+    drawer.classList.remove('full');
+  } else if (state.progressDrawerState === 'partial') {
+    state.progressDrawerState = 'full';
+    drawer.classList.remove('partial');
+    drawer.classList.add('full');
+  } else {
+    state.progressDrawerState = 'collapsed';
+    drawer.classList.remove('partial', 'full');
+  }
+
+  updateProgressDrawer();
+}
+
+function closeProgressDrawer() {
+  const drawer = document.getElementById('progress-drawer');
+  if (!drawer) return;
+
+  state.progressDrawerState = 'collapsed';
+  drawer.classList.remove('partial', 'full');
+}
+
+function initDrawerGestures() {
+  const drawer = document.getElementById('progress-drawer');
+  const handle = document.getElementById('drawer-handle');
+  if (!drawer || !handle) return;
+
+  let startY = 0;
+  let startHeight = 0;
+
+  handle.addEventListener('touchstart', (e) => {
+    startY = e.touches[0].clientY;
+    const rect = drawer.getBoundingClientRect();
+    startHeight = window.innerHeight - rect.top;
+  }, { passive: true });
+
+  handle.addEventListener('touchmove', (e) => {
+    const currentY = e.touches[0].clientY;
+    const diff = startY - currentY;
+    const newHeight = startHeight + diff;
+    const windowHeight = window.innerHeight;
+
+    // Determine state based on height
+    if (newHeight > windowHeight * 0.6) {
+      drawer.classList.remove('partial');
+      drawer.classList.add('full');
+      state.progressDrawerState = 'full';
+    } else if (newHeight > 100) {
+      drawer.classList.add('partial');
+      drawer.classList.remove('full');
+      state.progressDrawerState = 'partial';
+    } else {
+      drawer.classList.remove('partial', 'full');
+      state.progressDrawerState = 'collapsed';
+    }
+  }, { passive: true });
+}
+
+function updateProgressDrawer() {
+  const totalCU = calculateTotalCU();
+  const coreCU = calculateCoreCU();
+  const electiveCU = calculateElectiveCU();
+  const blockCU = calculateBlockCU();
+  const progress = (totalCU / PROGRAM_RULES.graduationMinimum) * 100;
+
+  // Update drawer values
+  const drawerCuValue = document.getElementById('drawer-cu-value');
+  if (drawerCuValue) {
+    drawerCuValue.textContent = totalCU.toFixed(1);
+  }
+
+  const drawerProgressFill = document.getElementById('drawer-progress-fill');
+  if (drawerProgressFill) {
+    drawerProgressFill.style.width = `${Math.min(progress, 100)}%`;
+  }
+
+  const drawerCoreCu = document.getElementById('drawer-core-cu');
+  if (drawerCoreCu) {
+    drawerCoreCu.textContent = `${coreCU.toFixed(1)} CU`;
+  }
+
+  const drawerElectiveCu = document.getElementById('drawer-elective-cu');
+  if (drawerElectiveCu) {
+    drawerElectiveCu.textContent = `${electiveCU.toFixed(1)} CU`;
+  }
+
+  const drawerElectiveNeed = document.getElementById('drawer-elective-need');
+  if (drawerElectiveNeed) {
+    const needed = Math.max(0, PROGRAM_RULES.graduationMinimum - coreCU - electiveCU - blockCU);
+    drawerElectiveNeed.textContent = needed > 0 ? `(need ${needed.toFixed(1)})` : '';
+  }
+
+  const drawerBlockCu = document.getElementById('drawer-block-cu');
+  if (drawerBlockCu) {
+    drawerBlockCu.textContent = `${blockCU.toFixed(1)} CU`;
+  }
+
+  const drawerBlockNeed = document.getElementById('drawer-block-need');
+  if (drawerBlockNeed) {
+    const blockNeeded = Math.max(0, 1.0 - blockCU);
+    drawerBlockNeed.textContent = blockNeeded > 0 ? `(need ${blockNeeded.toFixed(1)})` : '';
+  }
+
+  // Update major progress in drawer
+  updateDrawerMajors();
+
+  // Update alerts in drawer
+  updateDrawerAlerts();
+}
+
+function updateDrawerMajors() {
+  const container = document.getElementById('drawer-majors-list');
+  if (!container) return;
+
+  if (state.targetMajors.length === 0) {
+    container.innerHTML = '<p class="drawer-empty-state">No target majors selected</p>';
+    return;
+  }
+
+  let html = '';
+  state.targetMajors.forEach(majorId => {
+    const major = MAJORS[majorId];
+    if (!major) return;
+
+    const progress = calculateMajorProgress(majorId);
+    const percent = (progress.completed / major.requiredCUs) * 100;
+    const needed = Math.max(0, major.requiredCUs - progress.completed);
+
+    html += `
+      <div class="drawer-major-item">
+        <div class="drawer-major-header">
+          <span class="drawer-major-name">${major.name}</span>
+          <span class="drawer-major-cu">${progress.completed.toFixed(1)}/${major.requiredCUs} CU</span>
+        </div>
+        <div class="drawer-major-bar">
+          <div class="drawer-major-fill" style="width: ${Math.min(percent, 100)}%"></div>
+        </div>
+        ${needed > 0 ? `<span class="drawer-major-need">Need: ${needed.toFixed(1)} more CU</span>` : '<span class="drawer-major-need" style="color: var(--success);">Complete!</span>'}
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+function updateDrawerAlerts() {
+  const container = document.getElementById('drawer-alerts-list');
+  const badge = document.getElementById('drawer-alert-badge');
+  if (!container) return;
+
+  const alerts = generateAlerts();
+
+  if (badge) {
+    const errorCount = alerts.filter(a => a.type === 'error' || a.type === 'warning').length;
+    badge.textContent = errorCount;
+    badge.style.display = errorCount > 0 ? 'inline-flex' : 'none';
+  }
+
+  if (alerts.length === 0) {
+    container.innerHTML = '<li class="drawer-alert-item info">No issues detected</li>';
+    return;
+  }
+
+  container.innerHTML = alerts.slice(0, 5).map(alert => `
+    <li class="drawer-alert-item ${alert.type}" data-course="${alert.courseCode || ''}">
+      ${alert.message}
+    </li>
+  `).join('');
+
+  // Add click handlers for alerts
+  container.querySelectorAll('.drawer-alert-item[data-course]').forEach(item => {
+    item.addEventListener('click', () => {
+      const courseCode = item.dataset.course;
+      if (courseCode) {
+        closeProgressDrawer();
+        switchToMode('build');
+        // Could highlight the course in graph here
+      }
+    });
+  });
+}
+
+// Settings Panel Functions
+function openSettings() {
+  const panel = document.getElementById('settings-panel');
+  if (panel) {
+    panel.classList.remove('hidden');
+    updateSettingsDisplay();
+  }
+  state.settingsPanelOpen = true;
+}
+
+function closeSettings() {
+  const panel = document.getElementById('settings-panel');
+  if (panel) {
+    panel.classList.add('hidden');
+  }
+  state.settingsPanelOpen = false;
+}
+
+function updateSettingsDisplay() {
+  // Update cohort name
+  const cohortName = document.getElementById('settings-cohort-name');
+  if (cohortName && state.selectedCohort) {
+    const cohort = COHORTS[state.selectedCohort];
+    cohortName.textContent = cohort.name;
+  }
+
+  // Update finance section visibility
+  const financeSection = document.getElementById('settings-finance-section');
+  if (financeSection) {
+    financeSection.style.display = state.selectedCohort === 'global' ? 'none' : 'block';
+  }
+
+  updateSettingsFinanceDisplay();
+}
+
+function updateSettingsFinanceDisplay() {
+  document.querySelectorAll('.settings-finance-btn').forEach(btn => {
+    btn.classList.toggle('selected', btn.dataset.choice === state.financeChoice);
+  });
+}
+
+function resetApp() {
+  localStorage.removeItem('wemba-pathway-state');
+  window.location.reload();
+}
+
+// Course Sheet Functions
+function openCourseSheet(courseCode) {
+  const course = COURSES[courseCode];
+  if (!course) return;
+
+  state.selectedCourseCode = courseCode;
+  state.courseSheetOpen = true;
+
+  const sheet = document.getElementById('course-sheet');
+  if (!sheet) return;
+
+  // Populate sheet content
+  const offering = course.offerings?.[state.selectedCohort];
+  const dept = DEPARTMENTS[course.department];
+
+  document.getElementById('sheet-course-dept').textContent = course.department;
+  document.getElementById('sheet-course-dept').style.background = dept?.color || '#64748b';
+  document.getElementById('sheet-course-code').textContent = course.code;
+  document.getElementById('sheet-course-title').textContent = course.title;
+  document.getElementById('sheet-course-credits').textContent = `${course.credits} CU`;
+  document.getElementById('sheet-course-term').textContent = offering?.term || 'N/A';
+  document.getElementById('sheet-course-prof').textContent = offering?.professor || 'TBD';
+  document.getElementById('sheet-course-desc').textContent = course.description || 'No description available.';
+
+  // Populate prerequisites
+  const prereqsList = document.getElementById('sheet-prereqs-list');
+  const prereqsSection = document.getElementById('sheet-prereqs-section');
+  if (course.prerequisites && course.prerequisites.length > 0) {
+    prereqsSection.style.display = 'block';
+    prereqsList.innerHTML = course.prerequisites.map(prereq => {
+      const prereqCourse = COURSES[prereq];
+      const isMet = isPrerequisiteMet(prereq);
+      return `
+        <li>
+          <span>${prereqCourse?.code || prereq}</span>
+          <span class="sheet-prereq-status ${isMet ? 'met' : 'unmet'}">${isMet ? '✓ Met' : 'Not met'}</span>
+        </li>
+      `;
+    }).join('');
+  } else {
+    prereqsSection.style.display = 'none';
+  }
+
+  // Populate majors
+  const majorsSection = document.getElementById('sheet-majors-section');
+  const majorsTags = document.getElementById('sheet-majors-tags');
+  const relevantMajors = getCourseMajors(courseCode);
+  if (relevantMajors.length > 0) {
+    majorsSection.style.display = 'block';
+    majorsTags.innerHTML = relevantMajors.map(majorId => {
+      const major = MAJORS[majorId];
+      return `<span class="sheet-major-tag">${major?.name || majorId}</span>`;
+    }).join('');
+  } else {
+    majorsSection.style.display = 'none';
+  }
+
+  // Populate conflicts
+  const conflictsSection = document.getElementById('sheet-conflicts-section');
+  const conflictsList = document.getElementById('sheet-conflicts-list');
+  const conflicts = getCourseConflicts(courseCode);
+  if (conflicts.length > 0) {
+    conflictsSection.style.display = 'block';
+    conflictsList.innerHTML = conflicts.map(conflict => `
+      <li style="color: var(--danger);">⚡ ${conflict}</li>
+    `).join('');
+  } else {
+    conflictsSection.style.display = 'none';
+  }
+
+  // Update buttons
+  updateCourseSheetButtons();
+
+  sheet.classList.remove('hidden');
+}
+
+function closeCourseSheet() {
+  const sheet = document.getElementById('course-sheet');
+  if (sheet) {
+    sheet.classList.add('hidden');
+  }
+  state.courseSheetOpen = false;
+  state.selectedCourseCode = null;
+}
+
+function updateCourseSheetButtons() {
+  const addBtn = document.getElementById('sheet-add-btn');
+  const removeBtn = document.getElementById('sheet-remove-btn');
+
+  if (!addBtn || !removeBtn || !state.selectedCourseCode) return;
+
+  const isPlanned = state.plannedCourses.includes(state.selectedCourseCode);
+
+  if (isPlanned) {
+    addBtn.classList.add('hidden');
+    removeBtn.classList.remove('hidden');
+  } else {
+    addBtn.classList.remove('hidden');
+    removeBtn.classList.add('hidden');
+
+    // Check if prerequisites are met
+    const prereqsMet = arePrerequisitesMet(state.selectedCourseCode);
+    addBtn.disabled = !prereqsMet;
+  }
+}
+
+// Catalog Sheet Functions
+function openCatalogSheet() {
+  const sheet = document.getElementById('catalog-sheet');
+  if (!sheet) return;
+
+  state.catalogSheetOpen = true;
+  populateCatalogSheet();
+  sheet.classList.remove('hidden');
+}
+
+function closeCatalogSheet() {
+  const sheet = document.getElementById('catalog-sheet');
+  if (sheet) {
+    sheet.classList.add('hidden');
+  }
+  state.catalogSheetOpen = false;
+}
+
+function populateCatalogSheet() {
+  const list = document.getElementById('catalog-sheet-list');
+  const termFilter = document.getElementById('catalog-filter-term');
+  const majorFilter = document.getElementById('catalog-filter-major');
+
+  if (!list) return;
+
+  // Populate major filter options
+  if (majorFilter && majorFilter.options.length <= 1) {
+    Object.values(MAJORS).forEach(major => {
+      const option = document.createElement('option');
+      option.value = major.id;
+      option.textContent = major.name;
+      majorFilter.appendChild(option);
+    });
+  }
+
+  const selectedTerm = termFilter?.value || '';
+  const selectedMajor = majorFilter?.value || '';
+
+  // Get available courses
+  const availableCourses = Object.entries(COURSES).filter(([code, course]) => {
+    const offering = course.offerings?.[state.selectedCohort];
+    if (!offering) return false;
+
+    // Filter by term
+    if (selectedTerm && offering.term !== selectedTerm) return false;
+
+    // Filter by major
+    if (selectedMajor) {
+      const major = MAJORS[selectedMajor];
+      if (!major) return false;
+      const majorCourses = [...(major.coreRequirements || []), ...(major.electiveCourses || [])];
+      if (!majorCourses.includes(code)) return false;
+    }
+
+    // Only show elective terms (T4-T6, BW)
+    const electiveTerms = ['T4', 'T5', 'T6', 'BW'];
+    if (!electiveTerms.includes(offering.term)) return false;
+
+    // Don't show already planned courses
+    if (state.plannedCourses.includes(code)) return false;
+
+    return true;
+  });
+
+  // Group by term
+  const byTerm = {};
+  availableCourses.forEach(([code, course]) => {
+    const term = course.offerings[state.selectedCohort].term;
+    if (!byTerm[term]) byTerm[term] = [];
+    byTerm[term].push([code, course]);
+  });
+
+  // Render
+  let html = '';
+  ['T4', 'T5', 'T6', 'BW'].forEach(term => {
+    if (!byTerm[term] || byTerm[term].length === 0) return;
+
+    html += `<div class="catalog-term-section"><h4>${term === 'BW' ? 'Block Weeks' : `Term ${term.slice(1)}`} (${byTerm[term].length})</h4>`;
+
+    byTerm[term].forEach(([code, course]) => {
+      const prereqsMet = arePrerequisitesMet(code);
+      html += `
+        <div class="catalog-course-item" data-code="${code}">
+          <div class="catalog-course-info">
+            <div class="catalog-course-code">${course.code}</div>
+            <div class="catalog-course-title">${course.title}</div>
+          </div>
+          <div class="catalog-course-meta">
+            <span class="catalog-course-credits">${course.credits} CU</span>
+            <button class="catalog-add-btn" data-code="${code}" ${prereqsMet ? '' : 'disabled'} title="${prereqsMet ? 'Add to plan' : 'Prerequisites not met'}">
+              ${prereqsMet ? '+' : '🔒'}
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += '</div>';
+  });
+
+  if (html === '') {
+    html = '<p class="drawer-empty-state">No courses available with current filters</p>';
+  }
+
+  list.innerHTML = html;
+
+  // Add click handlers
+  list.querySelectorAll('.catalog-course-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      if (!e.target.classList.contains('catalog-add-btn')) {
+        openCourseSheet(item.dataset.code);
+      }
+    });
+  });
+
+  list.querySelectorAll('.catalog-add-btn:not([disabled])').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      addCourse(btn.dataset.code);
+      populateCatalogSheet(); // Refresh list
+      updateAllDisplays();
+    });
+  });
+}
+
+// Helper Functions
+function calculateCoreCU() {
+  if (!state.selectedCohort) return 0;
+  const core = CORE_CURRICULUM[state.selectedCohort];
+  let total = 0;
+
+  ['T1', 'T2'].forEach(term => {
+    if (core[term]) {
+      core[term].forEach(c => total += c.credits);
+    }
+  });
+
+  // T3 depends on finance choice
+  if (state.financeChoice === 'FNCE-6110' && core.T3_alternative) {
+    core.T3_alternative.forEach(c => total += c.credits);
+  } else if (core.T3) {
+    core.T3.forEach(c => total += c.credits);
+  }
+
+  return total;
+}
+
+function calculateElectiveCU() {
+  let total = 0;
+  state.plannedCourses.forEach(code => {
+    const course = COURSES[code];
+    if (course) {
+      const offering = course.offerings?.[state.selectedCohort];
+      if (offering && ['T4', 'T5', 'T6'].includes(offering.term)) {
+        total += course.credits;
+      }
+    }
+  });
+  return total;
+}
+
+function calculateBlockCU() {
+  let total = 0;
+
+  // Count planned block week courses
+  state.plannedCourses.forEach(code => {
+    const course = COURSES[code];
+    if (course) {
+      const offering = course.offerings?.[state.selectedCohort];
+      if (offering && offering.term === 'BW') {
+        total += course.credits;
+      }
+    }
+  });
+
+  // Count completed early block courses
+  state.completedBlockCourses.forEach(code => {
+    const course = EARLY_BLOCK_COURSES[code];
+    if (course) {
+      total += course.credits;
+    }
+  });
+
+  return total;
+}
+
+function isPrerequisiteMet(prereqCode) {
+  // Check if in core curriculum
+  if (!state.selectedCohort) return false;
+  const core = CORE_CURRICULUM[state.selectedCohort];
+  for (const term of ['T1', 'T2', 'T3', 'T3_alternative']) {
+    if (core[term]) {
+      if (core[term].some(c => c.code === prereqCode)) return true;
+    }
+  }
+
+  // Check if in planned courses
+  return state.plannedCourses.includes(prereqCode);
+}
+
+function arePrerequisitesMet(courseCode) {
+  const course = COURSES[courseCode];
+  if (!course || !course.prerequisites || course.prerequisites.length === 0) return true;
+
+  return course.prerequisites.every(prereq => isPrerequisiteMet(prereq));
+}
+
+function getCourseMajors(courseCode) {
+  const majors = [];
+  Object.entries(MAJORS).forEach(([majorId, major]) => {
+    const allCourses = [...(major.coreRequirements || []), ...(major.electiveCourses || [])];
+    if (allCourses.includes(courseCode)) {
+      majors.push(majorId);
+    }
+  });
+  return majors;
+}
+
+function getCourseConflicts(courseCode) {
+  const conflicts = [];
+  const course = COURSES[courseCode];
+  if (!course) return conflicts;
+
+  const offering = course.offerings?.[state.selectedCohort];
+  if (!offering) return conflicts;
+
+  state.plannedCourses.forEach(plannedCode => {
+    if (plannedCode === courseCode) return;
+    const plannedCourse = COURSES[plannedCode];
+    if (!plannedCourse) return;
+
+    const plannedOffering = plannedCourse.offerings?.[state.selectedCohort];
+    if (!plannedOffering) return;
+
+    if (offering.term === plannedOffering.term && offering.slot && plannedOffering.slot) {
+      if (slotsConflict(offering.slot, plannedOffering.slot)) {
+        conflicts.push(`${plannedCourse.code} (same slot in ${offering.term})`);
+      }
+    }
+  });
+
+  return conflicts;
+}
+
+function updateAllDisplays() {
+  updateAllCreditDisplays();
+  updateProgressDrawer();
+  updateSidebarProgress();
+  updateHeaderDisplay();
+
+  if (state.currentView === 'explore') {
+    // Refresh explorer if needed
+  } else if (state.currentView === 'build' && typeof renderGraphView === 'function') {
+    renderGraphView();
+  }
+}
+
+function updateSidebarProgress() {
+  const totalCU = calculateTotalCU();
+  const progress = (totalCU / PROGRAM_RULES.graduationMinimum) * 100;
+
+  const sidebarCu = document.getElementById('sidebar-progress-cu');
+  if (sidebarCu) {
+    sidebarCu.textContent = `${totalCU.toFixed(1)}/19`;
+  }
+
+  const sidebarFill = document.getElementById('sidebar-progress-fill');
+  if (sidebarFill) {
+    sidebarFill.style.width = `${Math.min(progress, 100)}%`;
+  }
+
+  // Update sidebar majors
+  const sidebarMajors = document.getElementById('sidebar-majors');
+  if (sidebarMajors && state.targetMajors.length > 0) {
+    sidebarMajors.innerHTML = state.targetMajors.slice(0, 2).map(majorId => {
+      const major = MAJORS[majorId];
+      if (!major) return '';
+      const progress = calculateMajorProgress(majorId);
+      const percent = (progress.completed / major.requiredCUs) * 100;
+      return `
+        <div class="sidebar-major-item">
+          <div class="sidebar-major-name">${major.name}</div>
+          <div class="sidebar-major-progress">
+            <div class="sidebar-major-fill" style="width: ${Math.min(percent, 100)}%"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Update sidebar alerts
+  const alerts = generateAlerts();
+  const alertCount = document.getElementById('sidebar-alert-count');
+  if (alertCount) {
+    const errorCount = alerts.filter(a => a.type === 'error' || a.type === 'warning').length;
+    alertCount.textContent = errorCount;
+  }
+}
+
+function updateHeaderDisplay() {
+  const totalCU = calculateTotalCU();
+
+  const headerCu = document.getElementById('header-total-cu');
+  if (headerCu) {
+    headerCu.textContent = totalCU.toFixed(1);
+  }
+
+  // Update cohort badges
+  if (state.selectedCohort) {
+    const cohort = COHORTS[state.selectedCohort];
+    const headerBadge = document.getElementById('header-cohort-badge');
+    if (headerBadge) {
+      headerBadge.textContent = cohort.shortName;
+    }
+
+    const sidebarCohortName = document.getElementById('sidebar-cohort-name');
+    if (sidebarCohortName) {
+      sidebarCohortName.textContent = cohort.shortName;
+    }
+  }
+}
+
 // Cohort Selection
 function selectCohort(cohortId) {
   state.selectedCohort = cohortId;
@@ -104,44 +1178,34 @@ function selectCohort(cohortId) {
 function showMainApp() {
   const cohortSelection = document.getElementById('cohort-selection');
   const mainApp = document.getElementById('main-app');
+  const onboardingModal = document.getElementById('onboarding-modal');
+
+  // Hide onboarding if visible
+  if (onboardingModal) {
+    onboardingModal.classList.add('hidden');
+  }
 
   // Prepare data first
   updateCohortDisplay();
   populateSidebar();
-  updateDashboard();
-  updatePathway();
 
-  // Remove hidden class if returning from main app
-  cohortSelection.classList.remove('hidden');
+  // Initialize new UI displays
+  updateHeaderDisplay();
+  updateSidebarProgress();
+  updateProgressDrawer();
 
-  // Step 1: Make cohort selection fixed position (so main app can show behind)
-  cohortSelection.classList.add('transitioning');
+  // Set initial view based on state
+  switchToMode(state.currentView || 'explore');
 
-  // Step 2: Show main app behind the cohort selection
-  mainApp.classList.add('active');
-  mainApp.classList.add('snap-in');
-
-  // Step 3: Slide cohort selection up (after a tiny delay to ensure layout)
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      cohortSelection.classList.add('sliding-up');
-    });
-  });
-
-  // Step 4: Clean up after animation completes
-  setTimeout(() => {
-    // Hide cohort selection completely
-    cohortSelection.classList.remove('active', 'transitioning', 'sliding-up');
+  // Hide cohort selection, show main app
+  if (cohortSelection) {
     cohortSelection.classList.add('hidden');
+    cohortSelection.classList.remove('active', 'transitioning', 'sliding-up');
+  }
 
-    // Clean up main app animation class
-    mainApp.classList.remove('snap-in');
-
-    // Reset any selected card states
-    document.querySelectorAll('.cohort-card.selected').forEach(card => {
-      card.classList.remove('selected');
-    });
-  }, 600);
+  if (mainApp) {
+    mainApp.classList.add('active');
+  }
 }
 
 function updateCohortDisplay() {
@@ -646,14 +1710,31 @@ function setBrowseMode(mode) {
 }
 
 function populateSidebar() {
-  // Populate majors
+  // Populate majors with progress indicators
   const majorsList = document.getElementById('majors-list');
-  majorsList.innerHTML = Object.values(MAJORS).map(major => `
-    <li class="sidebar-item" data-major="${major.id}">
-      <span>${major.name}</span>
-      <span class="badge">${major.requiredCUs} CU</span>
-    </li>
-  `).join('');
+  majorsList.innerHTML = Object.values(MAJORS).map(major => {
+    const isTargeted = state.targetMajors.includes(major.id);
+    const progress = isTargeted ? calculateMajorProgress(major.id) : null;
+    const percent = progress ? Math.round((progress.completed / major.requiredCUs) * 100) : 0;
+
+    return `
+      <li class="sidebar-item ${isTargeted ? 'targeted' : ''}" data-major="${major.id}">
+        <div class="sidebar-item-main">
+          <span class="sidebar-item-name">${major.name}</span>
+          <span class="badge">${major.requiredCUs} CU</span>
+        </div>
+        ${isTargeted ? `
+          <div class="sidebar-item-progress">
+            <div class="sidebar-mini-progress">
+              <div class="sidebar-mini-fill" style="width: ${Math.min(percent, 100)}%"></div>
+            </div>
+            <span class="sidebar-progress-text">${progress.completed.toFixed(1)}/${major.requiredCUs}</span>
+          </div>
+        ` : ''}
+        ${major.stemCertified ? '<span class="stem-badge">STEM</span>' : ''}
+      </li>
+    `;
+  }).join('');
 
   majorsList.querySelectorAll('.sidebar-item').forEach(item => {
     item.addEventListener('click', () => selectMajor(item.dataset.major));
@@ -1183,6 +2264,14 @@ function closeAddCourseModal() {
 // Course Details Modal
 function showCourseDetails(courseCode) {
   const normalizedCode = courseCode.replace(/\s+/g, '-');
+
+  // On mobile, use the new course sheet
+  if (window.innerWidth < 1024) {
+    openCourseSheet(normalizedCode);
+    return;
+  }
+
+  // On desktop, use the traditional modal
   const course = COURSES[normalizedCode];
   const offering = course.offerings[state.selectedCohort];
   const modal = document.getElementById('course-modal');
@@ -1904,3 +2993,14 @@ window.exportPlan = exportPlan;
 window.clearElectives = clearElectives;
 window.toggleCompletedBlockCourse = toggleCompletedBlockCourse;
 window.updateAllCreditDisplays = updateAllCreditDisplays;
+
+// New UI functions
+window.switchToMode = switchToMode;
+window.openCourseSheet = openCourseSheet;
+window.closeCourseSheet = closeCourseSheet;
+window.openCatalogSheet = openCatalogSheet;
+window.closeCatalogSheet = closeCatalogSheet;
+window.openSettings = openSettings;
+window.closeSettings = closeSettings;
+window.toggleProgressDrawer = toggleProgressDrawer;
+window.updateAllDisplays = updateAllDisplays;

@@ -2674,6 +2674,32 @@ function toggleCatalogMajor(majorId) {
 
 window.toggleCatalogMajor = toggleCatalogMajor;
 
+// Cycle through major display modes (called from header filter button)
+function cycleMajorMode() {
+  if (!graphInstance) return;
+
+  const modes = ['all', 'highlight', 'filter'];
+  const currentIndex = modes.indexOf(graphInstance.majorDisplayMode);
+  const nextIndex = (currentIndex + 1) % modes.length;
+  const nextMode = modes[nextIndex];
+
+  graphInstance.setMajorDisplayMode(nextMode);
+
+  // Update mode selector buttons if visible
+  const modeSelector = document.getElementById('major-mode-selector');
+  if (modeSelector) {
+    modeSelector.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-mode') === nextMode);
+    });
+  }
+
+  // Show feedback
+  const modeLabels = { all: 'All Courses', highlight: 'Highlight Majors', filter: 'Filter to Majors' };
+  console.log(`Major mode: ${modeLabels[nextMode]}`);
+}
+
+window.cycleMajorMode = cycleMajorMode;
+
 // Export for use in app.js
 window.initGraphBuilder = initGraphBuilder;
 window.renderGraphView = renderGraphView;

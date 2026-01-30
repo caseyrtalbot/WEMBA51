@@ -59,40 +59,113 @@
 
   <!-- Main Application -->
   <div id="main-app" class="screen">
-    <!-- Header -->
-    <header class="app-header">
-      <div class="header-left">
-        <h1>WEMBA 51 Pathway Planner</h1>
-        <button id="cohort-switcher" class="cohort-badge">
-          <span id="current-cohort-name">Philadelphia</span>
+    <!-- Desktop Sidebar (hidden on mobile) -->
+    <aside class="desktop-sidebar" id="desktop-sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo">W</div>
+        <span class="sidebar-title">WEMBA 51</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="sidebar-nav-item active" data-view="explore">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <span>Explore</span>
+        </button>
+        <button class="sidebar-nav-item" data-view="build">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+          <span>Build</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-progress">
+        <div class="sidebar-progress-header">
+          <span class="sidebar-progress-label">Progress</span>
+          <span class="sidebar-progress-value" id="sidebar-progress-cu">9.5/19</span>
+        </div>
+        <div class="sidebar-progress-bar">
+          <div class="sidebar-progress-fill" id="sidebar-progress-fill" style="width: 50%"></div>
+        </div>
+
+        <div class="sidebar-majors" id="sidebar-majors">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="sidebar-alerts" id="sidebar-alerts">
+          <span class="sidebar-alert-badge" id="sidebar-alert-count">0</span>
+          <span>alerts</span>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="sidebar-cohort-btn" id="sidebar-cohort-btn">
+          <span id="sidebar-cohort-name">PHL</span>
           <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
             <path d="M3 5l3 3 3-3H3z"/>
           </svg>
         </button>
       </div>
-      <div class="header-right">
-        <div class="cu-summary">
-          <span class="cu-label">Plan Total:</span>
-          <span id="total-cu" class="cu-value">9.5</span>
-          <span class="cu-label">/ 19.0 CU</span>
-        </div>
-        <button class="clear-plan-btn" onclick="clearElectives()" title="Clear all planned electives">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-          </svg>
-          Clear Plan
-        </button>
-      </div>
-    </header>
+    </aside>
 
-    <!-- Navigation -->
-    <nav class="main-nav">
-      <button class="nav-tab active" data-view="dashboard">Dashboard</button>
-      <button class="nav-tab" data-view="explorer">Explorer</button>
-      <button class="nav-tab" data-view="pathway">My Pathway</button>
-      <button class="nav-tab" data-view="graph">Graph Builder</button>
-    </nav>
+    <!-- Main Content Area -->
+    <div class="main-content-area">
+      <!-- Compact Header (Mobile shows CU, Desktop hidden) -->
+      <header class="app-header-compact" id="app-header-compact">
+        <button class="header-cu-trigger" id="header-cu-trigger">
+          <span id="header-total-cu">9.5</span>
+          <span class="header-cu-max">/19 CU</span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+            <path d="M6 8L2 4h8L6 8z"/>
+          </svg>
+        </button>
+        <span class="header-cohort-badge" id="header-cohort-badge">PHL</span>
+        <button class="header-filter-btn" id="header-filter-btn" title="Filter by major">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+        </button>
+      </header>
+
+      <!-- Legacy Header (hidden, kept for compatibility) -->
+      <header class="app-header legacy-header" style="display: none;">
+        <div class="header-left">
+          <h1>WEMBA 51 Pathway Planner</h1>
+          <button id="cohort-switcher" class="cohort-badge">
+            <span id="current-cohort-name">Philadelphia</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+              <path d="M3 5l3 3 3-3H3z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="header-right">
+          <div class="cu-summary">
+            <span class="cu-label">Plan Total:</span>
+            <span id="total-cu" class="cu-value">9.5</span>
+            <span class="cu-label">/ 19.0 CU</span>
+          </div>
+          <button class="clear-plan-btn" onclick="clearElectives()" title="Clear all planned electives">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+              <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+            </svg>
+            Clear Plan
+          </button>
+        </div>
+      </header>
+
+      <!-- Legacy Navigation (hidden) -->
+      <nav class="main-nav legacy-nav" style="display: none;">
+        <button class="nav-tab active" data-view="dashboard">Dashboard</button>
+        <button class="nav-tab" data-view="explorer">Explorer</button>
+        <button class="nav-tab" data-view="pathway">My Pathway</button>
+        <button class="nav-tab" data-view="graph">Graph Builder</button>
+      </nav>
 
     <!-- Dashboard View -->
     <main id="dashboard-view" class="view active">
@@ -543,7 +616,156 @@
           </div>
         </div>
       </div>
+
+      <!-- Quick Add Button (mobile FAB) -->
+      <button class="graph-quick-add" id="graph-quick-add" title="Add Course">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </button>
     </main>
+
+    </div><!-- End main-content-area -->
+
+    <!-- Bottom Tab Bar (iOS style - mobile only) -->
+    <nav class="bottom-tab-bar" id="bottom-tab-bar">
+      <button class="bottom-tab active" data-view="explore">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+        <span>Explore</span>
+      </button>
+      <button class="bottom-tab" data-view="build">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        <span>Build</span>
+      </button>
+    </nav>
+
+    <!-- Progress Drawer -->
+    <div class="progress-drawer" id="progress-drawer">
+      <div class="drawer-handle" id="drawer-handle">
+        <div class="drawer-handle-bar"></div>
+      </div>
+
+      <div class="drawer-content">
+        <!-- Graduation Progress -->
+        <section class="drawer-section">
+          <h3 class="drawer-section-title">Graduation Progress</h3>
+          <div class="drawer-progress-bar">
+            <div class="drawer-progress-fill" id="drawer-progress-fill" style="width: 50%"></div>
+          </div>
+          <div class="drawer-progress-stats">
+            <span class="drawer-cu-value" id="drawer-cu-value">9.5</span>
+            <span class="drawer-cu-total">/ 19.0 CU</span>
+          </div>
+          <div class="drawer-progress-breakdown">
+            <div class="breakdown-item">
+              <span>Core Curriculum</span>
+              <span id="drawer-core-cu">9.5 CU</span>
+              <span class="breakdown-status complete">✓</span>
+            </div>
+            <div class="breakdown-item">
+              <span>Electives</span>
+              <span id="drawer-elective-cu">0.0 CU</span>
+              <span class="breakdown-need" id="drawer-elective-need">(need 9.5)</span>
+            </div>
+            <div class="breakdown-item">
+              <span>Block Weeks</span>
+              <span id="drawer-block-cu">0.0 CU</span>
+              <span class="breakdown-need" id="drawer-block-need">(need 1.0)</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Target Majors -->
+        <section class="drawer-section">
+          <div class="drawer-section-header">
+            <h3 class="drawer-section-title">Target Majors</h3>
+            <button class="drawer-edit-btn" id="drawer-edit-majors">Edit</button>
+          </div>
+          <div class="drawer-majors-list" id="drawer-majors-list">
+            <p class="drawer-empty-state">No target majors selected</p>
+          </div>
+          <button class="drawer-add-btn" id="drawer-add-major">+ Add Target Major</button>
+        </section>
+
+        <!-- Alerts -->
+        <section class="drawer-section">
+          <div class="drawer-section-header">
+            <h3 class="drawer-section-title">Alerts</h3>
+            <span class="drawer-alert-badge" id="drawer-alert-badge">0</span>
+          </div>
+          <ul class="drawer-alerts-list" id="drawer-alerts-list">
+            <li class="drawer-alert-item info">No issues detected</li>
+          </ul>
+        </section>
+
+        <!-- Actions -->
+        <section class="drawer-section drawer-actions">
+          <button class="drawer-action-btn" id="drawer-settings-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+            </svg>
+            Settings
+          </button>
+          <button class="drawer-action-btn" id="drawer-export-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            Export Plan
+          </button>
+        </section>
+      </div>
+    </div>
+
+    <!-- Settings Panel (slide-in) -->
+    <div class="settings-panel hidden" id="settings-panel">
+      <div class="settings-panel-backdrop" id="settings-backdrop"></div>
+      <div class="settings-panel-content">
+        <div class="settings-header">
+          <h3>Settings</h3>
+          <button class="settings-close" id="settings-close">&times;</button>
+        </div>
+        <div class="settings-body">
+          <div class="settings-item">
+            <label>Cohort</label>
+            <button class="settings-cohort-change" id="settings-change-cohort">
+              <span id="settings-cohort-name">Philadelphia</span>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                <path d="M3 5l3 3 3-3H3z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="settings-item" id="settings-finance-section">
+            <label>Finance Option</label>
+            <div class="settings-finance-options">
+              <button class="settings-finance-btn" data-choice="FNCE-6110">
+                <strong>FNCE 6110</strong>
+                <span>1.0 CU - Required for Finance major</span>
+              </button>
+              <button class="settings-finance-btn" data-choice="FNCE-6210">
+                <strong>FNCE 6210</strong>
+                <span>0.5 CU - Shorter option</span>
+              </button>
+            </div>
+          </div>
+          <div class="settings-item settings-danger">
+            <button class="settings-danger-btn" id="settings-clear-plan">Clear All Electives</button>
+            <button class="settings-danger-btn" id="settings-reset-app">Reset App</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Course Detail Modal -->
@@ -565,6 +787,152 @@
       <h2 id="add-course-title">Add Course to Term 4</h2>
       <div id="add-course-list" class="add-course-grid">
         <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Course Detail Sheet (iOS-style bottom sheet) -->
+  <div class="course-sheet hidden" id="course-sheet">
+    <div class="sheet-backdrop" id="sheet-backdrop"></div>
+    <div class="sheet-content">
+      <div class="sheet-handle">
+        <div class="sheet-handle-bar"></div>
+      </div>
+      <div class="sheet-header">
+        <div class="sheet-course-dept" id="sheet-course-dept"></div>
+        <h2 class="sheet-course-code" id="sheet-course-code">FNCE 7050</h2>
+        <h3 class="sheet-course-title" id="sheet-course-title">Investment Management</h3>
+        <span class="sheet-course-credits" id="sheet-course-credits">1.0 CU</span>
+      </div>
+      <div class="sheet-body">
+        <div class="sheet-meta">
+          <div class="sheet-meta-item">
+            <span class="sheet-meta-label">Term</span>
+            <span class="sheet-meta-value" id="sheet-course-term">T5</span>
+          </div>
+          <div class="sheet-meta-item">
+            <span class="sheet-meta-label">Professor</span>
+            <span class="sheet-meta-value" id="sheet-course-prof">TBD</span>
+          </div>
+        </div>
+        <div class="sheet-section">
+          <h4>Description</h4>
+          <p class="sheet-description" id="sheet-course-desc"></p>
+        </div>
+        <div class="sheet-section" id="sheet-prereqs-section">
+          <h4>Prerequisites</h4>
+          <ul class="sheet-prereqs-list" id="sheet-prereqs-list"></ul>
+        </div>
+        <div class="sheet-section" id="sheet-majors-section">
+          <h4>Counts Toward</h4>
+          <div class="sheet-majors-tags" id="sheet-majors-tags"></div>
+        </div>
+        <div class="sheet-section" id="sheet-conflicts-section">
+          <h4>Schedule Conflicts</h4>
+          <ul class="sheet-conflicts-list" id="sheet-conflicts-list"></ul>
+        </div>
+      </div>
+      <div class="sheet-footer">
+        <button class="sheet-action-btn sheet-add-btn" id="sheet-add-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Add to Plan
+        </button>
+        <button class="sheet-action-btn sheet-remove-btn hidden" id="sheet-remove-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Remove from Plan
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Catalog Sheet (for adding courses in Build mode) -->
+  <div class="catalog-sheet hidden" id="catalog-sheet">
+    <div class="sheet-backdrop" id="catalog-sheet-backdrop"></div>
+    <div class="sheet-content catalog-sheet-content">
+      <div class="sheet-handle">
+        <div class="sheet-handle-bar"></div>
+      </div>
+      <div class="catalog-sheet-header">
+        <h2>Add Course</h2>
+        <button class="catalog-sheet-close" id="catalog-sheet-close">&times;</button>
+      </div>
+      <div class="catalog-sheet-search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" id="catalog-sheet-search" placeholder="Search available courses...">
+      </div>
+      <div class="catalog-sheet-filters">
+        <select id="catalog-filter-term" class="catalog-filter-select">
+          <option value="">All Terms</option>
+          <option value="T4">Term 4</option>
+          <option value="T5">Term 5</option>
+          <option value="T6">Term 6</option>
+          <option value="BW">Block Weeks</option>
+        </select>
+        <select id="catalog-filter-major" class="catalog-filter-select">
+          <option value="">All Majors</option>
+        </select>
+      </div>
+      <div class="catalog-sheet-list" id="catalog-sheet-list">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Onboarding Modal (first-run only) -->
+  <div class="onboarding-modal hidden" id="onboarding-modal">
+    <div class="onboarding-content">
+      <div class="onboarding-step active" id="onboarding-step-1">
+        <div class="onboarding-logo">
+          <div class="onboarding-shield">W</div>
+        </div>
+        <h1 class="onboarding-title">WEMBA Pathway Planner</h1>
+        <p class="onboarding-subtitle">Plan your journey to graduation</p>
+
+        <div class="onboarding-cohort-cards">
+          <button class="onboarding-cohort-card" data-cohort="philadelphia">
+            <span class="onboarding-cohort-icon">PHL</span>
+            <span class="onboarding-cohort-name">Philadelphia</span>
+            <span class="onboarding-cohort-desc">East Coast • In-Person</span>
+          </button>
+          <button class="onboarding-cohort-card" data-cohort="san_francisco">
+            <span class="onboarding-cohort-icon">SF</span>
+            <span class="onboarding-cohort-name">San Francisco</span>
+            <span class="onboarding-cohort-desc">West Coast • In-Person</span>
+          </button>
+          <button class="onboarding-cohort-card" data-cohort="global">
+            <span class="onboarding-cohort-icon">GLO</span>
+            <span class="onboarding-cohort-name">Global</span>
+            <span class="onboarding-cohort-desc">Virtual • WAVE</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="onboarding-step" id="onboarding-step-2">
+        <div class="onboarding-success-icon">✓</div>
+        <h2 class="onboarding-title">You're set up!</h2>
+        <p class="onboarding-subtitle" id="onboarding-cohort-confirm">Your Philadelphia core curriculum is loaded.</p>
+        <p class="onboarding-hint">Start exploring courses or build your pathway.</p>
+
+        <div class="onboarding-actions">
+          <button class="onboarding-primary-btn" id="onboarding-start-explore">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+            Start Exploring
+          </button>
+          <button class="onboarding-secondary-btn" id="onboarding-start-build">
+            or jump to Build
+          </button>
+        </div>
       </div>
     </div>
   </div>
