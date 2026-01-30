@@ -1672,8 +1672,50 @@ body.modal-open {
   z-index: 12;
 }
 
+.graph-conflict-chip {
+  align-self: flex-start;
+  margin: 0.5rem 1rem 0;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #f59e0b;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.graph-conflict-chip.hidden {
+  display: none;
+}
+
+.graph-conflict-chip.active {
+  background: #f59e0b;
+  color: white;
+  border-color: #d97706;
+}
+
+.graph-conflict-chip:active {
+  transform: scale(0.98);
+}
+
+.graph-conflict-chip:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 .graph-alerts.hidden {
   display: none;
+}
+
+@media (min-width: 1024px) {
+  .graph-conflict-chip {
+    display: none;
+  }
 }
 
 .graph-alerts h4 {

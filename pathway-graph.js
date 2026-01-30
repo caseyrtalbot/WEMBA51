@@ -72,6 +72,11 @@ class PathwayGraph {
     if (conflictBtn) {
       conflictBtn.addEventListener('click', () => this.toggleConflictsMode());
     }
+
+    const conflictChip = document.getElementById('graph-conflict-chip');
+    if (conflictChip) {
+      conflictChip.addEventListener('click', () => this.toggleConflictsMode());
+    }
   }
 
   setupMajorModeSelector() {
@@ -597,6 +602,7 @@ class PathwayGraph {
       this.restoreAllNodes();
     }
 
+    this.updateConflictBadge();
     this.updateGraphAlerts();
   }
 
@@ -1212,6 +1218,17 @@ class PathwayGraph {
       } else {
         badge.classList.add('hidden');
       }
+    }
+
+    const chip = document.getElementById('graph-conflict-chip');
+    if (chip) {
+      if (conflicts.length > 0) {
+        chip.textContent = `Conflicts (${conflicts.length})`;
+        chip.classList.remove('hidden');
+      } else {
+        chip.classList.add('hidden');
+      }
+      chip.classList.toggle('active', this.showConflictsMode);
     }
   }
 
