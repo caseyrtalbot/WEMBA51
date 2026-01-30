@@ -2245,10 +2245,14 @@ function initGraphBuilder() {
 
   if (!svg || !catalogContainer) return;
 
-  pathwayGraph = new PathwayGraph(svg, state);
-  courseCatalog = new CourseCatalog(catalogContainer, state, pathwayGraph);
+  // Only create new instances if they don't exist yet
+  // This prevents duplicate event listeners from being added on repeated navigations
+  if (!pathwayGraph) {
+    pathwayGraph = new PathwayGraph(svg, state);
+    courseCatalog = new CourseCatalog(catalogContainer, state, pathwayGraph);
+  }
 
-  // Initial render
+  // Always render to update the view
   renderGraphView();
 }
 
@@ -2369,6 +2373,13 @@ function toggleCatalogMajor(majorId) {
 
 window.toggleCatalogMajor = toggleCatalogMajor;
 
+// Reset graph builder instances (call when cohort changes)
+function resetGraphBuilder() {
+  pathwayGraph = null;
+  courseCatalog = null;
+}
+
 // Export for use in app.js
 window.initGraphBuilder = initGraphBuilder;
 window.renderGraphView = renderGraphView;
+window.resetGraphBuilder = resetGraphBuilder;

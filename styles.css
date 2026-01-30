@@ -3050,6 +3050,7 @@ h1, h2, .display-heading {
   padding: 8px 16px;
   border-radius: var(--radius);
   box-shadow: var(--shadow-dark);
+  z-index: 30;
 }
 
 .graph-stat {
@@ -3305,7 +3306,7 @@ h1, h2, .display-heading {
 /* Course Info Panel */
 .course-info-panel {
   position: absolute;
-  top: 4rem;
+  top: 5.5rem;
   right: 1rem;
   width: 260px;
   background: var(--surface);
@@ -3313,7 +3314,7 @@ h1, h2, .display-heading {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   z-index: 20;
-  max-height: calc(100vh - 280px);
+  max-height: calc(100vh - 300px);
   overflow-y: auto;
 }
 

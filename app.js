@@ -164,6 +164,11 @@ function selectCohort(cohortId) {
     selectedCard.classList.add('selected');
   }
 
+  // Reset graph builder instances when cohort changes (prevents stale event listeners)
+  if (typeof resetGraphBuilder === 'function') {
+    resetGraphBuilder();
+  }
+
   if (cohortId === 'global') {
     // Global cohort: auto-select FNCE-6110 and proceed directly
     state.selectedCohort = cohortId;
