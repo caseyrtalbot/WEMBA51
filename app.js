@@ -11,7 +11,8 @@ let state = {
   currentView: 'dashboard',
   explorerMode: 'majors',
   selectedMajor: null,
-  selectedDepartment: null
+  selectedDepartment: null,
+  highlightedMajorCourses: [] // Course codes to highlight across all views
 };
 
 function getTermLabel(offering) {
@@ -28,11 +29,90 @@ function getTermLabel(offering) {
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
   initEventListeners();
+  initRouter();
+
+  // Handle initial state based on URL and saved state
+  const currentRoute = router.getCurrentRoute();
 
   if (state.selectedCohort) {
-    showMainApp();
+    // Has cohort - check if URL specifies a view
+    if (currentRoute.screen === 'main-app') {
+      showMainApp(false); // Don't animate on page load
+      if (currentRoute.view) {
+        activateView(currentRoute.view);
+      }
+    } else {
+      // URL is landing page but we have cohort - go to dashboard
+      router.navigate('/dashboard', { replace: true });
+    }
+  } else {
+    // No cohort - ensure we're on landing page
+    if (currentRoute.screen !== 'cohort-selection') {
+      router.navigate('/', { replace: true });
+    }
   }
 });
+
+// Initialize router and set up route change handler
+function initRouter() {
+  router.onRouteChange((route, path) => {
+    if (route.screen === 'cohort-selection') {
+      // Show landing page
+      const cohortSelection = document.getElementById('cohort-selection');
+      const mainApp = document.getElementById('main-app');
+      cohortSelection.classList.remove('hidden');
+      cohortSelection.classList.add('active');
+      mainApp.classList.remove('active');
+    } else if (route.screen === 'main-app' && route.view) {
+      // Show main app with specific view
+      const cohortSelection = document.getElementById('cohort-selection');
+      const mainApp = document.getElementById('main-app');
+
+      if (!mainApp.classList.contains('active')) {
+        // Main app not visible yet - show it without animation
+        cohortSelection.classList.remove('active');
+        cohortSelection.classList.add('hidden');
+        mainApp.classList.add('active');
+
+        // Ensure data is loaded
+        updateCohortDisplay();
+        populateSidebar();
+        updateDashboard();
+        updatePathway();
+      }
+
+      // Activate the requested view
+      activateView(route.view);
+    }
+  });
+}
+
+// Activate a view without changing URL (internal use)
+function activateView(viewName) {
+  state.currentView = viewName;
+
+  // Update nav tabs
+  document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.view === viewName);
+  });
+
+  // Update views
+  document.querySelectorAll('.view').forEach(view => {
+    view.classList.remove('active');
+  });
+  document.getElementById(`${viewName}-view`).classList.add('active');
+
+  // Refresh view content
+  if (viewName === 'pathway') {
+    updatePathway();
+  } else if (viewName === 'dashboard') {
+    updateDashboard();
+  } else if (viewName === 'graph') {
+    if (typeof initGraphBuilder === 'function') {
+      initGraphBuilder();
+    }
+  }
+}
 
 // Event Listeners
 function initEventListeners() {
@@ -43,18 +123,16 @@ function initEventListeners() {
     });
   });
 
-  // Cohort switcher
+  // Cohort switcher - navigate to landing page via router
   document.getElementById('cohort-switcher').addEventListener('click', () => {
-    const cohortSelection = document.getElementById('cohort-selection');
-    cohortSelection.classList.remove('hidden');
-    cohortSelection.classList.add('active');
-    document.getElementById('main-app').classList.remove('active');
+    router.navigate('/');
   });
 
-  // Navigation tabs
+  // Navigation tabs - use router for URL-based navigation
   document.querySelectorAll('.nav-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      switchView(tab.dataset.view);
+    tab.addEventListener('click', (e) => {
+      e.preventDefault();
+      router.navigate('/' + tab.dataset.view);
     });
   });
 
@@ -80,28 +158,68 @@ function initEventListeners() {
 
 // Cohort Selection
 function selectCohort(cohortId) {
-  state.selectedCohort = cohortId;
-
-  // Set default finance choice for Global (no option)
-  if (cohortId === 'global') {
-    state.financeChoice = 'FNCE-6110';
-  }
-
   // Add visual feedback to selected card
   const selectedCard = document.querySelector(`.cohort-card[data-cohort="${cohortId}"]`);
   if (selectedCard) {
     selectedCard.classList.add('selected');
   }
 
-  saveState();
+  if (cohortId === 'global') {
+    // Global cohort: auto-select FNCE-6110 and proceed directly
+    state.selectedCohort = cohortId;
+    state.financeChoice = 'FNCE-6110';
+    saveState();
 
-  // Brief delay before transition for click feedback
-  setTimeout(() => {
-    showMainApp();
-  }, 150);
+    // Brief delay before transition for click feedback
+    setTimeout(() => {
+      showMainApp();
+    }, 150);
+  } else {
+    // PHL/SF cohorts: show finance choice modal
+    state.pendingCohort = cohortId;
+    showFinanceModal();
+  }
 }
 
-function showMainApp() {
+// Finance Choice Modal Functions
+function showFinanceModal() {
+  const modal = document.getElementById('finance-choice-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+  }
+}
+
+function closeFinanceModal() {
+  const modal = document.getElementById('finance-choice-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+
+  // Reset selected card state if user cancels
+  document.querySelectorAll('.cohort-card.selected').forEach(card => {
+    card.classList.remove('selected');
+  });
+  state.pendingCohort = null;
+}
+
+function selectFinanceAndProceed(choice) {
+  // Set cohort and finance choice
+  state.selectedCohort = state.pendingCohort;
+  state.financeChoice = choice;
+  state.pendingCohort = null;
+  saveState();
+
+  // Close modal
+  const modal = document.getElementById('finance-choice-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+
+  // Proceed to main app
+  showMainApp();
+}
+
+function showMainApp(animate = true) {
   const cohortSelection = document.getElementById('cohort-selection');
   const mainApp = document.getElementById('main-app');
 
@@ -110,6 +228,15 @@ function showMainApp() {
   populateSidebar();
   updateDashboard();
   updatePathway();
+
+  if (!animate) {
+    // No animation - just switch screens
+    cohortSelection.classList.remove('active', 'transitioning', 'sliding-up');
+    cohortSelection.classList.add('hidden');
+    mainApp.classList.add('active');
+    mainApp.classList.remove('snap-in');
+    return;
+  }
 
   // Remove hidden class if returning from main app
   cohortSelection.classList.remove('hidden');
@@ -128,7 +255,7 @@ function showMainApp() {
     });
   });
 
-  // Step 4: Clean up after animation completes
+  // Step 4: Clean up after animation completes and navigate to dashboard
   setTimeout(() => {
     // Hide cohort selection completely
     cohortSelection.classList.remove('active', 'transitioning', 'sliding-up');
@@ -141,6 +268,9 @@ function showMainApp() {
     document.querySelectorAll('.cohort-card.selected').forEach(card => {
       card.classList.remove('selected');
     });
+
+    // Navigate to dashboard via router (will update URL)
+    router.navigate('/dashboard', { replace: true });
   }, 600);
 }
 
@@ -193,31 +323,19 @@ function updateFinanceDecision() {
   });
 }
 
-// View Navigation
+// View Navigation - now uses router for URL-based navigation
 function switchView(viewName) {
-  state.currentView = viewName;
+  router.navigate('/' + viewName);
+}
 
-  // Update nav tabs
-  document.querySelectorAll('.nav-tab').forEach(tab => {
-    tab.classList.toggle('active', tab.dataset.view === viewName);
-  });
-
-  // Update views
-  document.querySelectorAll('.view').forEach(view => {
-    view.classList.remove('active');
-  });
-  document.getElementById(`${viewName}-view`).classList.add('active');
-
-  // Refresh view content
-  if (viewName === 'pathway') {
-    updatePathway();
-  } else if (viewName === 'dashboard') {
-    updateDashboard();
-  } else if (viewName === 'graph') {
-    if (typeof initGraphBuilder === 'function') {
-      initGraphBuilder();
-    }
-  }
+// Navigate to Explorer filtered by a specific major
+function navigateToMajor(majorId) {
+  router.navigate('/explorer');
+  // Need to wait for route change to complete before setting mode
+  setTimeout(() => {
+    setBrowseMode('majors');
+    selectMajor(majorId);
+  }, 50);
 }
 
 // Dashboard
@@ -278,7 +396,7 @@ function updateMajorProgress() {
     const percent = (progress.completed / major.requiredCUs) * 100;
 
     html += `
-      <div class="major-progress-item">
+      <div class="major-progress-item clickable" data-major="${majorId}" onclick="navigateToMajor('${majorId}')">
         <div class="major-info">
           <strong>${major.name}</strong>
           <span>${progress.completed.toFixed(1)} / ${major.requiredCUs} CU</span>
@@ -287,6 +405,12 @@ function updateMajorProgress() {
           <div class="progress-bar" style="width: ${Math.min(percent, 100)}%"></div>
         </div>
         ${percent >= 100 ? '<span class="status-badge ready" style="margin-top: 0.5rem;">Complete</span>' : ''}
+        <span class="major-progress-arrow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </span>
       </div>
     `;
   });
@@ -775,6 +899,9 @@ function displayMajorCourses(majorId) {
     </div>
   `;
   container.insertAdjacentHTML('afterbegin', majorBtn);
+
+  // Apply major highlights
+  applyMajorHighlights();
 }
 
 function displayDepartmentCourses(deptCode) {
@@ -788,6 +915,9 @@ function displayDepartmentCourses(deptCode) {
 
   container.innerHTML = courses.map(course => createCourseCard(course)).join('');
   attachCourseListeners();
+
+  // Apply major highlights
+  applyMajorHighlights();
 }
 
 function getCoursesForDepartment(deptCode) {
@@ -876,6 +1006,9 @@ function filterCourses(query) {
   document.getElementById('explorer-title').textContent = `Search Results`;
   document.getElementById('explorer-subtitle').textContent = `${results.length} courses found for "${query}"`;
   container.innerHTML = results.map(course => createCourseCard(course)).join('');
+
+  // Apply major highlights
+  applyMajorHighlights();
 }
 
 // Course Management
@@ -983,6 +1116,10 @@ function toggleTargetMajor(majorId) {
   } else {
     state.targetMajors.push(majorId);
   }
+
+  // Update highlighted courses list
+  updateMajorHighlights();
+
   saveState();
 
   updateDashboard();
@@ -990,10 +1127,80 @@ function toggleTargetMajor(majorId) {
     displayMajorCourses(majorId);
   }
 
+  // Apply highlights to all views
+  applyMajorHighlights();
+
   // Update graph view if active
   if (typeof renderGraphView === 'function' && state.currentView === 'graph') {
     renderGraphView();
   }
+}
+
+// Update the list of courses to highlight based on target majors
+function updateMajorHighlights() {
+  const highlightedCourses = new Set();
+
+  state.targetMajors.forEach(majorId => {
+    const major = MAJORS[majorId];
+    if (!major) return;
+
+    // Add required/core courses
+    if (major.coreRequirements) {
+      major.coreRequirements.forEach(code => highlightedCourses.add(code));
+    }
+
+    // Add primary courses
+    if (major.primaryCourses) {
+      major.primaryCourses.forEach(code => highlightedCourses.add(code));
+    }
+
+    // Add secondary courses
+    if (major.secondaryCourses) {
+      major.secondaryCourses.forEach(code => highlightedCourses.add(code));
+    }
+
+    // Add elective courses
+    if (major.electiveCourses) {
+      major.electiveCourses.forEach(code => highlightedCourses.add(code));
+    }
+  });
+
+  state.highlightedMajorCourses = Array.from(highlightedCourses);
+}
+
+// Apply visual highlights across all views
+function applyMajorHighlights() {
+  const highlightSet = new Set(state.highlightedMajorCourses);
+
+  // Highlight courses in Explorer view
+  document.querySelectorAll('#explorer-courses .course-card').forEach(card => {
+    const courseCode = card.dataset.course?.replace(/\s+/g, '-');
+    if (highlightSet.has(courseCode)) {
+      card.classList.add('major-highlight');
+    } else {
+      card.classList.remove('major-highlight');
+    }
+  });
+
+  // Highlight courses in Pathway view (term cards)
+  document.querySelectorAll('.term-courses li').forEach(item => {
+    const courseNameEl = item.querySelector('.course-name');
+    if (courseNameEl) {
+      const courseName = courseNameEl.textContent;
+      // Extract course code from "CODE: Title" format
+      const codeMatch = courseName.match(/^([A-Z]{3,4})\s+(\d{4})/);
+      if (codeMatch) {
+        const courseCode = `${codeMatch[1]}-${codeMatch[2]}`;
+        if (highlightSet.has(courseCode)) {
+          item.classList.add('major-highlight');
+        } else {
+          item.classList.remove('major-highlight');
+        }
+      }
+    }
+  });
+
+  // Graph view highlighting is handled by pathway-graph.js
 }
 
 // Pathway
@@ -1093,6 +1300,9 @@ function updatePathway() {
 
   // Update validation messages
   updateValidation();
+
+  // Apply major highlights to pathway courses
+  applyMajorHighlights();
 }
 
 function getPlannedCoursesForTerm(term) {
@@ -1910,6 +2120,11 @@ function loadState() {
         parsed.waivedCourses = parsed.waivedCourses.map(code => courseAliases[code] || code);
       }
       state = { ...state, ...parsed };
+
+      // Restore major highlights if target majors exist
+      if (state.targetMajors && state.targetMajors.length > 0) {
+        updateMajorHighlights();
+      }
     } catch (e) {
       console.error('Failed to load state:', e);
     }
@@ -1930,3 +2145,6 @@ window.exportPlan = exportPlan;
 window.clearElectives = clearElectives;
 window.toggleCompletedBlockCourse = toggleCompletedBlockCourse;
 window.updateAllCreditDisplays = updateAllCreditDisplays;
+window.closeFinanceModal = closeFinanceModal;
+window.selectFinanceAndProceed = selectFinanceAndProceed;
+window.navigateToMajor = navigateToMajor;

@@ -40,16 +40,7 @@
       <h1 class="hero-title">WEMBA Pathway Planner</h1>
       <p class="hero-subtitle">Smart tools to simplify your academic planning and ensure you're on track for graduation.</p>
 
-      <div class="hero-ctas">
-        <a href="#cohorts" class="btn-primary btn-lg">
-          Start Planning
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="5" y1="12" x2="19" y2="12"/>
-            <polyline points="12 5 19 12 12 19"/>
-          </svg>
-        </a>
-        <a href="#features" class="btn-outline btn-lg">Watch Demo</a>
-      </div>
+      <p class="hero-instruction">Start planning by selecting your cohort below</p>
 
       <!-- Cohort Cards -->
       <div class="cohort-cards" id="cohorts">
@@ -223,6 +214,46 @@
         <p class="footer-disclaimer">Consult your academic advisor for official guidance.</p>
       </div>
     </footer>
+  </div>
+
+  <!-- Finance Choice Modal (shown during PHL/SF cohort selection) -->
+  <div id="finance-choice-modal" class="modal hidden">
+    <div class="modal-backdrop" onclick="closeFinanceModal()"></div>
+    <div class="modal-content finance-modal-content">
+      <div class="finance-modal-header">
+        <h2>Choose Your Corporate Finance Course</h2>
+        <p>This decision affects your Term 3 schedule and major options</p>
+      </div>
+      <div class="finance-modal-options">
+        <button class="finance-option-card" onclick="selectFinanceAndProceed('FNCE-6110')">
+          <div class="finance-option-header">
+            <span class="finance-option-badge recommended">Recommended</span>
+            <span class="finance-option-cu">1.0 CU</span>
+          </div>
+          <h3>FNCE 6110</h3>
+          <p class="finance-option-title">Corporate Finance (Full)</p>
+          <ul class="finance-option-benefits">
+            <li>Required for Finance major</li>
+            <li>Unlocks advanced finance electives</li>
+            <li>Comprehensive foundation</li>
+          </ul>
+        </button>
+        <button class="finance-option-card" onclick="selectFinanceAndProceed('FNCE-6210')">
+          <div class="finance-option-header">
+            <span class="finance-option-badge">Alternative</span>
+            <span class="finance-option-cu">0.5 CU</span>
+          </div>
+          <h3>FNCE 6210</h3>
+          <p class="finance-option-title">Corporate Finance (Short)</p>
+          <ul class="finance-option-benefits">
+            <li>Shorter commitment</li>
+            <li>More elective flexibility</li>
+            <li>Cannot pursue Finance major</li>
+          </ul>
+        </button>
+      </div>
+      <p class="finance-modal-note">You can change this decision later from the Dashboard.</p>
+    </div>
   </div>
 
   <!-- Main Application -->
@@ -851,6 +882,7 @@
   </div>
 
   <script src="data.js"></script>
+  <script src="router.js"></script>
   <script src="pathway-graph.js"></script>
   <script src="app.js"></script>
 </body>
