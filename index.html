@@ -363,6 +363,34 @@
               <span class="core-cohort" id="core-cohort-name">Philadelphia</span>
               <span class="finance-indicator" id="finance-indicator"></span>
               <button class="core-expand-btn" id="core-expand-btn">Expand</button>
+
+              <!-- Graph Header Stats (integrated into core summary bar) -->
+              <div class="graph-header-stats">
+                <div class="graph-stat">
+                  <span class="graph-stat-value" id="graph-total-cu">9.0</span>
+                  <span class="graph-stat-label">/ 19.0 CU</span>
+                </div>
+                <div class="graph-major-progress" id="graph-major-progress">
+                  <!-- Mini progress bars for target majors -->
+                </div>
+                <button class="graph-toggle-btn" id="show-conflicts-btn" title="Show Schedule Conflicts">
+                  <span class="toggle-icon">⚡</span>
+                  <span class="toggle-label">Conflicts</span>
+                  <span class="conflict-count-badge hidden" id="conflict-count-badge">0</span>
+                </button>
+                <div class="graph-majors-display" id="graph-majors-display">
+                  <span class="majors-label">Majors:</span>
+                  <div class="selected-majors-tags" id="selected-majors-tags">
+                    <!-- Populated by JS -->
+                  </div>
+                  <button class="clear-majors-btn" id="clear-majors-btn" title="Clear all target majors">×</button>
+                </div>
+                <div class="graph-mode-selector" id="major-mode-selector">
+                  <button class="mode-btn active" data-mode="all" title="Show All Courses">All</button>
+                  <button class="mode-btn" data-mode="highlight" title="Highlight Major Courses">Highlight</button>
+                  <button class="mode-btn" data-mode="filter" title="Filter to Major Courses">Filter</button>
+                </div>
+              </div>
             </div>
             <div class="core-summary-expanded hidden" id="core-expanded">
               <div class="core-terms">
@@ -486,33 +514,6 @@
             </div>
           </div>
 
-          <!-- Graph Header Stats -->
-          <div class="graph-header-stats">
-            <div class="graph-stat">
-              <span class="graph-stat-value" id="graph-total-cu">9.0</span>
-              <span class="graph-stat-label">/ 19.0 CU</span>
-            </div>
-            <div class="graph-major-progress" id="graph-major-progress">
-              <!-- Mini progress bars for target majors -->
-            </div>
-            <button class="graph-toggle-btn" id="show-conflicts-btn" title="Show Schedule Conflicts">
-              <span class="toggle-icon">⚡</span>
-              <span class="toggle-label">Conflicts</span>
-              <span class="conflict-count-badge hidden" id="conflict-count-badge">0</span>
-            </button>
-            <div class="graph-majors-display" id="graph-majors-display">
-              <span class="majors-label">Majors:</span>
-              <div class="selected-majors-tags" id="selected-majors-tags">
-                <!-- Populated by JS -->
-              </div>
-              <button class="clear-majors-btn" id="clear-majors-btn" title="Clear all target majors">×</button>
-            </div>
-            <div class="graph-mode-selector" id="major-mode-selector">
-              <button class="mode-btn active" data-mode="all" title="Show All Courses">All</button>
-              <button class="mode-btn" data-mode="highlight" title="Highlight Major Courses">Highlight</button>
-              <button class="mode-btn" data-mode="filter" title="Filter to Major Courses">Filter</button>
-            </div>
-          </div>
         </div>
       </div>
 

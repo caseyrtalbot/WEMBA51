@@ -1422,7 +1422,6 @@ body {
 
 .core-expand-btn,
 .core-collapse-btn {
-  margin-left: auto;
   background: var(--background);
   border: 1px solid var(--border);
   padding: 0.375rem 0.75rem;
@@ -2005,18 +2004,14 @@ body {
   font-weight: normal;
 }
 
-/* Graph Header Stats */
+/* Graph Header Stats (integrated into core summary bar) */
 .graph-header-stats {
-  position: absolute;
-  top: 0.75rem;
-  right: 1rem;
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  background: var(--surface);
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  margin-left: auto;
+  padding-left: 1rem;
+  border-left: 1px solid var(--border);
 }
 
 .graph-stat {
@@ -2504,12 +2499,21 @@ body {
     height: 60vh;
   }
 
+  .core-summary-collapsed {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
   .graph-header-stats {
-    top: auto;
-    bottom: 4rem;
-    right: 0.5rem;
-    left: 0.5rem;
+    width: 100%;
+    margin-left: 0;
+    padding-left: 0;
+    padding-top: 0.5rem;
+    border-left: none;
+    border-top: 1px solid var(--border);
     justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
   }
 
   .graph-controls {

@@ -42,15 +42,16 @@ Single global `state` object persisted to `localStorage` under key `wemba-pathwa
 
 ```javascript
 state = {
-  selectedCohort,     // 'philadelphia' | 'san_francisco' | 'global'
-  plannedCourses,     // Array of course codes: ['FNCE-7050', 'MGMT-8010']
-  targetMajors,       // Array of major IDs: ['finance', 'management']
-  financeChoice,      // 'FNCE-6110' | 'FNCE-6210' (PHL/SF only)
-  currentView,        // 'dashboard' | 'explorer' | 'pathway' | 'graph'
-  explorerMode,       // 'majors' | 'departments'
+  selectedCohort,         // 'philadelphia' | 'san_francisco' | 'global'
+  plannedCourses,         // Array of course codes: ['FNCE-7050', 'MGMT-8010']
+  targetMajors,           // Array of major IDs: ['finance', 'management']
+  financeChoice,          // 'FNCE-6110' | 'FNCE-6210' (PHL/SF only)
+  currentView,            // 'dashboard' | 'explorer' | 'pathway' | 'graph'
+  explorerMode,           // 'majors' | 'departments'
   selectedMajor,
   selectedDepartment,
-  waivedCourses       // Not fully implemented
+  completedBlockCourses,  // Early block courses taken during T1-T3
+  waivedCourses           // Not fully implemented
 }
 ```
 
@@ -81,6 +82,9 @@ COURSES['FNCE-7050'] = {
 
 - `weekends` array: 0-based indices into `SCHEDULE[cohort][term].weekends` for conflict detection
 - Block Week courses use `dates` string instead of `weekends` array
+- `slot` property (A, B, C, or combinations like 'A,A') indicates Wharton's slot system for conflict detection
+
+**Early Block Courses (`EARLY_BLOCK_COURSES`)** are special block courses available for registration before Feb 15, taken during T1-T2. These are open to all cohorts.
 
 **Core curriculum (`CORE_CURRICULUM`) is organized by cohort and term (T1, T2, T3).**
 
@@ -132,7 +136,16 @@ Department colors are defined in `DEPT_COLORS` object matching `DEPARTMENTS` in 
 
 ## Validation Features
 
-**Schedule Conflicts:** Courses in the same term with overlapping `weekends` arrays trigger warnings. Checked via `getScheduleConflicts()`.
+**Schedule Conflicts:** Uses Wharton's slot system (A, B, C) for accurate conflict detection:
+- Courses in the same term with the **same slot** conflict (A vs A, B vs B)
+- Courses in **different slots** do NOT conflict even if weekends overlap (A vs B is OK)
+- GMC/Block Week courses use date-based detection (same dates = conflict)
+- `slotsConflict()` handles slot comparison; `getScheduleConflicts()` finds all conflicts
+
+Slot assignments follow the schedule pattern:
+- Slot A/B (first half): weekends `[0, 1, 2, 3]`
+- Slot C (second half): weekends `[4, 5, 6]`
+- Full term (A,A / B,B / C,C): weekends `[0, 1, 2, 3, 4, 5, 6, 7]`
 
 **Prerequisites:** Each course can have a `prerequisites` array of course codes. `getMissingPrerequisites()` checks against planned courses + core curriculum.
 
