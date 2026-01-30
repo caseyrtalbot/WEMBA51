@@ -596,6 +596,8 @@ class PathwayGraph {
       this.clearConflictConnectors();
       this.restoreAllNodes();
     }
+
+    this.updateGraphAlerts();
   }
 
   renderConflictConnectors() {
@@ -849,6 +851,10 @@ class PathwayGraph {
     const conflictsSection = document.getElementById('info-conflicts-section');
 
     if (!panel) return;
+
+    if (typeof closeProgressDrawer === 'function') {
+      closeProgressDrawer();
+    }
 
     const normalizedCode = courseCode.replace(/\s+/g, '-');
     const course = COURSES[normalizedCode];
@@ -1215,7 +1221,7 @@ class PathwayGraph {
     if (!alertsContainer || !alertsList) return;
 
     const conflicts = getScheduleConflicts();
-    if (conflicts.length === 0) {
+    if (!this.showConflictsMode || conflicts.length === 0) {
       alertsContainer.classList.add('hidden');
       alertsList.innerHTML = '';
       return;
@@ -2689,7 +2695,9 @@ function renderCoreSummary() {
 
 // Toggle catalog major section collapse
 function toggleCatalogMajor(majorId) {
-  const section = document.querySelector(`.catalog-major[data-major="${majorId}"]`);
+  const section = document.querySelector(
+    `.catalog-major[data-major="${majorId}"], .catalog-major[data-dept="${majorId}"]`
+  );
   if (section) {
     section.classList.toggle('collapsed');
   }
@@ -2699,14 +2707,14 @@ window.toggleCatalogMajor = toggleCatalogMajor;
 
 // Cycle through major display modes (called from header filter button)
 function cycleMajorMode() {
-  if (!graphInstance) return;
+  if (!pathwayGraph) return;
 
   const modes = ['all', 'highlight', 'filter'];
-  const currentIndex = modes.indexOf(graphInstance.majorDisplayMode);
+  const currentIndex = modes.indexOf(pathwayGraph.majorDisplayMode);
   const nextIndex = (currentIndex + 1) % modes.length;
   const nextMode = modes[nextIndex];
 
-  graphInstance.setMajorDisplayMode(nextMode);
+  pathwayGraph.setMajorDisplayMode(nextMode);
 
   // Update mode selector buttons if visible
   const modeSelector = document.getElementById('major-mode-selector');

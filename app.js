@@ -54,6 +54,17 @@ let state = {
   selectedCourseCode: null
 };
 
+function normalizeMode(mode) {
+  if (mode === 'graph') return 'build';
+  if (mode === 'explorer') return 'explore';
+  if (mode === 'dashboard' || mode === 'pathway') return 'explore';
+  return mode || 'explore';
+}
+
+function isBuildModeActive() {
+  return state.currentView === 'build' || state.currentView === 'graph';
+}
+
 function getTermLabel(offering) {
   if (!offering) return '';
   if (offering.term === 'BW') {
@@ -297,7 +308,7 @@ function initNewUIListeners() {
   if (filterBtn) {
     filterBtn.addEventListener('click', () => {
       // Toggle major filter mode in graph view
-      if (state.currentView === 'build' && typeof cycleMajorMode === 'function') {
+      if (isBuildModeActive() && typeof cycleMajorMode === 'function') {
         cycleMajorMode();
       }
     });
@@ -462,18 +473,28 @@ function completeOnboarding(startMode) {
 
 // Mode Switching (Explore/Build)
 function switchToMode(mode) {
-  state.currentView = mode;
+  const normalizedMode = normalizeMode(mode);
+  state.currentView = normalizedMode;
   saveState();
 
   // Update bottom tabs
   document.querySelectorAll('.bottom-tab').forEach(tab => {
-    tab.classList.toggle('active', tab.dataset.view === mode);
+    tab.classList.toggle('active', tab.dataset.view === normalizedMode);
   });
 
   // Update sidebar nav
   document.querySelectorAll('.sidebar-nav-item').forEach(item => {
-    item.classList.toggle('active', item.dataset.view === mode);
+    item.classList.toggle('active', item.dataset.view === normalizedMode);
   });
+
+  // Toggle header filter button visibility
+  const headerFilterBtn = document.getElementById('header-filter-btn');
+  if (headerFilterBtn) {
+    const showFilter = normalizedMode === 'build';
+    headerFilterBtn.classList.toggle('hidden', !showFilter);
+    headerFilterBtn.setAttribute('aria-hidden', String(!showFilter));
+    headerFilterBtn.disabled = !showFilter;
+  }
 
   // Map mode to view
   const viewMap = {
@@ -481,7 +502,7 @@ function switchToMode(mode) {
     'build': 'graph'
   };
 
-  const viewName = viewMap[mode] || mode;
+  const viewName = viewMap[normalizedMode] || normalizedMode;
 
   // Update views
   document.querySelectorAll('.view').forEach(view => {
@@ -494,9 +515,9 @@ function switchToMode(mode) {
   }
 
   // Refresh content
-  if (mode === 'explore') {
+  if (normalizedMode === 'explore') {
     populateSidebar();
-  } else if (mode === 'build') {
+  } else if (normalizedMode === 'build') {
     if (typeof initGraphBuilder === 'function') {
       initGraphBuilder();
     }
@@ -713,6 +734,7 @@ function updateDrawerAlerts() {
 
 // Settings Panel Functions
 function openSettings() {
+  closeProgressDrawer();
   const panel = document.getElementById('settings-panel');
   if (panel) {
     panel.classList.remove('hidden');
@@ -765,6 +787,7 @@ function resetApp() {
 
 // Course Sheet Functions
 function openCourseSheet(courseCode) {
+  closeProgressDrawer();
   const course = COURSES[courseCode];
   if (!course) return;
 
@@ -879,6 +902,7 @@ function updateCourseSheetButtons() {
 
 // Catalog Sheet Functions
 function openCatalogSheet() {
+  closeProgressDrawer();
   const sheet = document.getElementById('catalog-sheet');
   if (!sheet) return;
 
@@ -1135,9 +1159,9 @@ function updateAllDisplays() {
   updateSidebarProgress();
   updateHeaderDisplay();
 
-  if (state.currentView === 'explore') {
+  if (normalizeMode(state.currentView) === 'explore') {
     // Refresh explorer if needed
-  } else if (state.currentView === 'build' && typeof renderGraphView === 'function') {
+  } else if (isBuildModeActive() && typeof renderGraphView === 'function') {
     renderGraphView();
   }
 }
@@ -1294,7 +1318,7 @@ function setFinanceChoice(choice) {
   updatePathway();
 
   // Update graph view if active
-  if (typeof renderGraphView === 'function' && state.currentView === 'graph') {
+  if (typeof renderGraphView === 'function' && isBuildModeActive()) {
     renderGraphView();
   }
 }
@@ -2004,7 +2028,7 @@ function addCourse(courseCode) {
     updatePathway();
 
     // Update graph view if active
-    if (typeof renderGraphView === 'function' && state.currentView === 'graph') {
+    if (typeof renderGraphView === 'function' && isBuildModeActive()) {
       renderGraphView();
     }
 
@@ -2031,7 +2055,7 @@ function removeCourse(courseCode) {
   updatePathway();
 
   // Update graph view if active
-  if (typeof renderGraphView === 'function' && state.currentView === 'graph') {
+  if (typeof renderGraphView === 'function' && isBuildModeActive()) {
     renderGraphView();
   }
 
@@ -2073,7 +2097,7 @@ function toggleCompletedBlockCourse(courseCode) {
   updatePathway();
 
   // Update graph view if active
-  if (typeof renderGraphView === 'function' && state.currentView === 'graph') {
+  if (typeof renderGraphView === 'function' && isBuildModeActive()) {
     renderGraphView();
   }
 }
@@ -2101,7 +2125,7 @@ function toggleTargetMajor(majorId) {
   }
 
   // Update graph view if active
-  if (typeof renderGraphView === 'function' && state.currentView === 'graph') {
+  if (typeof renderGraphView === 'function' && isBuildModeActive()) {
     renderGraphView();
   }
 }
@@ -2869,7 +2893,7 @@ function clearElectives() {
     updatePathway();
 
     // Update graph view if active
-    if (typeof renderGraphView === 'function' && state.currentView === 'graph') {
+    if (typeof renderGraphView === 'function' && isBuildModeActive()) {
       renderGraphView();
     }
   }
@@ -3030,6 +3054,7 @@ function loadState() {
         parsed.waivedCourses = parsed.waivedCourses.map(code => courseAliases[code] || code);
       }
       state = { ...state, ...parsed };
+      state.currentView = normalizeMode(state.currentView);
     } catch (e) {
       console.error('Failed to load state:', e);
     }
