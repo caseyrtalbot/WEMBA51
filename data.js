@@ -1902,7 +1902,7 @@ const COURSES = {
     prerequisites: ['MKTG-6110'],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T6', professor: 'Barbara Kahn', dates: 'May 3-7, 2027', location: 'Paris' }
+      all: { term: 'T6', professor: 'Barbara Kahn', dates: 'May 3-7, 2026', location: 'Paris' }
     }
   },
   'MKTG-XXXX': {
@@ -2096,7 +2096,7 @@ const COURSES = {
     prerequisites: [],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T6', professor: 'Serguei Netessine', dates: 'Mar 8-11, 2027', location: 'Seattle' }
+      all: { term: 'T6', professor: 'Serguei Netessine', dates: 'Mar 8-11, 2026', location: 'Seattle' }
     }
   },
   'OIDD-8970-INDIA': {
@@ -2201,8 +2201,8 @@ const COURSES = {
       all: { term: 'T5', professor: 'Peter Conti-Brown', dates: 'Oct 12-15, 2026', location: 'Philadelphia' }
     }
   },
-  'LGST-XXXX': {
-    code: 'LGST XXXX',
+  'LGST-7820': {
+    code: 'LGST 7820',
     title: 'Corrupted Information',
     description: 'Misinformation, disinformation, and their business impacts. Covers information integrity, social media dynamics, and organizational responses.',
     department: 'LGST',
