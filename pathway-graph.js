@@ -928,6 +928,18 @@ class PathwayGraph {
     // Setup close button
     document.getElementById('info-panel-close').onclick = () => this.clearSelection();
 
+    // Show backdrop on mobile
+    const backdrop = document.getElementById('info-panel-backdrop');
+    if (backdrop && window.innerWidth < 768) {
+      backdrop.classList.remove('hidden');
+      backdrop.onclick = () => this.clearSelection();
+
+      // Lock body scroll on mobile
+      if (typeof lockBodyScroll === 'function') {
+        lockBodyScroll();
+      }
+    }
+
     panel.classList.remove('hidden');
   }
 
@@ -935,6 +947,17 @@ class PathwayGraph {
     const panel = document.getElementById('course-info-panel');
     if (panel) {
       panel.classList.add('hidden');
+    }
+
+    // Hide backdrop
+    const backdrop = document.getElementById('info-panel-backdrop');
+    if (backdrop) {
+      backdrop.classList.add('hidden');
+    }
+
+    // Unlock body scroll
+    if (typeof unlockBodyScroll === 'function') {
+      unlockBodyScroll();
     }
   }
 

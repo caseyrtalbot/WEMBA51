@@ -1,5 +1,38 @@
 // WEMBA 51 Pathway Planner - Application Logic
 
+// ===========================================
+// BODY SCROLL LOCK UTILITIES
+// ===========================================
+let scrollPosition = 0;
+
+function lockBodyScroll() {
+  // Only lock if not already locked
+  if (document.body.classList.contains('modal-open')) return;
+
+  // Save current scroll position
+  scrollPosition = window.pageYOffset;
+  document.body.style.setProperty('--scroll-top', `-${scrollPosition}px`);
+  document.body.classList.add('modal-open');
+}
+
+function unlockBodyScroll() {
+  // Check if any modal/sheet is still open
+  const anyModalOpen =
+    state.courseSheetOpen ||
+    state.catalogSheetOpen ||
+    state.settingsPanelOpen ||
+    !document.getElementById('course-modal')?.classList.contains('hidden') ||
+    !document.getElementById('add-course-modal')?.classList.contains('hidden') ||
+    !document.getElementById('course-info-panel')?.classList.contains('hidden');
+
+  // Only unlock if no modals are open
+  if (anyModalOpen) return;
+
+  document.body.classList.remove('modal-open');
+  document.body.style.removeProperty('--scroll-top');
+  window.scrollTo(0, scrollPosition);
+}
+
 // Application State
 let state = {
   selectedCohort: null,
@@ -686,6 +719,9 @@ function openSettings() {
     updateSettingsDisplay();
   }
   state.settingsPanelOpen = true;
+
+  // Lock body scroll
+  lockBodyScroll();
 }
 
 function closeSettings() {
@@ -694,6 +730,9 @@ function closeSettings() {
     panel.classList.add('hidden');
   }
   state.settingsPanelOpen = false;
+
+  // Unlock body scroll
+  unlockBodyScroll();
 }
 
 function updateSettingsDisplay() {
@@ -798,6 +837,11 @@ function openCourseSheet(courseCode) {
   updateCourseSheetButtons();
 
   sheet.classList.remove('hidden');
+
+  // Lock body scroll on mobile
+  if (window.innerWidth < 1024) {
+    lockBodyScroll();
+  }
 }
 
 function closeCourseSheet() {
@@ -807,6 +851,9 @@ function closeCourseSheet() {
   }
   state.courseSheetOpen = false;
   state.selectedCourseCode = null;
+
+  // Unlock body scroll
+  unlockBodyScroll();
 }
 
 function updateCourseSheetButtons() {
@@ -838,6 +885,11 @@ function openCatalogSheet() {
   state.catalogSheetOpen = true;
   populateCatalogSheet();
   sheet.classList.remove('hidden');
+
+  // Lock body scroll on mobile
+  if (window.innerWidth < 1024) {
+    lockBodyScroll();
+  }
 }
 
 function closeCatalogSheet() {
@@ -846,6 +898,9 @@ function closeCatalogSheet() {
     sheet.classList.add('hidden');
   }
   state.catalogSheetOpen = false;
+
+  // Unlock body scroll
+  unlockBodyScroll();
 }
 
 function populateCatalogSheet() {
@@ -2259,6 +2314,7 @@ function addCourseAndClose(courseCode) {
 
 function closeAddCourseModal() {
   document.getElementById('add-course-modal').classList.add('hidden');
+  unlockBodyScroll();
 }
 
 // Course Details Modal
@@ -2399,6 +2455,7 @@ function getPrerequisiteInfo(courseCode) {
 
 function closeModal() {
   document.getElementById('course-modal').classList.add('hidden');
+  unlockBodyScroll();
 }
 
 // Calculations
