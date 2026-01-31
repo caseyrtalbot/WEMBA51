@@ -912,20 +912,31 @@
         <div id="regular-term-fields" class="form-row">
           <div class="form-group">
             <label for="custom-term">Term *</label>
-            <select id="custom-term">
+            <select id="custom-term" onchange="updateSlotOptions()">
               <option value="T4">Term 4</option>
               <option value="T5">Term 5</option>
               <option value="T6">Term 6</option>
             </select>
+            <p class="form-hint" id="term-hint"></p>
           </div>
           <div class="form-group">
             <label for="custom-slot">Slot *</label>
             <select id="custom-slot">
-              <option value="A">Slot A (Weekends 1-4)</option>
-              <option value="B">Slot B (Weekends 1-4)</option>
-              <option value="C">Slot C (Weekends 5-7)</option>
+              <!-- Populated dynamically based on term selection -->
             </select>
+            <p class="form-hint" id="slot-hint"></p>
           </div>
+        </div>
+
+        <!-- Block week term selector (for BW/GMC/GBW) - moved above dates for logical flow -->
+        <div id="block-term-field" class="form-group hidden">
+          <label for="custom-block-term">Associated Term *</label>
+          <select id="custom-block-term" onchange="updateBlockWeekHint()">
+            <option value="T4">Term 4</option>
+            <option value="T5">Term 5</option>
+            <option value="T6">Term 6</option>
+          </select>
+          <p class="form-hint" id="block-term-hint"></p>
         </div>
 
         <!-- Block week fields (hidden by default) -->
@@ -933,21 +944,12 @@
           <div class="form-group">
             <label for="custom-dates">Dates *</label>
             <input type="text" id="custom-dates" placeholder="e.g., Jan 5-9, 2027">
+            <p class="form-hint" id="block-dates-hint">Enter the dates when the course takes place</p>
           </div>
           <div class="form-group">
             <label for="custom-location">Location</label>
             <input type="text" id="custom-location" placeholder="e.g., Philadelphia, UAE">
           </div>
-        </div>
-
-        <!-- Block week term selector (for BW/GMC/GBW) -->
-        <div id="block-term-field" class="form-group hidden">
-          <label for="custom-block-term">Associated Term</label>
-          <select id="custom-block-term">
-            <option value="T4">Term 4</option>
-            <option value="T5">Term 5</option>
-            <option value="T6">Term 6</option>
-          </select>
         </div>
 
         <!-- Major relevance -->

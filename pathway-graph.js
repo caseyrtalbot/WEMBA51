@@ -1238,9 +1238,12 @@ class PathwayGraph {
       rect.setAttribute('data-term', term);
       this.dropzonesLayer.appendChild(rect);
 
-      // CU total for this term
+      // CU total for this term (use getCourse to include custom courses)
       const coursesInTerm = this.getCoursesInTerm(term);
-      const termCU = coursesInTerm.reduce((sum, c) => sum + (COURSES[c]?.credits || 0), 0);
+      const termCU = coursesInTerm.reduce((sum, c) => {
+        const course = typeof getCourse === 'function' ? getCourse(c) : COURSES[c];
+        return sum + (course?.credits || 0);
+      }, 0);
 
       const cuLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       cuLabel.setAttribute('x', x + width / 2);
@@ -1266,7 +1269,8 @@ class PathwayGraph {
     const cohort = this.state.selectedCohort;
     return this.state.plannedCourses.filter(code => {
       const normalizedCode = code.replace(/\s+/g, '-');
-      const course = COURSES[normalizedCode];
+      // Use getCourse to include custom courses
+      const course = typeof getCourse === 'function' ? getCourse(normalizedCode) : COURSES[normalizedCode];
       if (!course) return false;
       const offering = getCourseOffering(course, cohort);
       return offering?.term === term;
@@ -1286,7 +1290,8 @@ class PathwayGraph {
 
       coursesInTerm.forEach((courseCode, courseIndex) => {
         const normalizedCode = courseCode.replace(/\s+/g, '-');
-        const course = COURSES[normalizedCode];
+        // Use getCourse to include custom courses
+        const course = typeof getCourse === 'function' ? getCourse(normalizedCode) : COURSES[normalizedCode];
         if (!course) return;
 
         const nodeFullHeight = GRAPH_CONFIG.nodeHeight + GRAPH_CONFIG.nodeBadgeHeight + GRAPH_CONFIG.nodeGap;
@@ -2184,6 +2189,7 @@ class CourseCatalog {
     // Always show all courses by department, with major-relevant highlighting
     const coursesByDept = {};
 
+    // Add standard courses
     Object.entries(COURSES).forEach(([code, course]) => {
       if (!isCourseAvailableForCohort(course, cohort)) return;
       const dept = course.department;
@@ -2195,6 +2201,24 @@ class CourseCatalog {
       const isMajorRelevant = majorRelevantCourses.has(code);
       coursesByDept[dept].push({ code, course, inPlan, prereqsMet, offering, isMajorRelevant });
     });
+
+    // Add custom courses to their respective departments
+    if (this.state.customCourses && this.state.customCourses.length > 0) {
+      this.state.customCourses.forEach(course => {
+        const code = course.code;
+        const dept = course.department;
+        if (!coursesByDept[dept]) coursesByDept[dept] = [];
+
+        const inPlan = plannedSet.has(code);
+        const prereqsMet = true; // Custom courses have no prerequisites
+        const offering = getCourseOffering(course, cohort);
+        // Check if custom course counts toward any target major
+        const isMajorRelevant = course.countsTowardMajors?.some(majorId =>
+          this.state.targetMajors.includes(majorId)
+        ) || false;
+        coursesByDept[dept].push({ code, course, inPlan, prereqsMet, offering, isMajorRelevant, isCustom: true });
+      });
+    }
 
     Object.entries(coursesByDept).forEach(([dept, courses]) => {
       const deptName = DEPARTMENTS[dept]?.name || dept;
@@ -2227,7 +2251,7 @@ class CourseCatalog {
     this.setupDragListeners();
   }
 
-  renderCatalogCourse({ code, course, inPlan, prereqsMet, offering, isMajorRelevant }) {
+  renderCatalogCourse({ code, course, inPlan, prereqsMet, offering, isMajorRelevant, isCustom }) {
     const deptColor = DEPT_COLORS[course.department] || '#64748b';
     const isLocked = !prereqsMet && !inPlan;
 
@@ -2239,21 +2263,24 @@ class CourseCatalog {
     }
 
     const majorClass = isMajorRelevant ? 'major-target' : '';
+    const customClass = isCustom ? 'custom-course' : '';
+    const customBadge = isCustom ? '<span class="catalog-course-custom">Custom</span>' : '';
+    const displayCode = (course.displayCode || course.code).replace('-', ' ');
 
     return `
-      <div class="catalog-course ${inPlan ? 'in-plan' : ''} ${isLocked ? 'locked' : ''} ${majorClass}"
+      <div class="catalog-course ${inPlan ? 'in-plan' : ''} ${isLocked ? 'locked' : ''} ${majorClass} ${customClass}"
            data-course="${code}"
            draggable="${!inPlan && !isLocked}"
            ${isMajorRelevant ? `style="--major-accent-color: ${deptColor}"` : ''}>
         <div class="catalog-course-color" style="background: ${deptColor}"></div>
         <div class="catalog-course-info">
-          <div class="catalog-course-code">${course.code.replace('-', ' ')}</div>
+          <div class="catalog-course-code">${displayCode}${customBadge}</div>
           <div class="catalog-course-title">${course.title}</div>
           ${isMajorRelevant ? '<span class="major-indicator">★</span>' : ''}
         </div>
         <div class="catalog-course-meta">
           <span class="catalog-course-credits">${course.credits} CU</span>
-          <span class="catalog-course-term">${offering.term}</span>
+          <span class="catalog-course-term">${offering?.term || 'BW'}</span>
           ${statusHtml}
         </div>
       </div>
@@ -2261,7 +2288,8 @@ class CourseCatalog {
   }
 
   arePrereqsMet(courseCode, plannedCourses) {
-    const course = COURSES[courseCode];
+    // Use getCourse to include custom courses
+    const course = typeof getCourse === 'function' ? getCourse(courseCode) : COURSES[courseCode];
     if (!course?.prerequisites || course.prerequisites.length === 0) return true;
     return course.prerequisites.every(prereq => plannedCourses.has(prereq));
   }

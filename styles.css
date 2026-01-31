@@ -2755,6 +2755,25 @@ h1, h2, .display-heading {
   color: var(--text-light-muted);
 }
 
+/* Custom Course Badge in Catalog */
+.catalog-course-custom {
+  display: inline-block;
+  font-size: 0.6rem;
+  padding: 0.1rem 0.35rem;
+  background: var(--accent-teal);
+  color: white;
+  border-radius: 3px;
+  margin-left: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.catalog-course.custom-course {
+  border-left: 3px solid var(--accent-teal);
+}
+
 /* Major Target Course Highlight - Enhanced */
 .catalog-course.major-target {
   background: linear-gradient(135deg, rgba(163, 31, 52, 0.12) 0%, rgba(163, 31, 52, 0.06) 100%);
@@ -4479,6 +4498,27 @@ h1, h2, .display-heading {
   font-size: 0.8rem;
   color: var(--text-tertiary);
   margin: 0.25rem 0 0.5rem 0;
+}
+
+/* Slot hint showing weekend dates */
+#slot-hint {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  padding: 0.5rem;
+  background: var(--bg-surface);
+  border-radius: 4px;
+  border: 1px solid var(--border-primary);
+  margin-top: 0.5rem;
+}
+
+#slot-hint strong {
+  color: var(--text-primary);
+}
+
+#term-hint,
+#block-term-hint {
+  color: var(--accent-teal);
+  font-weight: 500;
 }
 
 .checkbox-grid {

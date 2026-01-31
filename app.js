@@ -1291,12 +1291,12 @@ function addCourse(courseCode) {
     // Update all credit displays across all views instantly
     updateAllCreditDisplays();
 
-    // Refresh view-specific content
+    // Refresh all views to ensure consistency between Pathway and Graph Builder
     updateDashboard();
     updatePathway();
 
-    // Update graph view if active
-    if (typeof renderGraphView === 'function' && state.currentView === 'graph') {
+    // Always refresh graph view to keep catalog and nodes in sync
+    if (typeof renderGraphView === 'function') {
       renderGraphView();
     }
 
@@ -1324,12 +1324,12 @@ function removeCourse(courseCode) {
   // Update all credit displays across all views instantly
   updateAllCreditDisplays();
 
-  // Refresh view-specific content
+  // Refresh all views to ensure consistency between Pathway and Graph Builder
   updateDashboard();
   updatePathway();
 
-  // Update graph view if active
-  if (typeof renderGraphView === 'function' && state.currentView === 'graph') {
+  // Always refresh graph view to keep catalog and nodes in sync
+  if (typeof renderGraphView === 'function') {
     renderGraphView();
   }
 
@@ -1777,13 +1777,111 @@ function updateCustomCourseForm() {
     blockFields.classList.add('hidden');
     blockTermField.classList.add('hidden');
     datesInput.removeAttribute('required');
+    // Update slot options for the selected term
+    updateSlotOptions();
   } else {
     regularFields.classList.add('hidden');
     blockFields.classList.remove('hidden');
     blockTermField.classList.remove('hidden');
     datesInput.setAttribute('required', 'required');
+    // Update block week hint
+    updateBlockWeekHint();
   }
 }
+
+/**
+ * Update slot dropdown options based on selected term with actual weekend dates.
+ * Shows which weekends each slot covers for better conflict awareness.
+ */
+function updateSlotOptions() {
+  const term = document.getElementById('custom-term').value;
+  const slotSelect = document.getElementById('custom-slot');
+  const termHint = document.getElementById('term-hint');
+  const slotHint = document.getElementById('slot-hint');
+
+  // Get schedule for current cohort and term
+  const schedule = SCHEDULE[state.selectedCohort]?.[term];
+
+  if (!schedule || !schedule.weekends) {
+    // Fallback if no schedule data
+    slotSelect.innerHTML = `
+      <option value="A">Slot A (Weekends 1-4)</option>
+      <option value="B">Slot B (Weekends 1-4)</option>
+      <option value="C">Slot C (Weekends 5-7)</option>
+    `;
+    termHint.textContent = '';
+    slotHint.textContent = '';
+    return;
+  }
+
+  const weekends = schedule.weekends;
+  const termName = schedule.name || term;
+
+  // Show term name/timeframe
+  termHint.textContent = termName;
+
+  // Slot A and B: weekends 1-4 (indexes 0-3)
+  // Slot C: weekends 5-7/8 (indexes 4+)
+  const slotABWeekends = weekends.slice(0, 4);
+  const slotCWeekends = weekends.slice(4);
+
+  // Build slot options with actual dates
+  let options = `
+    <option value="A">Slot A (Weekends 1-4)</option>
+    <option value="B">Slot B (Weekends 1-4)</option>
+  `;
+
+  // Only show Slot C if there are weekends for it
+  if (slotCWeekends.length > 0) {
+    options += `<option value="C">Slot C (Weekends 5-${weekends.length})</option>`;
+  }
+
+  slotSelect.innerHTML = options;
+
+  // Show helpful hint about weekend dates
+  const slotValue = slotSelect.value;
+  updateSlotHint(slotValue, slotABWeekends, slotCWeekends);
+
+  // Add change handler to update hint when slot changes
+  slotSelect.onchange = () => updateSlotHint(slotSelect.value, slotABWeekends, slotCWeekends);
+}
+
+/**
+ * Update the slot hint to show actual weekend dates
+ */
+function updateSlotHint(slot, slotABWeekends, slotCWeekends) {
+  const slotHint = document.getElementById('slot-hint');
+
+  if (slot === 'A' || slot === 'B') {
+    slotHint.innerHTML = `<strong>Weekends:</strong> ${slotABWeekends.join(' • ')}`;
+  } else if (slot === 'C') {
+    slotHint.innerHTML = `<strong>Weekends:</strong> ${slotCWeekends.join(' • ')}`;
+  }
+}
+
+/**
+ * Update block week hint to show term timeframe
+ */
+function updateBlockWeekHint() {
+  const blockTerm = document.getElementById('custom-block-term').value;
+  const blockTermHint = document.getElementById('block-term-hint');
+
+  // Get schedule for current cohort and term
+  const schedule = SCHEDULE[state.selectedCohort]?.[blockTerm];
+
+  if (schedule && schedule.weekends && schedule.weekends.length > 0) {
+    const termName = schedule.name || blockTerm;
+    const firstWeekend = schedule.weekends[0];
+    const lastWeekend = schedule.weekends[schedule.weekends.length - 1];
+    blockTermHint.textContent = `${termName}: ${firstWeekend} through ${lastWeekend}`;
+  } else {
+    blockTermHint.textContent = '';
+  }
+}
+
+// Make new functions globally available
+window.updateSlotOptions = updateSlotOptions;
+window.updateBlockWeekHint = updateBlockWeekHint;
 
 function populateMajorCheckboxes() {
   const container = document.getElementById('custom-majors-checkboxes');
@@ -1889,13 +1987,14 @@ function submitCustomCourse(event) {
   // Close modal
   closeCustomCourseModal();
 
-  // Refresh views
+  // Refresh all views to ensure consistency
   updateAllCreditDisplays();
   updateDashboard();
   updatePathway();
 
-  // Update graph view if active
-  if (typeof renderGraphView === 'function' && state.currentView === 'graph') {
+  // Always refresh graph view to keep catalog and nodes in sync
+  // This ensures custom courses appear in both Pathway and Graph Builder
+  if (typeof renderGraphView === 'function') {
     renderGraphView();
   }
 }
