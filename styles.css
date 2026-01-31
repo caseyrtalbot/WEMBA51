@@ -1982,6 +1982,18 @@ h1, h2, .display-heading {
   text-align: center;
 }
 
+/* Block Week course items in pathway view */
+.block-week-course {
+  background: linear-gradient(135deg, transparent, rgba(224, 123, 84, 0.06));
+  border-left: 3px solid rgba(224, 123, 84, 0.5);
+  padding-left: 0.75rem;
+  margin-left: -0.5rem;
+}
+
+.block-week-course .course-name {
+  font-size: 0.85rem;
+}
+
 /* Validation Messages */
 .validation-section {
   margin-top: 2rem;
@@ -2114,6 +2126,17 @@ h1, h2, .display-heading {
 .add-course-info p {
   font-size: 0.8rem;
   color: var(--text-secondary);
+}
+
+/* Block Week items in add course modal */
+.add-course-item.block-week-item {
+  border-left: 3px solid rgba(224, 123, 84, 0.6);
+  background: linear-gradient(135deg, var(--bg-muted), rgba(224, 123, 84, 0.04));
+}
+
+.add-course-item.block-week-item:hover {
+  border-color: rgba(224, 123, 84, 0.8);
+  background: linear-gradient(135deg, var(--bg-muted), rgba(224, 123, 84, 0.08));
 }
 
 /* Finance Choice Modal */

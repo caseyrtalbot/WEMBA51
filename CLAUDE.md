@@ -12,12 +12,15 @@ The WEMBA 51 Pathway Planner is a static web application that helps Wharton Exec
 
 ```bash
 # Run local server
-python -m http.server 8000   # or: npx http-server
+npm run serve              # python -m http.server 8000
+npm run serve:npx          # npx http-server -p 8000
 
-# Run Playwright tests (if test files exist)
-npx playwright test
-npx playwright test --ui              # interactive mode
-npx playwright test tests/foo.spec.js # single file
+# Run Playwright tests (auto-starts dev server)
+npm test                   # all tests, all browsers
+npm run test:ui            # interactive UI mode
+npm run test:headed        # headed browser mode
+npm run test:debug         # debug mode with inspector
+npx playwright test tests/e2e/navigation.spec.js  # single file
 ```
 
 **Deployment:** Hosted on Vercel. Deploy by pushing to the connected repository.
@@ -26,6 +29,8 @@ npx playwright test tests/foo.spec.js # single file
 
 ```
 index.html       →  DOM structure (cohort selection, main app views, modals)
+     ↓
+router.js        →  Hash-based URL routing, browser history, route guards
      ↓
 app.js           →  State management, event handlers, view updates, validation
      ↓
@@ -157,3 +162,4 @@ Data in `data.js` was synthesized from markdown files in the parent directory. W
 
 - `HANDOFF.md` - Context handoff notes for recent features (e.g., slot-based conflict detection)
 - `docs/plans/` - Design documents for major features like Graph Builder
+- `tests/e2e/` - Playwright E2E tests (navigation, cohort, explorer, pathway, dashboard, graph-builder)

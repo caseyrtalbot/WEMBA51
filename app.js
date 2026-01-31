@@ -1517,13 +1517,20 @@ function updatePathway() {
     if (courses.length === 0) {
       coursesList.innerHTML = `<li class="empty-slot">No courses planned</li>`;
     } else {
-      coursesList.innerHTML = courses.map(course => `
-        <li>
-          <span class="course-name">${course.code.replace('-', ' ')}: ${course.title}</span>
-          <span class="course-cu">${course.credits} CU</span>
-          <button class="remove-btn" onclick="removeCourse('${course.code}')">&times;</button>
-        </li>
-      `).join('');
+      coursesList.innerHTML = courses.map(course => {
+        const offering = course.offering || getCourseOffering(course, state.selectedCohort);
+        const isBlockWeek = course.isBlockWeek;
+        const locationInfo = isBlockWeek && offering?.location ? ` (${offering.location})` : '';
+        const dateInfo = isBlockWeek && offering?.dates ? ` - ${offering.dates}` : '';
+
+        return `
+          <li class="${isBlockWeek ? 'block-week-course' : ''}">
+            <span class="course-name">${course.code.replace('-', ' ')}: ${course.title}${dateInfo}${locationInfo}</span>
+            <span class="course-cu">${course.credits} CU</span>
+            <button class="remove-btn" onclick="removeCourse('${course.code}')">&times;</button>
+          </li>
+        `;
+      }).join('');
     }
   });
 
@@ -1560,8 +1567,19 @@ function getPlannedCoursesForTerm(term) {
       const course = COURSES[normalizedCode];
       if (!course) return null;
       const offering = getCourseOffering(course, state.selectedCohort);
-      if (!offering || offering.term !== term) return null;
-      return { code: normalizedCode, ...course };
+      if (!offering) return null;
+
+      // Block Week courses should appear in the BW section, not in T4/T5/T6
+      if (term === 'BW') {
+        // For BW section: only include courses with isBlockWeek flag
+        if (!course.isBlockWeek) return null;
+        return { code: normalizedCode, ...course, offering };
+      } else {
+        // For T4/T5/T6: exclude Block Week courses (they go in BW section)
+        if (course.isBlockWeek) return null;
+        if (offering.term !== term) return null;
+        return { code: normalizedCode, ...course, offering };
+      }
     })
     .filter(c => c !== null);
 }
@@ -1631,7 +1649,15 @@ function addCourseToTerm(term) {
   const availableCourses = Object.entries(COURSES)
     .filter(([code, course]) => {
       const offering = getCourseOffering(course, state.selectedCohort);
-      return offering && offering.term === term && !state.plannedCourses.includes(code);
+      if (!offering || state.plannedCourses.includes(code)) return false;
+
+      // For Block Week section: only show Block Week courses
+      if (term === 'BW') {
+        return course.isBlockWeek === true;
+      }
+      // For T4/T5/T6: exclude Block Week courses (they go in BW section)
+      if (course.isBlockWeek) return false;
+      return offering.term === term;
     })
     .map(([code, course]) => ({ code, ...course }));
 
@@ -1641,8 +1667,9 @@ function addCourseToTerm(term) {
     list.innerHTML = availableCourses.map(course => {
       const offering = getCourseOffering(course, state.selectedCohort);
       const locationInfo = course.isBlockWeek && offering.location ? ` | ${offering.location}` : '';
+      const blockWeekClass = course.isBlockWeek ? ' block-week-item' : '';
       return `
-        <div class="add-course-item" onclick="addCourseAndClose('${course.code}')">
+        <div class="add-course-item${blockWeekClass}" onclick="addCourseAndClose('${course.code}')">
           <div class="add-course-info">
             <h4>${course.code.replace('-', ' ')}: ${course.title}</h4>
             <p>${course.credits} CU | ${offering.professor}${offering.dates ? ` | ${offering.dates}` : ''}${locationInfo}</p>
