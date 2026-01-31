@@ -11,17 +11,22 @@ The WEMBA 51 Pathway Planner is a static web application that helps Wharton Exec
 ## Commands
 
 ```bash
-# Run local server
+# Run local server (for manual testing)
 npm run serve              # python -m http.server 8000
 npm run serve:npx          # npx http-server -p 8000
 
-# Run Playwright tests (auto-starts dev server)
+# Run Playwright tests (auto-starts dev server - no manual server needed)
 npm test                   # all tests, all browsers
 npm run test:ui            # interactive UI mode
 npm run test:headed        # headed browser mode
 npm run test:debug         # debug mode with inspector
 npx playwright test tests/e2e/navigation.spec.js  # single file
 ```
+
+**Why tests use localhost instead of file://:** The Playwright config auto-starts a Python http server. This is intentional because:
+- Firefox has strict security restrictions with `file://` that break localStorage
+- Cross-browser localStorage behavior varies with `file://` protocol
+- No manual steps needed - `npm test` handles everything
 
 **Deployment:** Hosted on Vercel. Deploy by pushing to the connected repository.
 
