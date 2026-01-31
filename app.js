@@ -91,6 +91,35 @@ function isCourseAvailableForCohort(course, cohort) {
   return !!course.offerings[cohort];
 }
 
+/**
+ * Get a course by code, checking both COURSES and custom courses.
+ * Custom courses are stored in state.customCourses array.
+ */
+function getCourse(courseCode) {
+  const normalizedCode = courseCode.replace(/\s+/g, '-');
+
+  // Check standard courses first
+  if (COURSES[normalizedCode]) {
+    return COURSES[normalizedCode];
+  }
+
+  // Check custom courses
+  const customCourse = state.customCourses.find(c => c.code === normalizedCode);
+  if (customCourse) {
+    return customCourse;
+  }
+
+  return null;
+}
+
+/**
+ * Check if a course code is a custom course.
+ */
+function isCustomCourse(courseCode) {
+  const normalizedCode = courseCode.replace(/\s+/g, '-');
+  return state.customCourses.some(c => c.code === normalizedCode);
+}
+
 // Initialize application
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
