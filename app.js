@@ -1721,6 +1721,183 @@ function closeAddCourseModal() {
   document.getElementById('add-course-modal').classList.add('hidden');
 }
 
+// Custom Course Modal
+let customCourseTargetTerm = null;
+
+function openCustomCourseModal(term = null) {
+  customCourseTargetTerm = term;
+  const modal = document.getElementById('custom-course-modal');
+  const form = document.getElementById('custom-course-form');
+
+  // Reset form
+  form.reset();
+
+  // Pre-select term if provided
+  if (term && term !== 'BW') {
+    document.getElementById('custom-term').value = term;
+  }
+
+  // If BW term, default to block week type
+  if (term === 'BW') {
+    document.getElementById('custom-type').value = 'block';
+    updateCustomCourseForm();
+  } else {
+    document.getElementById('custom-type').value = 'regular';
+    updateCustomCourseForm();
+  }
+
+  // Populate major checkboxes
+  populateMajorCheckboxes();
+
+  modal.classList.remove('hidden');
+}
+
+function closeCustomCourseModal() {
+  document.getElementById('custom-course-modal').classList.add('hidden');
+  customCourseTargetTerm = null;
+}
+
+function updateCustomCourseForm() {
+  const type = document.getElementById('custom-type').value;
+  const regularFields = document.getElementById('regular-term-fields');
+  const blockFields = document.getElementById('block-week-fields');
+  const blockTermField = document.getElementById('block-term-field');
+  const datesInput = document.getElementById('custom-dates');
+
+  if (type === 'regular') {
+    regularFields.classList.remove('hidden');
+    blockFields.classList.add('hidden');
+    blockTermField.classList.add('hidden');
+    datesInput.removeAttribute('required');
+  } else {
+    regularFields.classList.add('hidden');
+    blockFields.classList.remove('hidden');
+    blockTermField.classList.remove('hidden');
+    datesInput.setAttribute('required', 'required');
+  }
+}
+
+function populateMajorCheckboxes() {
+  const container = document.getElementById('custom-majors-checkboxes');
+
+  const majorsList = Object.entries(MAJORS).map(([id, major]) => ({
+    id,
+    name: major.name
+  }));
+
+  container.innerHTML = majorsList.map(major => `
+    <label class="checkbox-item">
+      <input type="checkbox" name="custom-major" value="${major.id}">
+      <span>${major.name}</span>
+    </label>
+  `).join('');
+}
+
+function submitCustomCourse(event) {
+  event.preventDefault();
+
+  const type = document.getElementById('custom-type').value;
+
+  // Get form values
+  const codeInput = document.getElementById('custom-code').value.trim().toUpperCase();
+  const code = codeInput.replace(/\s+/g, '-');
+  const displayCode = codeInput.replace(/-/g, ' ').replace(/([A-Z]{2,4})(\d{4})/, '$1 $2');
+  const title = document.getElementById('custom-title').value.trim();
+  const department = document.getElementById('custom-department').value;
+  const credits = parseFloat(document.getElementById('custom-credits').value);
+
+  // Check for duplicate code
+  if (getCourse(code)) {
+    alert('A course with this code already exists. Please use a different code.');
+    return;
+  }
+
+  // Build course object
+  const customCourse = {
+    code: code,
+    displayCode: displayCode,
+    title: title,
+    department: department,
+    credits: credits,
+    description: 'Custom course added by student',
+    prerequisites: [],
+    isCustom: true
+  };
+
+  // Get selected majors
+  const selectedMajors = Array.from(document.querySelectorAll('input[name="custom-major"]:checked'))
+    .map(cb => cb.value);
+  if (selectedMajors.length > 0) {
+    customCourse.countsTowardMajors = selectedMajors;
+  }
+
+  // Build offering based on type
+  if (type === 'regular') {
+    const term = document.getElementById('custom-term').value;
+    const slot = document.getElementById('custom-slot').value;
+
+    // Map slot to weekends (same as existing system)
+    const slotWeekends = {
+      'A': [0, 1, 2, 3],
+      'B': [0, 1, 2, 3],
+      'C': [4, 5, 6]
+    };
+
+    customCourse.offerings = {
+      [state.selectedCohort]: {
+        term: term,
+        slot: slot,
+        weekends: slotWeekends[slot],
+        professor: 'TBD'
+      }
+    };
+  } else {
+    // Block week / GMC / GBW
+    const dates = document.getElementById('custom-dates').value.trim();
+    const location = document.getElementById('custom-location').value.trim();
+    const blockTerm = document.getElementById('custom-block-term').value;
+
+    customCourse.isBlockWeek = true;
+    customCourse.offerings = {
+      all: {
+        term: blockTerm,
+        dates: dates,
+        location: location || undefined,
+        professor: 'TBD',
+        category: type === 'gmc' ? 'GMC' : (type === 'gbw' ? 'GBW' : undefined)
+      }
+    };
+  }
+
+  // Add to state
+  state.customCourses.push(customCourse);
+
+  // Add to planned courses
+  state.plannedCourses.push(code);
+
+  // Save state
+  saveState();
+
+  // Close modal
+  closeCustomCourseModal();
+
+  // Refresh views
+  updateAllCreditDisplays();
+  updateDashboard();
+  updatePathway();
+
+  // Update graph view if active
+  if (typeof renderGraphView === 'function' && state.currentView === 'graph') {
+    renderGraphView();
+  }
+}
+
+// Make functions globally available
+window.openCustomCourseModal = openCustomCourseModal;
+window.closeCustomCourseModal = closeCustomCourseModal;
+window.updateCustomCourseForm = updateCustomCourseForm;
+window.submitCustomCourse = submitCustomCourse;
+
 // Course Details Modal
 function showCourseDetails(courseCode) {
   const normalizedCode = courseCode.replace(/\s+/g, '-');
