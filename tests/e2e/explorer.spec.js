@@ -31,7 +31,7 @@ test.describe('Course Explorer', () => {
   test('should display majors list by default', async ({ page }) => {
     await expect(page.locator('#majors-list')).toBeVisible();
     await expect(page.locator('#departments-list')).toHaveClass(/hidden/);
-    await expect(page.locator('#majors-list .sidebar-item')).toHaveCount.greaterThan(0);
+    await expect(page.locator('#majors-list .sidebar-item')).not.toHaveCount(0);
   });
 
   test('should switch to departments view', async ({ page }) => {
@@ -39,7 +39,7 @@ test.describe('Course Explorer', () => {
 
     await expect(page.locator('#majors-list')).toHaveClass(/hidden/);
     await expect(page.locator('#departments-list')).toBeVisible();
-    await expect(page.locator('#departments-list .sidebar-item')).toHaveCount.greaterThan(0);
+    await expect(page.locator('#departments-list .sidebar-item')).not.toHaveCount(0);
   });
 
   test('should display courses when selecting a major', async ({ page }) => {
@@ -47,7 +47,7 @@ test.describe('Course Explorer', () => {
     await page.locator('#majors-list .sidebar-item').first().click();
 
     // Courses should appear
-    await expect(page.locator('#explorer-courses .course-card')).toHaveCount.greaterThan(0);
+    await expect(page.locator('#explorer-courses .course-card')).not.toHaveCount(0);
 
     // Header should update
     await expect(page.locator('#explorer-title')).not.toContainText('Select a Major');
@@ -58,7 +58,7 @@ test.describe('Course Explorer', () => {
     await page.locator('#departments-list .sidebar-item').first().click();
 
     // Courses should appear
-    await expect(page.locator('#explorer-courses .course-card')).toHaveCount.greaterThan(0);
+    await expect(page.locator('#explorer-courses .course-card')).not.toHaveCount(0);
   });
 
   test('should show Set as Target Major button when viewing a major', async ({ page }) => {
@@ -85,7 +85,7 @@ test.describe('Course Explorer', () => {
 
   test('should add course to plan', async ({ page }) => {
     await page.locator('#majors-list .sidebar-item').first().click();
-    await expect(page.locator('#explorer-courses .course-card')).toHaveCount.greaterThan(0);
+    await expect(page.locator('#explorer-courses .course-card')).not.toHaveCount(0);
 
     // Click "Add to Plan" on first course
     await page.locator('.course-btn.add').first().click();
@@ -146,7 +146,7 @@ test.describe('Course Explorer', () => {
 
     // Should show search results
     await expect(page.locator('#explorer-title')).toContainText('Search Results');
-    await expect(page.locator('#explorer-courses .course-card')).toHaveCount.greaterThan(0);
+    await expect(page.locator('#explorer-courses .course-card')).not.toHaveCount(0);
   });
 
   test('should highlight courses for target majors', async ({ page }) => {
@@ -155,7 +155,7 @@ test.describe('Course Explorer', () => {
     await page.locator('button:has-text("Set as Target Major")').click();
 
     // Courses should have major-highlight class
-    await expect(page.locator('.course-card.major-highlight')).toHaveCount.greaterThan(0);
+    await expect(page.locator('.course-card.major-highlight')).not.toHaveCount(0);
   });
 
   test('should show course card with correct information', async ({ page }) => {

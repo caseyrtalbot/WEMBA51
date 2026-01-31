@@ -132,7 +132,7 @@ test.describe('Graph Builder', () => {
     await page.locator('.nav-tab[data-view="graph"]').click();
 
     // Should have at least one course node
-    await expect(page.locator('#nodes-layer .course-node')).toHaveCount.greaterThan(0);
+    await expect(page.locator('#nodes-layer .course-node')).not.toHaveCount(0);
   });
 
   test('should populate catalog when target major is set', async ({ page }) => {
@@ -201,7 +201,7 @@ test.describe('Graph Builder', () => {
   });
 
   test('should have interactive legend items', async ({ page }) => {
-    await expect(page.locator('.legend-interactive')).toHaveCount.greaterThan(0);
+    await expect(page.locator('.legend-interactive')).not.toHaveCount(0);
   });
 
   test('should display header zoom controls', async ({ page }) => {

@@ -97,6 +97,11 @@ h1, h2, .display-heading {
   display: block;
 }
 
+/* Override for #main-app which has display: flex - ensure it's hidden when not active */
+#main-app:not(.active) {
+  display: none;
+}
+
 /* Screen Transitions */
 #cohort-selection.transitioning {
   display: block !important;

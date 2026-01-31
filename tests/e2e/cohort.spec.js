@@ -65,8 +65,8 @@ test.describe('Cohort Selection & Finance Modal', () => {
     await page.locator('[data-cohort="philadelphia"]').click();
     await expect(page.locator('#finance-choice-modal')).toBeVisible();
 
-    // Click backdrop
-    await page.locator('#finance-choice-modal .modal-backdrop').click();
+    // Click backdrop (at corner to avoid modal content in center)
+    await page.locator('#finance-choice-modal .modal-backdrop').click({ position: { x: 10, y: 10 } });
 
     // Modal should close
     await expect(page.locator('#finance-choice-modal')).not.toBeVisible();

@@ -55,7 +55,18 @@ class PathwayGraph {
     // Node positions cache
     this.nodePositions = new Map();
 
-    // Initialize
+    // Track if listeners are set up to prevent duplicates
+    this.listenersInitialized = false;
+
+    // Initialize event listeners (only once)
+    this.initializeListeners();
+  }
+
+  // Single initialization method to prevent duplicate listeners
+  initializeListeners() {
+    if (this.listenersInitialized) return;
+    this.listenersInitialized = true;
+
     this.setupEventListeners();
     this.setupDropZoneListeners();
     this.setupConflictToggle();
@@ -66,14 +77,16 @@ class PathwayGraph {
 
   setupConflictToggle() {
     const conflictBtn = document.getElementById('show-conflicts-btn');
-    if (conflictBtn) {
+    if (conflictBtn && !conflictBtn.dataset.listenerAttached) {
+      conflictBtn.dataset.listenerAttached = 'true';
       conflictBtn.addEventListener('click', () => this.toggleConflictsMode());
     }
   }
 
   setupMajorModeSelector() {
     const modeSelector = document.getElementById('major-mode-selector');
-    if (!modeSelector) return;
+    if (!modeSelector || modeSelector.dataset.listenerAttached) return;
+    modeSelector.dataset.listenerAttached = 'true';
 
     modeSelector.querySelectorAll('.mode-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -89,7 +102,8 @@ class PathwayGraph {
 
   setupMajorsDisplay() {
     const clearBtn = document.getElementById('clear-majors-btn');
-    if (clearBtn) {
+    if (clearBtn && !clearBtn.dataset.listenerAttached) {
+      clearBtn.dataset.listenerAttached = 'true';
       clearBtn.addEventListener('click', () => this.clearAllMajors());
     }
   }
@@ -284,6 +298,10 @@ class PathwayGraph {
   setupInteractiveLegend() {
     const legendItems = document.querySelectorAll('.legend-interactive');
     legendItems.forEach(item => {
+      // Prevent duplicate listeners
+      if (item.dataset.listenerAttached) return;
+      item.dataset.listenerAttached = 'true';
+
       item.addEventListener('click', () => {
         const highlightType = item.getAttribute('data-highlight');
         const isActive = item.classList.contains('active');
@@ -677,23 +695,39 @@ class PathwayGraph {
   }
 
   setupEventListeners() {
-    // Zoom controls
-    document.getElementById('zoom-in-btn')?.addEventListener('click', () => this.zoomIn());
-    document.getElementById('zoom-out-btn')?.addEventListener('click', () => this.zoomOut());
-    document.getElementById('zoom-reset-btn')?.addEventListener('click', () => this.resetView());
+    // Zoom controls - use data attribute to prevent duplicates
+    const zoomInBtn = document.getElementById('zoom-in-btn');
+    const zoomOutBtn = document.getElementById('zoom-out-btn');
+    const zoomResetBtn = document.getElementById('zoom-reset-btn');
 
-    // Pan with mouse drag on SVG background
-    this.svg.addEventListener('mousedown', (e) => this.handlePanStart(e));
-    this.svg.addEventListener('mousemove', (e) => this.handlePanMove(e));
-    this.svg.addEventListener('mouseup', () => this.handlePanEnd());
-    this.svg.addEventListener('mouseleave', () => this.handlePanEnd());
+    if (zoomInBtn && !zoomInBtn.dataset.listenerAttached) {
+      zoomInBtn.dataset.listenerAttached = 'true';
+      zoomInBtn.addEventListener('click', () => this.zoomIn());
+    }
+    if (zoomOutBtn && !zoomOutBtn.dataset.listenerAttached) {
+      zoomOutBtn.dataset.listenerAttached = 'true';
+      zoomOutBtn.addEventListener('click', () => this.zoomOut());
+    }
+    if (zoomResetBtn && !zoomResetBtn.dataset.listenerAttached) {
+      zoomResetBtn.dataset.listenerAttached = 'true';
+      zoomResetBtn.addEventListener('click', () => this.resetView());
+    }
 
-    // Click to deselect
-    this.svg.addEventListener('click', (e) => {
-      if (e.target === this.svg || e.target.closest('#dropzones-layer')) {
-        this.clearSelection();
-      }
-    });
+    // Pan with mouse drag on SVG background - use flag to prevent duplicates
+    if (!this.svg.dataset.listenerAttached) {
+      this.svg.dataset.listenerAttached = 'true';
+      this.svg.addEventListener('mousedown', (e) => this.handlePanStart(e));
+      this.svg.addEventListener('mousemove', (e) => this.handlePanMove(e));
+      this.svg.addEventListener('mouseup', () => this.handlePanEnd());
+      this.svg.addEventListener('mouseleave', () => this.handlePanEnd());
+
+      // Click to deselect
+      this.svg.addEventListener('click', (e) => {
+        if (e.target === this.svg || e.target.closest('#dropzones-layer')) {
+          this.clearSelection();
+        }
+      });
+    }
   }
 
   // Zoom methods
@@ -708,7 +742,12 @@ class PathwayGraph {
   setZoom(level) {
     this.zoom = level;
     this.updateTransform();
-    document.getElementById('zoom-level').textContent = `${Math.round(level * 100)}%`;
+    // Update both zoom level displays
+    const zoomText = `${Math.round(level * 100)}%`;
+    const zoomLevel = document.getElementById('zoom-level');
+    const zoomLevelHeader = document.getElementById('zoom-level-header');
+    if (zoomLevel) zoomLevel.textContent = zoomText;
+    if (zoomLevelHeader) zoomLevelHeader.textContent = zoomText;
   }
 
   resetView() {
@@ -1582,28 +1621,9 @@ class PathwayGraph {
     let originalTransform;
     const self = this;
 
-    nodeElement.addEventListener('mousedown', (e) => {
-      if (e.button !== 0) return; // Only left click
-
-      // Don't start drag if clicking the remove button
-      const target = e.target;
-      if (target.classList.contains('remove-btn-bg') ||
-          target.closest('.node-remove-btn')) {
-        return;
-      }
-
-      isDragging = true;
-      const transform = nodeElement.getAttribute('transform');
-      startX = e.clientX;
-      startY = e.clientY;
-      originalTransform = transform;
-
-      nodeElement.classList.add('dragging');
-      document.getElementById('trash-dropzone')?.classList.remove('hidden');
-
-      e.preventDefault();
-      e.stopPropagation();
-    });
+    // Store bound handlers so we can remove them later
+    let boundMouseMove = null;
+    let boundMouseUp = null;
 
     const handleMouseMove = (e) => {
       if (!isDragging) return;
@@ -1626,6 +1646,16 @@ class PathwayGraph {
       if (!isDragging) return;
       isDragging = false;
 
+      // CRITICAL: Remove document-level listeners immediately
+      if (boundMouseMove) {
+        document.removeEventListener('mousemove', boundMouseMove);
+        boundMouseMove = null;
+      }
+      if (boundMouseUp) {
+        document.removeEventListener('mouseup', boundMouseUp);
+        boundMouseUp = null;
+      }
+
       nodeElement.classList.remove('dragging');
       document.getElementById('trash-dropzone')?.classList.add('hidden');
       self.clearDropZoneHighlights();
@@ -1647,8 +1677,34 @@ class PathwayGraph {
       }
     };
 
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
+    nodeElement.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return; // Only left click
+
+      // Don't start drag if clicking the remove button
+      const target = e.target;
+      if (target.classList.contains('remove-btn-bg') ||
+          target.closest('.node-remove-btn')) {
+        return;
+      }
+
+      isDragging = true;
+      const transform = nodeElement.getAttribute('transform');
+      startX = e.clientX;
+      startY = e.clientY;
+      originalTransform = transform;
+
+      nodeElement.classList.add('dragging');
+      document.getElementById('trash-dropzone')?.classList.remove('hidden');
+
+      // Store bound references and add listeners only when drag starts
+      boundMouseMove = handleMouseMove;
+      boundMouseUp = handleMouseUp;
+      document.addEventListener('mousemove', boundMouseMove);
+      document.addEventListener('mouseup', boundMouseUp);
+
+      e.preventDefault();
+      e.stopPropagation();
+    });
   }
 
   highlightDropZone(clientX, clientY, courseCode) {
@@ -1715,7 +1771,8 @@ class PathwayGraph {
 
   setupDropZoneListeners() {
     const container = document.getElementById('graph-canvas-container');
-    if (!container) return;
+    if (!container || container.dataset.listenerAttached) return;
+    container.dataset.listenerAttached = 'true';
 
     container.addEventListener('dragover', (e) => {
       e.preventDefault();
@@ -2252,8 +2309,36 @@ function initGraphBuilder() {
     courseCatalog = new CourseCatalog(catalogContainer, state, pathwayGraph);
   }
 
+  // Set up header zoom controls (these are separate from the in-graph controls)
+  setupHeaderZoomControls();
+
   // Always render to update the view
   renderGraphView();
+}
+
+// Track header zoom controls setup
+let headerZoomSetup = false;
+
+function setupHeaderZoomControls() {
+  if (headerZoomSetup || !pathwayGraph) return;
+  headerZoomSetup = true;
+
+  const zoomInHeader = document.getElementById('zoom-in-btn-header');
+  const zoomOutHeader = document.getElementById('zoom-out-btn-header');
+  const resetViewBtn = document.getElementById('reset-view-btn');
+
+  if (zoomInHeader && !zoomInHeader.dataset.listenerAttached) {
+    zoomInHeader.dataset.listenerAttached = 'true';
+    zoomInHeader.addEventListener('click', () => pathwayGraph.zoomIn());
+  }
+  if (zoomOutHeader && !zoomOutHeader.dataset.listenerAttached) {
+    zoomOutHeader.dataset.listenerAttached = 'true';
+    zoomOutHeader.addEventListener('click', () => pathwayGraph.zoomOut());
+  }
+  if (resetViewBtn && !resetViewBtn.dataset.listenerAttached) {
+    resetViewBtn.dataset.listenerAttached = 'true';
+    resetViewBtn.addEventListener('click', () => pathwayGraph.resetView());
+  }
 }
 
 /**

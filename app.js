@@ -881,10 +881,6 @@ function populateSidebar() {
     </li>
   `).join('');
 
-  majorsList.querySelectorAll('.sidebar-item').forEach(item => {
-    item.addEventListener('click', () => selectMajor(item.dataset.major));
-  });
-
   // Populate departments
   const deptsList = document.getElementById('departments-list');
   deptsList.innerHTML = Object.entries(DEPARTMENTS).map(([code, dept]) => {
@@ -897,8 +893,35 @@ function populateSidebar() {
     `;
   }).join('');
 
-  deptsList.querySelectorAll('.sidebar-item').forEach(item => {
-    item.addEventListener('click', () => selectDepartment(item.dataset.dept));
+  // Use event delegation on parent containers instead of individual listeners
+  // This prevents listener accumulation on re-renders
+  setupSidebarEventDelegation();
+}
+
+// Track if delegation is already set up to avoid duplicate handlers
+let sidebarDelegationSetup = false;
+
+function setupSidebarEventDelegation() {
+  if (sidebarDelegationSetup) return;
+  sidebarDelegationSetup = true;
+
+  const majorsList = document.getElementById('majors-list');
+  const deptsList = document.getElementById('departments-list');
+
+  // Event delegation for majors list
+  majorsList.addEventListener('click', (e) => {
+    const item = e.target.closest('.sidebar-item');
+    if (item && item.dataset.major) {
+      selectMajor(item.dataset.major);
+    }
+  });
+
+  // Event delegation for departments list
+  deptsList.addEventListener('click', (e) => {
+    const item = e.target.closest('.sidebar-item');
+    if (item && item.dataset.dept) {
+      selectDepartment(item.dataset.dept);
+    }
   });
 }
 
@@ -1365,13 +1388,21 @@ function updatePathway() {
 
   // Update pathway stats
   const totalCU = calculateTotalCU();
-  document.getElementById('pathway-total-cu').textContent = totalCU.toFixed(1);
-  document.getElementById('pathway-status').textContent =
-    totalCU >= PROGRAM_RULES.graduationMinimum ? 'Ready' : 'In Progress';
-  document.getElementById('pathway-majors').textContent =
-    state.targetMajors.length > 0
+  const pathwayTotalCuEl = document.getElementById('pathway-total-cu');
+  const pathwayStatusEl = document.getElementById('pathway-status');
+  const pathwayMajorsEl = document.getElementById('pathway-majors');
+
+  if (pathwayTotalCuEl) {
+    pathwayTotalCuEl.textContent = totalCU.toFixed(1);
+  }
+  if (pathwayStatusEl) {
+    pathwayStatusEl.textContent = totalCU >= PROGRAM_RULES.graduationMinimum ? 'Ready' : 'In Progress';
+  }
+  if (pathwayMajorsEl) {
+    pathwayMajorsEl.textContent = state.targetMajors.length > 0
       ? state.targetMajors.map(m => MAJORS[m].name).join(', ')
       : 'None';
+  }
 
   // Update validation messages
   updateValidation();
