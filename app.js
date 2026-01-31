@@ -1552,10 +1552,12 @@ function updatePathway() {
         const isBlockWeek = course.isBlockWeek;
         const locationInfo = isBlockWeek && offering?.location ? ` (${offering.location})` : '';
         const dateInfo = isBlockWeek && offering?.dates ? ` - ${offering.dates}` : '';
+        const customBadge = course.isCustom ? '<span class="custom-course-badge">Custom</span>' : '';
+        const displayCode = course.displayCode || course.code.replace('-', ' ');
 
         return `
           <li class="${isBlockWeek ? 'block-week-course' : ''}">
-            <span class="course-name">${course.code.replace('-', ' ')}: ${course.title}${dateInfo}${locationInfo}</span>
+            <span class="course-name">${displayCode}: ${course.title}${dateInfo}${locationInfo}${customBadge}</span>
             <span class="course-cu">${course.credits} CU</span>
             <button class="remove-btn" onclick="removeCourse('${course.code}')">&times;</button>
           </li>
