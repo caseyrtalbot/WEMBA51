@@ -7,6 +7,7 @@ let state = {
   targetMajors: [],
   waivedCourses: [],
   completedBlockCourses: [], // Early block courses completed during T1-T3
+  customCourses: [], // User-created courses (independent study, new courses not in database)
   financeChoice: null, // 'FNCE-6110' or 'FNCE-6210'
   currentView: 'dashboard',
   explorerMode: 'majors',
