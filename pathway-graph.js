@@ -290,7 +290,7 @@ class PathwayGraph {
 
   getMajorHighlightColor(courseCode) {
     // Return the department color for this course
-    const course = COURSES[courseCode];
+    const course = typeof getCourse === 'function' ? getCourse(courseCode) : COURSES[courseCode];
     if (!course) return null;
     return DEPT_COLORS[course.department] || '#004785';
   }
@@ -829,10 +829,10 @@ class PathwayGraph {
     if (!panel) return;
 
     const normalizedCode = courseCode.replace(/\s+/g, '-');
-    const course = COURSES[normalizedCode];
+    const course = typeof getCourse === 'function' ? getCourse(normalizedCode) : COURSES[normalizedCode];
     if (!course) return;
 
-    titleEl.textContent = course.code.replace('-', ' ');
+    titleEl.textContent = (course.displayCode || course.code).replace('-', ' ');
 
     // Get courses in plan
     const cohort = this.state.selectedCohort;
@@ -855,8 +855,8 @@ class PathwayGraph {
     } else {
       prereqsSection.style.display = 'block';
       prereqsList.innerHTML = prereqs.map(prereqCode => {
-        const prereqCourse = COURSES[prereqCode];
-        const prereqName = prereqCourse ? prereqCourse.code.replace('-', ' ') : prereqCode.replace('-', ' ');
+        const prereqCourse = typeof getCourse === 'function' ? getCourse(prereqCode) : COURSES[prereqCode];
+        const prereqName = prereqCourse ? (prereqCourse.displayCode || prereqCourse.code).replace('-', ' ') : prereqCode.replace('-', ' ');
         const inCore = coreSet.has(prereqCode);
         const inPlan = plannedSet.has(prereqCode);
 
@@ -880,8 +880,8 @@ class PathwayGraph {
     } else {
       unlocksSection.style.display = 'block';
       unlocksList.innerHTML = unlocks.map(unlockCode => {
-        const unlockCourse = COURSES[unlockCode];
-        const unlockName = unlockCourse ? unlockCourse.code.replace('-', ' ') : unlockCode.replace('-', ' ');
+        const unlockCourse = typeof getCourse === 'function' ? getCourse(unlockCode) : COURSES[unlockCode];
+        const unlockName = unlockCourse ? (unlockCourse.displayCode || unlockCourse.code).replace('-', ' ') : unlockCode.replace('-', ' ');
         const inPlan = plannedSet.has(unlockCode);
         const statusText = inPlan ? 'In Plan' : 'Available';
 
@@ -1390,6 +1390,18 @@ class PathwayGraph {
     termText.setAttribute('text-anchor', 'end');
     termText.textContent = offering?.term || '';
     g.appendChild(termText);
+
+    // Custom course indicator
+    if (typeof isCustomCourse === 'function' && isCustomCourse(courseCode)) {
+      const customBadge = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      customBadge.setAttribute('class', 'node-custom-badge');
+      customBadge.setAttribute('x', 55);
+      customBadge.setAttribute('y', 58);
+      customBadge.setAttribute('font-size', '8');
+      customBadge.setAttribute('fill', 'var(--accent-teal)');
+      customBadge.textContent = 'CUSTOM';
+      g.appendChild(customBadge);
+    }
 
     // Warning icon if needed
     if (validationState.length > 0) {

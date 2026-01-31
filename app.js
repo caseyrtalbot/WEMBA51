@@ -894,7 +894,7 @@ function getScheduleConflicts() {
   const coursesByTerm = {};
   state.plannedCourses.forEach(code => {
     const normalizedCode = code.replace(/\s+/g, '-');
-    const course = COURSES[normalizedCode];
+    const course = getCourse(normalizedCode);
     if (!course) return;
 
     const offering = getCourseOffering(course, cohort);
@@ -2362,9 +2362,18 @@ function calculateMajorProgress(majorId) {
     // Normalize to hyphen format
     const normalizedCode = code.replace(/\s+/g, '-');
     if (allCourses.includes(normalizedCode)) {
-      const course = COURSES[normalizedCode];
+      const course = getCourse(normalizedCode);
       if (course) {
         completed += course.credits;
+      }
+    }
+  });
+
+  // Check custom courses that count toward this major
+  state.customCourses.forEach(customCourse => {
+    if (customCourse.countsTowardMajors?.includes(majorId)) {
+      if (state.plannedCourses.includes(customCourse.code)) {
+        completed += customCourse.credits;
       }
     }
   });
