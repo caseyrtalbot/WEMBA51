@@ -2806,9 +2806,15 @@ h1, h2, .display-heading {
 }
 
 .badge.major-badge {
-  background: rgba(163, 31, 52, 0.3);
-  color: var(--accent-teal-light);
-  border: 1px solid rgba(199, 62, 82, 0.4);
+  background: rgba(0, 71, 133, 0.12);
+  color: #7BA3C9;
+  border: 1px solid rgba(0, 71, 133, 0.3);
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  padding: 2px 7px;
+  text-transform: uppercase;
 }
 
 /* Graph Panel - Dark Enhanced */
@@ -3027,12 +3033,11 @@ h1, h2, .display-heading {
 /* Course Nodes - Enhanced */
 .course-node {
   cursor: pointer;
-  transition: transform 0.15s ease, filter 0.15s ease;
+  transition: filter 0.15s ease;
 }
 
 .course-node:hover {
-  filter: brightness(1.05);
-  transform: scale(1.02);
+  filter: brightness(1.08);
 }
 
 .course-node.selected .node-border {
