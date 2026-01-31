@@ -1313,6 +1313,12 @@ function removeCourse(courseCode) {
   // Normalize course code to use hyphens
   const normalizedCode = courseCode.replace(/\s+/g, '-');
   state.plannedCourses = state.plannedCourses.filter(c => c !== normalizedCode);
+
+  // If it's a custom course, also remove the course definition
+  if (isCustomCourse(normalizedCode)) {
+    state.customCourses = state.customCourses.filter(c => c.code !== normalizedCode);
+  }
+
   saveState();
 
   // Update all credit displays across all views instantly
