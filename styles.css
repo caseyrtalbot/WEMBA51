@@ -4579,3 +4579,14 @@ h1, h2, .display-heading {
 .term-actions .add-custom-btn {
   margin-top: 0;
 }
+
+/* Catalog custom course button in graph builder */
+.catalog-custom-btn {
+  margin-top: 0.75rem;
+  background: var(--bg-surface);
+  border-color: var(--border-primary);
+}
+
+.catalog-custom-btn:hover {
+  background: var(--bg-hover);
+}
