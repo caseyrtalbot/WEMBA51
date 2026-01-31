@@ -2153,83 +2153,69 @@ class CourseCatalog {
 
     let html = '';
 
-    // If target majors selected, show by major
+    // Build set of major-relevant courses if target majors are selected
+    const majorRelevantCourses = new Set();
     if (this.state.targetMajors.length > 0) {
       this.state.targetMajors.forEach(majorId => {
         const major = MAJORS[majorId];
+        if (!major) return;
         const allMajorCourses = [
           ...(major.electiveCourses || []),
           ...(major.primaryCourses || []),
-          ...(major.secondaryCourses || [])
+          ...(major.secondaryCourses || []),
+          ...(major.coreRequirements || [])
         ];
-
-        // Filter to courses available for this cohort
-        const availableCourses = allMajorCourses
-          .map(code => ({ code, course: COURSES[code] }))
-          .filter(({ course }) => isCourseAvailableForCohort(course, cohort))
-          .map(({ code, course }) => {
-            const inPlan = plannedSet.has(code);
-            const prereqsMet = this.arePrereqsMet(code, allPlannedCourses);
-            const offering = getCourseOffering(course, cohort);
-            return { code, course, inPlan, prereqsMet, offering };
-          });
-
-        if (availableCourses.length === 0) return;
-
-        const inPlanCount = availableCourses.filter(c => c.inPlan).length;
-
-        html += `
-          <div class="catalog-major" data-major="${majorId}">
-            <div class="catalog-major-header" onclick="toggleCatalogMajor('${majorId}')">
-              <h4>${major.name}</h4>
-              <span class="badge">${inPlanCount}/${availableCourses.length}</span>
-              <span class="chevron">▼</span>
-            </div>
-            <div class="catalog-courses">
-              ${availableCourses.map(c => this.renderCatalogCourse(c)).join('')}
-            </div>
-          </div>
-        `;
-      });
-    } else {
-      // No majors selected - show all courses by department
-      const coursesByDept = {};
-
-      Object.entries(COURSES).forEach(([code, course]) => {
-        if (!isCourseAvailableForCohort(course, cohort)) return;
-        const dept = course.department;
-        if (!coursesByDept[dept]) coursesByDept[dept] = [];
-
-        const inPlan = plannedSet.has(code);
-        const prereqsMet = this.arePrereqsMet(code, allPlannedCourses);
-        const offering = getCourseOffering(course, cohort);
-        coursesByDept[dept].push({ code, course, inPlan, prereqsMet, offering });
-      });
-
-      Object.entries(coursesByDept).forEach(([dept, courses]) => {
-        const deptName = DEPARTMENTS[dept]?.name || dept;
-        const inPlanCount = courses.filter(c => c.inPlan).length;
-
-        html += `
-          <div class="catalog-major" data-dept="${dept}">
-            <div class="catalog-major-header" onclick="toggleCatalogMajor('${dept}')">
-              <h4>${deptName}</h4>
-              <span class="badge">${inPlanCount}/${courses.length}</span>
-              <span class="chevron">▼</span>
-            </div>
-            <div class="catalog-courses">
-              ${courses.map(c => this.renderCatalogCourse(c)).join('')}
-            </div>
-          </div>
-        `;
+        allMajorCourses.forEach(code => majorRelevantCourses.add(code));
       });
     }
+
+    // Always show all courses by department, with major-relevant highlighting
+    const coursesByDept = {};
+
+    Object.entries(COURSES).forEach(([code, course]) => {
+      if (!isCourseAvailableForCohort(course, cohort)) return;
+      const dept = course.department;
+      if (!coursesByDept[dept]) coursesByDept[dept] = [];
+
+      const inPlan = plannedSet.has(code);
+      const prereqsMet = this.arePrereqsMet(code, allPlannedCourses);
+      const offering = getCourseOffering(course, cohort);
+      const isMajorRelevant = majorRelevantCourses.has(code);
+      coursesByDept[dept].push({ code, course, inPlan, prereqsMet, offering, isMajorRelevant });
+    });
+
+    Object.entries(coursesByDept).forEach(([dept, courses]) => {
+      const deptName = DEPARTMENTS[dept]?.name || dept;
+      const inPlanCount = courses.filter(c => c.inPlan).length;
+      const majorRelevantCount = courses.filter(c => c.isMajorRelevant).length;
+
+      // Show major-relevant badge if target majors selected and this dept has relevant courses
+      const majorBadge = (majorRelevantCourses.size > 0 && majorRelevantCount > 0)
+        ? `<span class="badge major-badge">${majorRelevantCount} for major</span>`
+        : '';
+
+      html += `
+        <div class="catalog-major" data-dept="${dept}">
+          <div class="catalog-major-header" onclick="toggleCatalogMajor('${dept}')">
+            <h4>${deptName}</h4>
+            <div class="catalog-badges">
+              ${majorBadge}
+              <span class="badge">${inPlanCount}/${courses.length}</span>
+            </div>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="catalog-courses">
+            ${courses.map(c => this.renderCatalogCourse(c)).join('')}
+          </div>
+        </div>
+      `;
+    });
 
     this.container.innerHTML = html;
     this.setupDragListeners();
   }
 
-  renderCatalogCourse({ code, course, inPlan, prereqsMet, offering }) {
+  renderCatalogCourse({ code, course, inPlan, prereqsMet, offering, isMajorRelevant }) {
     const deptColor = DEPT_COLORS[course.department] || '#64748b';
     const isLocked = !prereqsMet && !inPlan;
 
@@ -2240,14 +2226,18 @@ class CourseCatalog {
       statusHtml = '<span class="catalog-course-status locked">🔒 Prereqs</span>';
     }
 
+    const majorClass = isMajorRelevant ? 'major-target' : '';
+
     return `
-      <div class="catalog-course ${inPlan ? 'in-plan' : ''} ${isLocked ? 'locked' : ''}"
+      <div class="catalog-course ${inPlan ? 'in-plan' : ''} ${isLocked ? 'locked' : ''} ${majorClass}"
            data-course="${code}"
-           draggable="${!inPlan && !isLocked}">
+           draggable="${!inPlan && !isLocked}"
+           ${isMajorRelevant ? `style="--major-accent-color: ${deptColor}"` : ''}>
         <div class="catalog-course-color" style="background: ${deptColor}"></div>
         <div class="catalog-course-info">
           <div class="catalog-course-code">${course.code.replace('-', ' ')}</div>
           <div class="catalog-course-title">${course.title}</div>
+          ${isMajorRelevant ? '<span class="major-indicator">★</span>' : ''}
         </div>
         <div class="catalog-course-meta">
           <span class="catalog-course-credits">${course.credits} CU</span>

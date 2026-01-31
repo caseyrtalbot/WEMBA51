@@ -2661,6 +2661,60 @@ h1, h2, .display-heading {
   color: var(--text-light-secondary);
 }
 
+/* Major Target Course Highlight */
+.catalog-course.major-target {
+  background: linear-gradient(135deg, rgba(13, 110, 110, 0.15) 0%, rgba(13, 110, 110, 0.08) 100%);
+  border-color: var(--accent-teal);
+  box-shadow:
+    0 0 0 1px rgba(13, 110, 110, 0.3),
+    0 0 12px rgba(13, 110, 110, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.catalog-course.major-target:hover {
+  background: linear-gradient(135deg, rgba(13, 110, 110, 0.22) 0%, rgba(13, 110, 110, 0.12) 100%);
+  border-color: var(--accent-teal-light);
+  box-shadow:
+    0 0 0 1px rgba(20, 163, 163, 0.4),
+    0 0 16px rgba(13, 110, 110, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.catalog-course.major-target .catalog-course-color {
+  box-shadow: 0 0 8px var(--major-accent-color, var(--accent-teal));
+}
+
+.major-indicator {
+  display: inline-block;
+  font-size: 0.6rem;
+  color: var(--accent-teal-light);
+  margin-left: 4px;
+  vertical-align: middle;
+  text-shadow: 0 0 4px rgba(20, 163, 163, 0.5);
+}
+
+/* Major target that's also in-plan (combined styling) */
+.catalog-course.major-target.in-plan {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(13, 110, 110, 0.08) 100%);
+  border-color: var(--accent-green);
+  box-shadow:
+    0 0 0 1px rgba(16, 185, 129, 0.3),
+    0 0 8px rgba(13, 110, 110, 0.1);
+}
+
+/* Catalog header badges container */
+.catalog-badges {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.badge.major-badge {
+  background: rgba(13, 110, 110, 0.3);
+  color: var(--accent-teal-light);
+  border: 1px solid rgba(20, 163, 163, 0.4);
+}
+
 /* Graph Panel - Dark */
 .graph-panel {
   position: relative;

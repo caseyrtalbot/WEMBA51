@@ -75,9 +75,13 @@ test.describe('Graph Builder', () => {
     await expect(page.locator('.catalog-header')).toBeVisible();
   });
 
-  test('should show catalog empty state when no majors selected', async ({ page }) => {
-    await expect(page.locator('#catalog-empty')).toBeVisible();
-    await expect(page.locator('#catalog-empty')).toContainText('Select target majors');
+  test('should show all courses by department when no majors selected', async ({ page }) => {
+    // Catalog should show all courses grouped by department (no empty state)
+    await expect(page.locator('#catalog-empty')).not.toBeVisible();
+    await expect(page.locator('#catalog-majors')).toBeVisible();
+    // Should have department sections with courses
+    await expect(page.locator('.catalog-major')).not.toHaveCount(0);
+    await expect(page.locator('.catalog-course')).not.toHaveCount(0);
   });
 
   test('should show major mode selector', async ({ page }) => {
@@ -135,7 +139,7 @@ test.describe('Graph Builder', () => {
     await expect(page.locator('#nodes-layer .course-node')).not.toHaveCount(0);
   });
 
-  test('should populate catalog when target major is set', async ({ page }) => {
+  test('should highlight major-relevant courses when target major is set', async ({ page }) => {
     // Set a target major
     await page.locator('.nav-tab[data-view="explorer"]').click();
     await page.locator('#majors-list .sidebar-item').first().click();
@@ -144,9 +148,15 @@ test.describe('Graph Builder', () => {
     // Go back to Graph
     await page.locator('.nav-tab[data-view="graph"]').click();
 
-    // Catalog should have courses now
+    // Catalog should still show all courses
     await expect(page.locator('#catalog-empty')).not.toBeVisible();
     await expect(page.locator('#catalog-majors')).toBeVisible();
+
+    // Major-relevant courses should have the major-target highlight class
+    await expect(page.locator('.catalog-course.major-target')).not.toHaveCount(0);
+
+    // Should also show major badge in relevant department headers
+    await expect(page.locator('.badge.major-badge')).not.toHaveCount(0);
   });
 
   test('should switch major display modes', async ({ page }) => {
