@@ -164,17 +164,17 @@ const PROGRAM_RULES = {
 };
 
 const DEPARTMENTS = {
-  FNCE: { name: 'Finance', color: '#2563eb' },
-  MGMT: { name: 'Management', color: '#7c3aed' },
-  MKTG: { name: 'Marketing', color: '#db2777' },
-  OIDD: { name: 'Operations, Information & Decisions', color: '#059669' },
-  ACCT: { name: 'Accounting', color: '#d97706' },
-  STAT: { name: 'Statistics', color: '#0891b2' },
-  LGST: { name: 'Legal Studies & Business Ethics', color: '#4f46e5' },
-  HCMG: { name: 'Health Care Management', color: '#dc2626' },
-  REAL: { name: 'Real Estate', color: '#65a30d' },
-  BEPP: { name: 'Business Economics & Public Policy', color: '#ea580c' },
-  WHCP: { name: 'Wharton Communication Program', color: '#6366f1' }
+  FNCE: { name: 'Finance', color: '#004785' },           // Wharton Blue
+  MGMT: { name: 'Management', color: '#5B4B8A' },        // Muted purple
+  MKTG: { name: 'Marketing', color: '#8B4A6B' },         // Muted rose
+  OIDD: { name: 'Operations, Information & Decisions', color: '#2E6B5A' },  // Forest green
+  ACCT: { name: 'Accounting', color: '#8B6914' },        // Golden bronze
+  STAT: { name: 'Statistics', color: '#1E6B7B' },        // Teal
+  LGST: { name: 'Legal Studies & Business Ethics', color: '#4A4A8B' },      // Slate blue
+  HCMG: { name: 'Health Care Management', color: '#990000' },               // Penn Red
+  REAL: { name: 'Real Estate', color: '#4A6B2E' },       // Olive green
+  BEPP: { name: 'Business Economics & Public Policy', color: '#7B5014' },   // Copper
+  WHCP: { name: 'Wharton Communication Program', color: '#011F5B' }         // Penn Blue
 };
 
 // Course evaluation metrics metadata

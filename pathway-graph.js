@@ -16,19 +16,19 @@ const GRAPH_CONFIG = {
   zoomStep: 0.1
 };
 
-// Department colors (matching existing DEPARTMENTS in data.js)
+// Department colors - Penn/Wharton Ivy League palette
 const DEPT_COLORS = {
-  FNCE: '#2563eb',
-  MGMT: '#7c3aed',
-  MKTG: '#db2777',
-  OIDD: '#059669',
-  ACCT: '#d97706',
-  STAT: '#0891b2',
-  LGST: '#4f46e5',
-  HCMG: '#dc2626',
-  REAL: '#65a30d',
-  BEPP: '#ea580c',
-  WHCP: '#6366f1'
+  FNCE: '#004785',  // Wharton Blue - Finance is flagship
+  MGMT: '#5B4B8A',  // Muted purple
+  MKTG: '#8B4A6B',  // Muted rose
+  OIDD: '#2E6B5A',  // Forest green
+  ACCT: '#8B6914',  // Golden bronze
+  STAT: '#1E6B7B',  // Teal
+  LGST: '#4A4A8B',  // Slate blue
+  HCMG: '#990000',  // Penn Red
+  REAL: '#4A6B2E',  // Olive green
+  BEPP: '#7B5014',  // Copper
+  WHCP: '#011F5B'   // Penn Blue
 };
 
 /**
@@ -292,7 +292,7 @@ class PathwayGraph {
     // Return the department color for this course
     const course = COURSES[courseCode];
     if (!course) return null;
-    return DEPT_COLORS[course.department] || '#3b82f6';
+    return DEPT_COLORS[course.department] || '#004785';
   }
 
   setupInteractiveLegend() {
@@ -1088,7 +1088,7 @@ class PathwayGraph {
     addText.setAttribute('x', 10);
     addText.setAttribute('y', 58);
     addText.textContent = '+ Click to add';
-    addText.setAttribute('fill', '#3b82f6');
+    addText.setAttribute('fill', '#004785');
     g.appendChild(addText);
 
     // Click to add course
@@ -1399,7 +1399,7 @@ class PathwayGraph {
       warningIcon.setAttribute('y', 22);
       warningIcon.setAttribute('text-anchor', 'end');
       warningIcon.textContent = validationState.includes('prereq') ? '⚠' : '⚡';
-      warningIcon.setAttribute('fill', validationState.includes('prereq') ? '#dc2626' : '#d97706');
+      warningIcon.setAttribute('fill', validationState.includes('prereq') ? '#990000' : '#B45309');
 
       // Tooltip
       const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
