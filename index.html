@@ -827,6 +827,123 @@
     </div>
   </div>
 
+  <!-- Custom Course Modal -->
+  <div id="custom-course-modal" class="modal hidden">
+    <div class="modal-backdrop" onclick="closeCustomCourseModal()"></div>
+    <div class="modal-content modal-medium">
+      <button class="modal-close" onclick="closeCustomCourseModal()">&times;</button>
+      <h2>Create Custom Course</h2>
+      <p class="modal-subtitle">Add an independent study or course not in the catalog</p>
+
+      <form id="custom-course-form" onsubmit="submitCustomCourse(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="custom-code">Course Code *</label>
+            <input type="text" id="custom-code" placeholder="e.g., MGMT 9999" required
+                   pattern="[A-Z]{2,4}\s?\d{4}" title="Format: DEPT 1234 (e.g., MGMT 9999)">
+          </div>
+          <div class="form-group">
+            <label for="custom-credits">Credits *</label>
+            <select id="custom-credits" required>
+              <option value="0.5">0.5 CU</option>
+              <option value="1.0" selected>1.0 CU</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="custom-title">Course Title *</label>
+          <input type="text" id="custom-title" placeholder="e.g., Independent Study in Leadership" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="custom-department">Department *</label>
+            <select id="custom-department" required>
+              <option value="">Select department...</option>
+              <option value="FNCE">Finance (FNCE)</option>
+              <option value="MGMT">Management (MGMT)</option>
+              <option value="MKTG">Marketing (MKTG)</option>
+              <option value="OIDD">Operations, Info & Decisions (OIDD)</option>
+              <option value="ACCT">Accounting (ACCT)</option>
+              <option value="STAT">Statistics (STAT)</option>
+              <option value="LGST">Legal Studies (LGST)</option>
+              <option value="HCMG">Health Care Management (HCMG)</option>
+              <option value="REAL">Real Estate (REAL)</option>
+              <option value="BEPP">Business Econ & Public Policy (BEPP)</option>
+              <option value="WHCP">Wharton Communication (WHCP)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="custom-type">Course Type *</label>
+            <select id="custom-type" required onchange="updateCustomCourseForm()">
+              <option value="regular">Regular Term Course</option>
+              <option value="block">Block Week (BW)</option>
+              <option value="gmc">Global Modular Course (GMC)</option>
+              <option value="gbw">Global Block Week (GBW)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Regular term fields -->
+        <div id="regular-term-fields" class="form-row">
+          <div class="form-group">
+            <label for="custom-term">Term *</label>
+            <select id="custom-term">
+              <option value="T4">Term 4</option>
+              <option value="T5">Term 5</option>
+              <option value="T6">Term 6</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="custom-slot">Slot *</label>
+            <select id="custom-slot">
+              <option value="A">Slot A (Weekends 1-4)</option>
+              <option value="B">Slot B (Weekends 1-4)</option>
+              <option value="C">Slot C (Weekends 5-7)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Block week fields (hidden by default) -->
+        <div id="block-week-fields" class="form-row hidden">
+          <div class="form-group">
+            <label for="custom-dates">Dates *</label>
+            <input type="text" id="custom-dates" placeholder="e.g., Jan 5-9, 2027">
+          </div>
+          <div class="form-group">
+            <label for="custom-location">Location</label>
+            <input type="text" id="custom-location" placeholder="e.g., Philadelphia, UAE">
+          </div>
+        </div>
+
+        <!-- Block week term selector (for BW/GMC/GBW) -->
+        <div id="block-term-field" class="form-group hidden">
+          <label for="custom-block-term">Associated Term</label>
+          <select id="custom-block-term">
+            <option value="T4">Term 4</option>
+            <option value="T5">Term 5</option>
+            <option value="T6">Term 6</option>
+          </select>
+        </div>
+
+        <!-- Major relevance -->
+        <div class="form-group">
+          <label>Counts Toward Major(s)</label>
+          <p class="form-hint">Select if this course counts toward any of your target majors</p>
+          <div id="custom-majors-checkboxes" class="checkbox-grid">
+            <!-- Populated by JS based on available majors -->
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" onclick="closeCustomCourseModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Create Course</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="data.js"></script>
   <script src="router.js"></script>
   <script src="pathway-graph.js"></script>
