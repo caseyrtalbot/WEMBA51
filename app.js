@@ -417,13 +417,55 @@ function navigateToMajor(majorId) {
 // Dashboard
 function updateDashboard() {
   const totalCU = calculateTotalCU();
+  const cuBreakdown = calculateCUBreakdown();
   const progress = (totalCU / PROGRAM_RULES.graduationMinimum) * 100;
 
-  // Update progress display
+  // Update progress display (legacy elements)
   document.getElementById('total-cu').textContent = totalCU.toFixed(1);
-  document.getElementById('progress-cu').textContent = totalCU.toFixed(1);
-  document.getElementById('progress-bar').style.width = `${Math.min(progress, 100)}%`;
-  document.getElementById('progress-percent').textContent = `(${Math.round(progress)}%)`;
+  const progressCuEl = document.getElementById('progress-cu');
+  if (progressCuEl) progressCuEl.textContent = totalCU.toFixed(1);
+
+  const progressBarEl = document.getElementById('progress-bar');
+  if (progressBarEl) progressBarEl.style.width = `${Math.min(progress, 100)}%`;
+
+  const progressPercentEl = document.getElementById('progress-percent');
+  if (progressPercentEl) progressPercentEl.textContent = `(${Math.round(progress)}%)`;
+
+  // Update progress ring (new design)
+  const progressRingFill = document.getElementById('progress-ring-fill');
+  if (progressRingFill) {
+    const circumference = 2 * Math.PI * 52; // r=52
+    const offset = circumference - (Math.min(progress, 100) / 100) * circumference;
+    progressRingFill.style.strokeDasharray = circumference;
+    progressRingFill.style.strokeDashoffset = offset;
+    progressRingFill.classList.toggle('complete', totalCU >= PROGRAM_RULES.graduationMinimum);
+  }
+
+  // Update breakdown stats (new design)
+  const coreCuEl = document.getElementById('progress-core-cu');
+  if (coreCuEl) coreCuEl.textContent = `${cuBreakdown.core.toFixed(1)} CU`;
+
+  const blockCuEl = document.getElementById('progress-block-cu');
+  if (blockCuEl) blockCuEl.textContent = `${cuBreakdown.block.toFixed(1)} CU`;
+
+  const electiveCuEl = document.getElementById('progress-elective-cu');
+  if (electiveCuEl) electiveCuEl.textContent = `${cuBreakdown.elective.toFixed(1)} CU`;
+
+  // Update remaining/complete status (new design)
+  const statusLabelEl = document.getElementById('graduation-status-label');
+  const statusValueEl = document.getElementById('graduation-status-value');
+  const remainingRow = statusValueEl?.closest('.progress-remaining');
+
+  if (totalCU >= PROGRAM_RULES.graduationMinimum) {
+    if (statusLabelEl) statusLabelEl.textContent = 'Status';
+    if (statusValueEl) statusValueEl.textContent = 'Complete!';
+    if (remainingRow) remainingRow.classList.add('complete');
+  } else {
+    const needed = (PROGRAM_RULES.graduationMinimum - totalCU).toFixed(1);
+    if (statusLabelEl) statusLabelEl.textContent = 'Remaining';
+    if (statusValueEl) statusValueEl.textContent = `${needed} CU`;
+    if (remainingRow) remainingRow.classList.remove('complete');
+  }
 
   // Update sidebar progress (new design)
   const sidebarCu = document.getElementById('sidebar-cu-display');
@@ -433,15 +475,17 @@ function updateDashboard() {
   if (sidebarPercent) sidebarPercent.textContent = `${Math.round(progress)}%`;
   if (sidebarFill) sidebarFill.style.width = `${Math.min(progress, 100)}%`;
 
-  // Update graduation status
+  // Update graduation status (legacy)
   const statusEl = document.getElementById('graduation-status');
-  if (totalCU >= PROGRAM_RULES.graduationMinimum) {
-    statusEl.textContent = 'Graduation Ready';
-    statusEl.className = 'status-badge ready';
-  } else {
-    const needed = (PROGRAM_RULES.graduationMinimum - totalCU).toFixed(1);
-    statusEl.textContent = `Need ${needed} more CU`;
-    statusEl.className = 'status-badge pending';
+  if (statusEl) {
+    if (totalCU >= PROGRAM_RULES.graduationMinimum) {
+      statusEl.textContent = 'Graduation Ready';
+      statusEl.className = 'status-badge ready';
+    } else {
+      const needed = (PROGRAM_RULES.graduationMinimum - totalCU).toFixed(1);
+      statusEl.textContent = `Need ${needed} more CU`;
+      statusEl.className = 'status-badge pending';
+    }
   }
 
   // Update major progress
@@ -454,54 +498,151 @@ function updateDashboard() {
   updateAlerts();
 }
 
+// Calculate CU breakdown by category
+function calculateCUBreakdown() {
+  const cohort = state.selectedCohort;
+  const core = CORE_CURRICULUM[cohort];
+
+  let coreCU = 0;
+  let blockCU = 0;
+  let electiveCU = 0;
+
+  // Core curriculum CUs
+  ['T1', 'T2', 'T3'].forEach(term => {
+    const courses = core[term] || [];
+    courses.forEach(c => {
+      // Handle Term 3 finance choice
+      if (c.code === 'FNCE-6210' && state.financeChoice === 'FNCE-6110' && cohort !== 'global') {
+        return;
+      }
+      coreCU += c.credits;
+    });
+  });
+
+  // Add FNCE-6110 if selected (for PHL/SF)
+  if (cohort !== 'global' && state.financeChoice === 'FNCE-6110') {
+    coreCU += 1.0;
+  }
+
+  // Completed early block courses
+  state.completedBlockCourses.forEach(code => {
+    const normalizedCode = code.replace(/\s+/g, '-');
+    const course = EARLY_BLOCK_COURSES[normalizedCode];
+    if (course) {
+      blockCU += course.credits;
+    }
+  });
+
+  // Elective CUs (planned courses)
+  state.plannedCourses.forEach(code => {
+    const normalizedCode = code.replace(/\s+/g, '-');
+    const course = COURSES[normalizedCode];
+    if (course) {
+      electiveCU += course.credits;
+    }
+  });
+
+  return { core: coreCU, block: blockCU, elective: electiveCU };
+}
+
 function updateMajorProgress() {
   const container = document.getElementById('major-progress-content');
 
   if (state.targetMajors.length === 0) {
+    // Render new empty state design
     container.innerHTML = `
-      <p class="empty-state">No major selected</p>
-      <button class="btn-secondary" onclick="switchView('explorer')">Explore Majors</button>
+      <div class="major-empty-state">
+        <div class="major-empty-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 14l9-5-9-5-9 5 9 5z"/>
+            <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+            <path d="M12 14l9-5-9-5-9 5 9 5z"/>
+            <path d="M12 14v7"/>
+          </svg>
+        </div>
+        <p class="major-empty-title">No major selected</p>
+        <p class="major-empty-desc">Track your progress toward completing a concentration</p>
+        <button class="btn-explore-majors" onclick="switchView('explorer')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+          </svg>
+          Explore Majors
+        </button>
+      </div>
     `;
+
+    // Update sidebar major status
+    const sidebarMajor = document.getElementById('sidebar-major-status');
+    if (sidebarMajor) {
+      sidebarMajor.innerHTML = '<span class="major-label">Major</span><span class="major-value">Not Selected</span>';
+    }
     return;
   }
 
-  let html = '';
+  // Render new major progress cards
+  let html = '<div class="major-progress-list">';
+
   state.targetMajors.forEach(majorId => {
     const major = MAJORS[majorId];
     const progress = calculateMajorProgress(majorId);
-    const percent = (progress.completed / major.requiredCUs) * 100;
+    const percent = Math.min((progress.completed / major.requiredCUs) * 100, 100);
+    const isComplete = percent >= 100;
+
+    // Calculate ring stroke offset for mini ring (r=18, circumference = 2*PI*18 ≈ 113.1)
+    const circumference = 2 * Math.PI * 18;
+    const ringOffset = circumference - (percent / 100) * circumference;
+
+    const remaining = Math.max(0, major.requiredCUs - progress.completed);
+    const statusText = isComplete ? 'Complete' : `${remaining.toFixed(1)} CU remaining`;
 
     html += `
-      <div class="major-progress-item clickable" data-major="${majorId}" onclick="navigateToMajor('${majorId}')">
-        <div class="major-info">
-          <strong>${major.name}</strong>
-          <span>${progress.completed.toFixed(1)} / ${major.requiredCUs} CU</span>
+      <div class="major-progress-card" onclick="navigateToMajor('${majorId}')">
+        <div class="major-mini-ring">
+          <svg viewBox="0 0 44 44">
+            <circle class="ring-bg" cx="22" cy="22" r="18" />
+            <circle class="ring-fill ${isComplete ? 'complete' : ''}" cx="22" cy="22" r="18"
+                    stroke-dasharray="${circumference}" stroke-dashoffset="${ringOffset}" />
+          </svg>
+          <span class="ring-percent">${Math.round(percent)}%</span>
         </div>
-        <div class="progress-bar-container" style="height: 8px; margin-top: 0.5rem;">
-          <div class="progress-bar" style="width: ${Math.min(percent, 100)}%"></div>
+        <div class="major-progress-info">
+          <div class="major-progress-header">
+            <span class="major-progress-name">${major.name}</span>
+            <span class="major-progress-cu">${progress.completed.toFixed(1)} / ${major.requiredCUs} CU</span>
+          </div>
+          <div class="major-progress-bar-container">
+            <div class="major-progress-bar ${isComplete ? 'complete' : ''}" style="width: ${percent}%"></div>
+          </div>
+          <span class="major-progress-status ${isComplete ? 'complete' : ''}">${statusText}</span>
         </div>
-        ${percent >= 100 ? '<span class="status-badge ready" style="margin-top: 0.5rem;">Complete</span>' : ''}
         <span class="major-progress-arrow">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="5" y1="12" x2="19" y2="12"/>
-            <polyline points="12 5 19 12 12 19"/>
+            <polyline points="9 18 15 12 9 6"/>
           </svg>
         </span>
       </div>
     `;
   });
 
+  // Add "Add another major" button
+  html += `
+    <button class="add-major-btn" onclick="switchView('explorer')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Add another major
+    </button>
+  </div>`;
+
   container.innerHTML = html;
 
   // Update sidebar major status
   const sidebarMajor = document.getElementById('sidebar-major-status');
   if (sidebarMajor) {
-    if (state.targetMajors.length === 0) {
-      sidebarMajor.innerHTML = '<span class="major-label">Major</span><span class="major-value">Not Selected</span>';
-    } else {
-      const majorNames = state.targetMajors.map(id => MAJORS[id].name).join(', ');
-      sidebarMajor.innerHTML = `<span class="major-label">Major</span><span class="major-value">${majorNames}</span>`;
-    }
+    const majorNames = state.targetMajors.map(id => MAJORS[id].name).join(', ');
+    sidebarMajor.innerHTML = `<span class="major-label">Major</span><span class="major-value">${majorNames}</span>`;
   }
 }
 
@@ -1705,13 +1846,14 @@ function calculateTotalCU() {
 // Update all credit unit displays across all views (for real-time sync)
 function updateAllCreditDisplays() {
   const totalCU = calculateTotalCU();
+  const cuBreakdown = calculateCUBreakdown();
   const progress = (totalCU / PROGRAM_RULES.graduationMinimum) * 100;
 
   // Banner header Plan Total
   const totalCuEl = document.getElementById('total-cu');
   if (totalCuEl) totalCuEl.textContent = totalCU.toFixed(1);
 
-  // Dashboard progress
+  // Dashboard progress (legacy)
   const progressCuEl = document.getElementById('progress-cu');
   if (progressCuEl) progressCuEl.textContent = totalCU.toFixed(1);
 
@@ -1720,6 +1862,42 @@ function updateAllCreditDisplays() {
 
   const progressPercentEl = document.getElementById('progress-percent');
   if (progressPercentEl) progressPercentEl.textContent = `(${Math.round(progress)}%)`;
+
+  // Update progress ring (new design)
+  const progressRingFill = document.getElementById('progress-ring-fill');
+  if (progressRingFill) {
+    const circumference = 2 * Math.PI * 52;
+    const offset = circumference - (Math.min(progress, 100) / 100) * circumference;
+    progressRingFill.style.strokeDasharray = circumference;
+    progressRingFill.style.strokeDashoffset = offset;
+    progressRingFill.classList.toggle('complete', totalCU >= PROGRAM_RULES.graduationMinimum);
+  }
+
+  // Update breakdown stats (new design)
+  const coreCuEl = document.getElementById('progress-core-cu');
+  if (coreCuEl) coreCuEl.textContent = `${cuBreakdown.core.toFixed(1)} CU`;
+
+  const blockCuEl = document.getElementById('progress-block-cu');
+  if (blockCuEl) blockCuEl.textContent = `${cuBreakdown.block.toFixed(1)} CU`;
+
+  const electiveCuEl = document.getElementById('progress-elective-cu');
+  if (electiveCuEl) electiveCuEl.textContent = `${cuBreakdown.elective.toFixed(1)} CU`;
+
+  // Update remaining/complete status (new design)
+  const statusLabelEl = document.getElementById('graduation-status-label');
+  const statusValueEl = document.getElementById('graduation-status-value');
+  const remainingRow = statusValueEl?.closest('.progress-remaining');
+
+  if (totalCU >= PROGRAM_RULES.graduationMinimum) {
+    if (statusLabelEl) statusLabelEl.textContent = 'Status';
+    if (statusValueEl) statusValueEl.textContent = 'Complete!';
+    if (remainingRow) remainingRow.classList.add('complete');
+  } else {
+    const needed = (PROGRAM_RULES.graduationMinimum - totalCU).toFixed(1);
+    if (statusLabelEl) statusLabelEl.textContent = 'Remaining';
+    if (statusValueEl) statusValueEl.textContent = `${needed} CU`;
+    if (remainingRow) remainingRow.classList.remove('complete');
+  }
 
   // Pathway view stats
   const pathwayCuEl = document.getElementById('pathway-total-cu');
@@ -1734,7 +1912,7 @@ function updateAllCreditDisplays() {
   const graphCuEl = document.getElementById('graph-total-cu');
   if (graphCuEl) graphCuEl.textContent = totalCU.toFixed(1);
 
-  // Graduation status badge
+  // Graduation status badge (legacy)
   const statusEl = document.getElementById('graduation-status');
   if (statusEl) {
     if (totalCU >= PROGRAM_RULES.graduationMinimum) {

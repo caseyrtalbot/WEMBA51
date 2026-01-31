@@ -1020,6 +1020,386 @@ h1, h2, .display-heading {
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
+/* ============================================
+   REDESIGNED PROGRESS CARDS (V2)
+   ============================================ */
+
+/* Graduation Progress Card V2 */
+.progress-card-v2 {
+  position: relative;
+}
+
+.progress-card-v2::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-teal), var(--accent-teal-light));
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.progress-card-content {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.progress-ring-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.progress-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+  fill: none;
+  stroke: var(--bg-muted);
+  stroke-width: 10;
+}
+
+.progress-ring-fill {
+  fill: none;
+  stroke: var(--accent-teal);
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.progress-ring-fill.complete {
+  stroke: var(--accent-green);
+}
+
+.progress-ring-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.progress-ring-value {
+  display: block;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.progress-ring-label {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.progress-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.progress-detail-row .detail-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.progress-detail-row .detail-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.progress-divider {
+  height: 1px;
+  background: var(--border-primary);
+  margin: 4px 0;
+}
+
+.progress-remaining .detail-label {
+  font-weight: 500;
+}
+
+.progress-remaining .detail-value {
+  color: var(--accent-orange);
+}
+
+.progress-remaining.complete .detail-label,
+.progress-remaining.complete .detail-value {
+  color: var(--accent-green);
+}
+
+/* Major Progress Card V2 */
+.major-card-v2 {
+  position: relative;
+}
+
+.major-card-v2::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-purple), #a78bfa);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+/* Major Empty State */
+.major-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px 0;
+}
+
+.major-empty-icon {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #f3e8ff, #ede9fe);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  color: var(--accent-purple);
+}
+
+.major-empty-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
+}
+
+.major-empty-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 0 0 16px 0;
+  max-width: 200px;
+}
+
+.btn-explore-majors {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-purple);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-explore-majors:hover {
+  background: #7c3aed;
+  transform: translateY(-1px);
+}
+
+/* Major Progress Items (when majors are selected) */
+.major-progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.major-progress-card {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 12px;
+  background: var(--bg-muted);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.major-progress-card:hover {
+  background: #f0f0f2;
+  border-color: var(--border-primary);
+}
+
+.major-mini-ring {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.major-mini-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.major-mini-ring .ring-bg {
+  fill: none;
+  stroke: rgba(139, 92, 246, 0.15);
+  stroke-width: 5;
+}
+
+.major-mini-ring .ring-fill {
+  fill: none;
+  stroke: var(--accent-purple);
+  stroke-width: 5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.major-mini-ring .ring-fill.complete {
+  stroke: var(--accent-green);
+}
+
+.major-mini-ring .ring-percent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.major-progress-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.major-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.major-progress-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.major-progress-cu {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.major-progress-bar-container {
+  height: 4px;
+  background: rgba(139, 92, 246, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.major-progress-bar {
+  height: 100%;
+  background: var(--accent-purple);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.major-progress-bar.complete {
+  background: var(--accent-green);
+}
+
+.major-progress-status {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.major-progress-status.complete {
+  color: var(--accent-green);
+  font-weight: 500;
+}
+
+.major-progress-arrow {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  align-self: center;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.major-progress-card:hover .major-progress-arrow {
+  opacity: 1;
+}
+
+/* Add major button at bottom of list */
+.add-major-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+  margin-top: 8px;
+  background: transparent;
+  border: 1px dashed var(--border-primary);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.add-major-btn:hover {
+  border-color: var(--accent-purple);
+  color: var(--accent-purple);
+  background: rgba(139, 92, 246, 0.05);
+}
+
+/* Responsive adjustments for progress cards */
+@media (max-width: 768px) {
+  .progress-card-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .progress-details {
+    width: 100%;
+  }
+
+  .major-progress-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .major-progress-info {
+    width: 100%;
+  }
+
+  .major-progress-header {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
 /* Alert Card */
 .alert-card {
   border-left: 4px solid var(--accent-orange);

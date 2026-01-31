@@ -13,9 +13,9 @@ test.describe('Dashboard', () => {
   });
 
   test('should display graduation progress', async ({ page }) => {
-    await expect(page.locator('.progress-card')).toBeVisible();
+    await expect(page.locator('.progress-card-v2')).toBeVisible();
     await expect(page.locator('#progress-cu')).toBeVisible();
-    await expect(page.locator('#graduation-status')).toBeVisible();
+    await expect(page.locator('#progress-ring-fill')).toBeVisible();
   });
 
   test('should show correct initial CU total', async ({ page }) => {
@@ -26,7 +26,7 @@ test.describe('Dashboard', () => {
   });
 
   test('should display major progress section', async ({ page }) => {
-    await expect(page.locator('.major-card')).toBeVisible();
+    await expect(page.locator('.major-card-v2')).toBeVisible();
 
     // With no major selected, should show empty state
     await expect(page.locator('#major-progress-content')).toContainText('No major selected');
@@ -83,8 +83,8 @@ test.describe('Dashboard', () => {
     // Go back to Dashboard
     await page.locator('.nav-tab[data-view="dashboard"]').click();
 
-    // Major progress should now be visible
-    await expect(page.locator('.major-progress-item')).toBeVisible();
+    // Major progress should now be visible (using new class)
+    await expect(page.locator('.major-progress-card')).toBeVisible();
   });
 
   test('should make major progress items clickable', async ({ page }) => {
@@ -96,8 +96,8 @@ test.describe('Dashboard', () => {
     // Go back to Dashboard
     await page.locator('.nav-tab[data-view="dashboard"]').click();
 
-    // Click on the major progress item
-    const majorItem = page.locator('.major-progress-item.clickable').first();
+    // Click on the major progress item (using new class)
+    const majorItem = page.locator('.major-progress-card').first();
     await expect(majorItem).toBeVisible();
     await majorItem.click();
 
