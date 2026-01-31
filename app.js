@@ -1594,7 +1594,7 @@ function getPlannedCoursesForTerm(term) {
     .map(code => {
       // Normalize to hyphen format for COURSES lookup
       const normalizedCode = code.replace(/\s+/g, '-');
-      const course = COURSES[normalizedCode];
+      const course = getCourse(normalizedCode);
       if (!course) return null;
       const offering = getCourseOffering(course, state.selectedCohort);
       if (!offering) return null;
@@ -1603,12 +1603,12 @@ function getPlannedCoursesForTerm(term) {
       if (term === 'BW') {
         // For BW section: only include courses with isBlockWeek flag
         if (!course.isBlockWeek) return null;
-        return { code: normalizedCode, ...course, offering };
+        return { code: normalizedCode, ...course, offering, isCustom: isCustomCourse(normalizedCode) };
       } else {
         // For T4/T5/T6: exclude Block Week courses (they go in BW section)
         if (course.isBlockWeek) return null;
         if (offering.term !== term) return null;
-        return { code: normalizedCode, ...course, offering };
+        return { code: normalizedCode, ...course, offering, isCustom: isCustomCourse(normalizedCode) };
       }
     })
     .filter(c => c !== null);
