@@ -4563,3 +4563,19 @@ h1, h2, .display-heading {
   font-size: 1rem;
   font-weight: 300;
 }
+
+/* Term actions wrapper for pathway view */
+.term-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 0.5rem;
+}
+
+.term-actions .add-course-btn {
+  margin-bottom: 0;
+}
+
+.term-actions .add-custom-btn {
+  margin-top: 0;
+}
