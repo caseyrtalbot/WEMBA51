@@ -91,7 +91,7 @@ const EARLY_BLOCK_COURSES = {
     credits: 0.5,
     department: 'OIDD',
     term: 'T2',
-    dates: 'November 30 - December 3, 2026',
+    dates: 'November 30 - December 3, 2025',
     location: 'SFO',
     cohorts: ['philadelphia', 'san_francisco', 'global']
   },
@@ -124,7 +124,7 @@ const EARLY_BLOCK_COURSES = {
     credits: 0.5,
     department: 'LGST',
     term: 'T2',
-    dates: 'December 17 - 20, 2026',
+    dates: 'December 17 - 20, 2025',
     location: 'SFO',
     cohorts: ['philadelphia', 'san_francisco', 'global']
   }
@@ -1895,14 +1895,14 @@ const COURSES = {
   },
   'MKTG-8970': {
     code: 'MKTG 8970',
-    title: 'Luxury Branding and Retailing in Paris',
+    title: 'Advanced Study: Luxury Branding and Retailing in Paris',
     description: 'Immersive study of luxury brand management in Paris. Company visits and case studies on heritage brands, craftsmanship, and luxury retail strategy.',
     department: 'MKTG',
     credits: 0.5,
     prerequisites: ['MKTG-6110'],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T6', professor: 'Barbara Kahn', dates: 'May 3-7, 2026', location: 'Paris' }
+      all: { term: 'T4', professor: 'Barbara Kahn', dates: 'May 3-8, 2026', location: 'Paris' }
     }
   },
   'MKTG-XXXX': {
@@ -2149,6 +2149,19 @@ const COURSES = {
       philadelphia: { term: 'T4', category: 'GMC', professor: 'Senthil Veeraraghavan, Edwin Keh', dates: 'Mar 9-13, 2026', location: 'Taiwan & Hong Kong' },
       san_francisco: { term: 'T4', category: 'GMC', professor: 'Senthil Veeraraghavan, Edwin Keh', dates: 'Mar 9-13, 2026', location: 'Taiwan & Hong Kong' },
       global: { term: 'T4', category: 'GMC', professor: 'Senthil Veeraraghavan, Edwin Keh', dates: 'Mar 9-13, 2026', location: 'Taiwan & Hong Kong' }
+    }
+  },
+  'OIDD-8970-THAILAND': {
+    code: 'OIDD 8970-THAILAND',
+    title: 'Thailand: Disruptive Technology, Innovation & Sustainability',
+    description: 'Global Modular Course on technology, innovation, and sustainability in Thailand. Cross-listed with LGST 8980.',
+    department: 'OIDD',
+    credits: 0.5,
+    prerequisites: [],
+    offerings: {
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' },
+      global: { term: 'T4', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' }
     }
   },
   'OIDD-XXX2-NIGERIA': {
@@ -2643,7 +2656,7 @@ const MAJORS = {
       'MKTG-7340', 'MKTG-7540', 'MKTG-7770', 'MKTG-7770-BW', 'MKTG-7780', 'MKTG-7790',
       'MKTG-8500', 'MKTG-8530', 'MKTG-8970', 'MKTG-8960-SAUDI', 'MKTG-8960-KOREA', 'MKTG-XXXX',
       'OIDD-6120', 'OIDD-6140', 'OIDD-6360', 'OIDD-6530', 'OIDD-6540', 'OIDD-6620', 'OIDD-6670', 'OIDD-6920', 'OIDD-6930', 'OIDD-6990',
-      'OIDD-8970-INDIA', 'OIDD-8970-INDONESIA', 'OIDD-8970-MEXICO', 'OIDD-8970-TAIWAN-HK', 'OIDD-XXX2-NIGERIA'
+      'OIDD-8970-INDIA', 'OIDD-8970-INDONESIA', 'OIDD-8970-MEXICO', 'OIDD-8970-TAIWAN-HK', 'OIDD-8970-THAILAND', 'OIDD-XXX2-NIGERIA'
     ],
     warnings: [
       'Requires Marketing core (MKTG 6110 + MKTG 6120/6130), OIDD core (1.0 CU from flex-core list), and a Marketing research course.',
