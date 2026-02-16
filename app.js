@@ -851,7 +851,7 @@ function generateAlerts() {
   conflicts.forEach(conflict => {
     alerts.push({
       type: 'warning',
-      message: `Schedule conflict: ${conflict.course1} and ${conflict.course2} overlap on weekend ${conflict.weekend + 1} in ${conflict.term}`
+      message: `Schedule conflict: ${conflict.course1} and ${conflict.course2} ${typeof conflict.weekend === 'string' ? `during ${conflict.weekend}` : `overlap on weekend ${conflict.weekend + 1} in ${conflict.term}`}`
     });
   });
 
@@ -884,6 +884,28 @@ function slotsConflict(slot1, slot2) {
 
   // Courses conflict if they share any base slot letter
   return bases1.some(b1 => bases2.includes(b1));
+}
+
+function blockWeekDatesOverlap(dates1, dates2) {
+  if (!dates1 || !dates2) return false;
+  if (dates1 === dates2) return true;
+  try {
+    const months = { Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11,
+      January:0, February:1, March:2, April:3, June:5, July:6, August:7, September:8, October:9, November:10, December:11 };
+    const parse = (s) => {
+      const yearMatch = s.match(/(\d{4})/);
+      const year = yearMatch ? parseInt(yearMatch[1]) : 2026;
+      const cleaned = s.replace(/,?\s*\d{4}/, '').trim();
+      const m = cleaned.match(/(\w+)\s+(\d+)\s*[-–]\s*(?:(\w+)\s+)?(\d+)/);
+      if (!m) return null;
+      const sm = months[m[1]], em = m[3] ? months[m[3]] : sm;
+      if (sm === undefined || em === undefined) return null;
+      return { start: new Date(year, sm, parseInt(m[2])), end: new Date(year, em, parseInt(m[4])) };
+    };
+    const r1 = parse(dates1), r2 = parse(dates2);
+    if (!r1 || !r2) return dates1 === dates2;
+    return r1.start <= r2.end && r2.start <= r1.end;
+  } catch { return dates1 === dates2; }
 }
 
 function getScheduleConflicts() {
@@ -927,6 +949,20 @@ function getScheduleConflicts() {
 
         // Skip if either is a GMC course (they don't conflict with regular courses)
         if (c1.offering.category === 'GMC' || c2.offering.category === 'GMC') {
+          continue;
+        }
+
+        // Block week date-based conflicts (non-GMC courses with dates)
+        if (c1.offering.dates && c2.offering.dates &&
+            c1.offering.category !== 'GMC' && c2.offering.category !== 'GMC') {
+          if (blockWeekDatesOverlap(c1.offering.dates, c2.offering.dates)) {
+            conflicts.push({
+              course1: c1.course.code.replace('-', ' '),
+              course2: c2.course.code.replace('-', ' '),
+              term: c1.offering.dates,
+              weekend: c1.offering.dates
+            });
+          }
           continue;
         }
 

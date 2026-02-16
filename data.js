@@ -836,7 +836,8 @@ const COURSES = {
     prerequisites: ['FNCE-6110'],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T6', professor: 'Burcu Esmer', dates: 'May 3-6, 2027', location: 'Philadelphia' }
+      all: { term: 'T4', professor: 'Burcu Esmer', dates: 'May 4-7, 2026', location: 'Philadelphia' },
+      all_2027: { term: 'T6', professor: 'Burcu Esmer', dates: 'May 3-6, 2027', location: 'Philadelphia' }
     }
   },
   'FNCE-7401': {
@@ -848,7 +849,8 @@ const COURSES = {
     prerequisites: ['FNCE-6110', 'FNCE-6130'],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T6', professor: 'Anthony Landry', dates: 'Apr 26-29, 2027', location: 'San Francisco' }
+      all: { term: 'T3', professor: 'Anthony Landry', dates: 'April 27-30, 2026', location: 'San Francisco' },
+      all_2027: { term: 'T6', professor: 'Anthony Landry', dates: 'Apr 26-29, 2027', location: 'San Francisco' }
     }
   },
   'FNCE-8960': {
@@ -1195,7 +1197,8 @@ const COURSES = {
     prerequisites: [],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T6', professor: 'Samir Nurmohamed', dates: 'Jan 11-14, 2027', location: 'Philadelphia' }
+      all: { term: 'T3', professor: 'Samir Nurmohamed', dates: 'January 12-15, 2026', location: 'Philadelphia' },
+      all_2027: { term: 'T6', professor: 'Samir Nurmohamed', dates: 'Jan 11-14, 2027', location: 'Philadelphia' }
     }
   },
   'MGMT-7820': {
@@ -1225,6 +1228,18 @@ const COURSES = {
           recommendToNonMajor: 2.00
         }
       }
+    }
+  },
+  'MGMT-7820-BW': {
+    code: 'MGMT 7820',
+    title: 'Strategic Implementation (Block Week)',
+    description: 'Executing strategy effectively through organizational design, change management, and performance systems. Bridges strategy formulation and execution.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: ['MGMT-6130'],
+    isBlockWeek: true,
+    offerings: {
+      all: { term: 'T3', professor: 'Nicolaj Siggelkow', dates: 'February 2-5, 2026', location: 'San Francisco' }
     }
   },
   'MGMT-7830': {
@@ -1413,7 +1428,19 @@ const COURSES = {
     prerequisites: [],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T4', professor: 'Ethan Mollick', dates: 'Jan 12-15, 2026', location: 'Philadelphia' }
+      all: { term: 'T3', professor: 'Ethan Mollick', dates: 'Jan 12-15, 2026', location: 'Philadelphia' }
+    }
+  },
+  'MGMT-XXX2': {
+    code: 'MGMT XXX2',
+    title: 'Technology Ecosystems in the SF Bay Area',
+    description: 'Immersive exploration of the SF Bay Area technology ecosystem with company visits to leading tech firms and startups.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    isBlockWeek: true,
+    offerings: {
+      all: { term: 'T3', professor: 'Lori Rosenkopf', dates: 'March 9-12, 2026', location: 'San Francisco' }
     }
   },
   'MGMT-8160': {
@@ -1425,7 +1452,8 @@ const COURSES = {
     prerequisites: ['MGMT-8010'],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T6', professor: 'Valery Yakubovich', dates: 'May 3-6, 2027', location: 'San Francisco' }
+      all: { term: 'T4', professor: 'Valery Yakubovich', dates: 'May 4-7, 2026', location: 'San Francisco' },
+      all_2027: { term: 'T6', professor: 'Valery Yakubovich', dates: 'May 3-6, 2027', location: 'San Francisco' }
     }
   },
   'MGMT-8310': {
@@ -1817,7 +1845,8 @@ const COURSES = {
     prerequisites: ['MKTG-6110'],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T6', professor: 'Pinar Yildirim', dates: 'Jan 11-14, 2027', location: 'Philadelphia' }
+      all: { term: 'T3', professor: 'Pinar Yildirim', dates: 'January 12-15, 2026', location: 'Philadelphia' },
+      all_2027: { term: 'T6', professor: 'Pinar Yildirim', dates: 'Jan 11-14, 2027', location: 'Philadelphia' }
     }
   },
   'MKTG-7780': {
@@ -1864,7 +1893,8 @@ const COURSES = {
     prerequisites: ['MKTG-6110'],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T6', professor: 'Annie Wilson', dates: 'Mar 8-11, 2027', location: 'Philadelphia' }
+      all: { term: 'T3', professor: 'Annie Wilson', dates: 'March 9-12, 2026', location: 'Philadelphia' },
+      all_2027: { term: 'T6', professor: 'Annie Wilson', dates: 'Mar 8-11, 2027', location: 'Philadelphia' }
     }
   },
   'MKTG-8960-SAUDI': {
@@ -2057,8 +2087,10 @@ const COURSES = {
     prerequisites: [],
     isBlockWeek: true,
     offerings: {
-      all_phl: { term: 'T6', professor: 'Priyanka Vergadia', dates: 'May 3-6, 2027', location: 'Philadelphia' },
-      all_sf: { term: 'T6', professor: 'Kartik Hosanagar', dates: 'Mar 8-11, 2027', location: 'San Francisco' }
+      all: { term: 'T3', professor: 'Kartik Hosanagar', dates: 'March 9-12, 2026', location: 'San Francisco' },
+      all_phl_2026: { term: 'T4', professor: 'Priyanka Vergadia', dates: 'May 4-7, 2026', location: 'Philadelphia' },
+      all_phl_2027: { term: 'T6', professor: 'Priyanka Vergadia', dates: 'May 3-6, 2027', location: 'Philadelphia' },
+      all_sf_2027: { term: 'T6', professor: 'Kartik Hosanagar', dates: 'Mar 8-11, 2027', location: 'San Francisco' }
     }
   },
   'OIDD-6920': {
@@ -2070,7 +2102,8 @@ const COURSES = {
     prerequisites: ['MGMT-6910'],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T6', professor: 'Maurice Schweitzer', dates: 'Mar 8-11, 2027', location: 'Philadelphia' }
+      all: { term: 'T3', professor: 'Maurice Schweitzer', dates: 'March 9-12, 2026', location: 'Philadelphia' },
+      all_2027: { term: 'T6', professor: 'Maurice Schweitzer', dates: 'Mar 8-11, 2027', location: 'Philadelphia' }
     }
   },
   'OIDD-6930': {
@@ -2083,7 +2116,8 @@ const COURSES = {
     isBlockWeek: true,
     offerings: {
       philadelphia: { term: 'T5', professor: 'Cade Massey', slot: 'B', weekends: [0, 1, 2, 3] },
-      all: { term: 'T6', professor: 'Cade Massey', dates: 'Feb 15-18, 2027', location: 'San Francisco' },
+      all: { term: 'T3', professor: 'Cade Massey', dates: 'February 2-5, 2026', location: 'San Francisco' },
+      all_2027: { term: 'T6', professor: 'Cade Massey', dates: 'Feb 15-18, 2027', location: 'San Francisco' },
       global: { term: 'T4', professor: 'Cade Massey', slot: 'C', weekends: [4, 5, 6] }
     }
   },
@@ -2096,7 +2130,7 @@ const COURSES = {
     prerequisites: [],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T6', professor: 'Serguei Netessine', dates: 'Mar 8-11, 2026', location: 'Seattle' }
+      all: { term: 'T3', professor: 'Serguei Netessine', dates: 'March 9-12, 2026', location: 'Seattle' }
     }
   },
   'OIDD-8970-INDIA': {
@@ -2388,7 +2422,8 @@ const COURSES = {
     prerequisites: [],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T6', professor: 'Ezekiel Emanuel', dates: 'Spring 2027 (TBD)', location: 'San Francisco' }
+      all: { term: 'T3', professor: 'Ezekiel Emanuel', dates: 'April 12-15, 2026', location: 'San Francisco' },
+      all_2027: { term: 'T6', professor: 'Ezekiel Emanuel', dates: 'Spring 2027 (TBD)', location: 'San Francisco' }
     }
   },
   'HCMG-8520': {
@@ -2483,7 +2518,8 @@ const COURSES = {
     prerequisites: ['STAT-6130'],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T6', professor: 'Adi Wyner', dates: 'May 3-6, 2027', location: 'Philadelphia' }
+      all: { term: 'T4', professor: 'Adi Wyner', dates: 'May 4-7, 2026', location: 'Philadelphia' },
+      all_2027: { term: 'T6', professor: 'Adi Wyner', dates: 'May 3-6, 2027', location: 'Philadelphia' }
     }
   },
 
@@ -2611,7 +2647,7 @@ const MAJORS = {
     description: 'Explore AI foundations and business impact, spanning analytics, ethics, and strategy.',
     coreRequirements: [],
     electiveCUs: 4.0,
-    electiveCourses: ['LGST-6420', 'MGMT-7310', 'MKTG-7120', 'MKTG-7340', 'MKTG-7790', 'OIDD-6620', 'OIDD-6670', 'STAT-7230'],
+    electiveCourses: ['LGST-6420', 'MGMT-7310', 'MKTG-7120', 'MKTG-7340', 'MKTG-7790', 'OIDD-6620', 'OIDD-6670', 'OIDD-6990', 'STAT-7230'],
     warnings: ['AI major typically requires STAT 7230 and LGST 6420 plus additional pillar courses. Confirm requirements with your advisor.'],
     restrictions: []
   },
@@ -2689,7 +2725,7 @@ const MAJORS = {
     electiveCourses: [
       'LGST-8060', 'LGST-8090',
       'MGMT-6250', 'MGMT-6910', 'MGMT-7010', 'MGMT-7150', 'MGMT-7210', 'MGMT-7310',
-      'MGMT-7640', 'MGMT-7720', 'MGMT-7820', 'MGMT-7930', 'MGMT-7990', 'MGMT-8010',
+      'MGMT-7640', 'MGMT-7720', 'MGMT-7820', 'MGMT-7820-BW', 'MGMT-7930', 'MGMT-7990', 'MGMT-8010',
       'MGMT-8040', 'MGMT-8090', 'MGMT-8110', 'MGMT-8130', 'MGMT-8160', 'MGMT-8310',
       'MGMT-8320', 'MGMT-8710', 'MGMT-XXXX', 'MGMT-XXXX-IMPACT',
       'OIDD-6920',
@@ -2709,7 +2745,7 @@ const MAJORS = {
     coreRequirements: ['MGMT-6100', 'MGMT-6130'],
     electiveCUs: 4.0,
     electiveCourses: [
-      'MGMT-6250', 'MGMT-7010', 'MGMT-7150', 'MGMT-7210', 'MGMT-7310', 'MGMT-7820',
+      'MGMT-6250', 'MGMT-7010', 'MGMT-7150', 'MGMT-7210', 'MGMT-7310', 'MGMT-7820', 'MGMT-7820-BW',
       'MGMT-8010', 'MGMT-8110', 'MGMT-8320', 'MGMT-8710', 'MKTG-7770', 'MKTG-7770-BW',
       'OIDD-6360'
     ],
@@ -2727,7 +2763,7 @@ const MAJORS = {
     electiveCUs: 3.5,
     electiveCourses: [
       'FNCE-7500', 'FNCE-7510', 'HCMG-8670', 'LGST-8060', 'LGST-8130',
-      'MGMT-6910', 'MGMT-7210', 'MGMT-7310', 'MGMT-8040', 'MGMT-8090', 'MGMT-8110',
+      'MGMT-6910', 'MGMT-7210', 'MGMT-7310', 'MGMT-8040', 'MGMT-8090', 'MGMT-8110', 'MGMT-8130',
       'MGMT-8160', 'MGMT-8310', 'MGMT-8320', 'MKTG-7340',
       'OIDD-6140', 'OIDD-6360', 'OIDD-6540', 'OIDD-6620', 'OIDD-6670', 'OIDD-6920', 'OIDD-6930',
       'REAL-8910'
