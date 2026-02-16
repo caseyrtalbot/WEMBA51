@@ -1205,26 +1205,9 @@ const COURSES = {
     department: 'MGMT',
     credits: 0.5,
     prerequisites: ['MGMT-6130'],
+    isBlockWeek: true,
     offerings: {
-      global: {
-        term: 'T4',
-        professor: 'Michael Christensen',
-        slot: 'B',
-        weekends: [0, 1, 2, 3],
-        evaluations: {
-          instructorQuality: 2.73,
-          courseQuality: 2.45,
-          instructorCommunication: 2.67,
-          instructorStimulateInterest: 2.67,
-          instructorAccessibility: 3.22,
-          valueOfReadings: 2.67,
-          knowledgeLearned: 2.00,
-          courseDifficulty: 2.00,
-          workRequired: 2.56,
-          recommendToMajor: 2.11,
-          recommendToNonMajor: 2.00
-        }
-      }
+      all: { term: 'T6', professor: 'Nicolaj Siggelkow', dates: 'Feb 1-4, 2027', location: 'San Francisco' }
     }
   },
   'MGMT-7830': {
