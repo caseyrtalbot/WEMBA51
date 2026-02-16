@@ -11,6 +11,10 @@ The WEMBA 51 Pathway Planner is a static web application that helps Wharton Exec
 ## Commands
 
 ```bash
+# First-time setup
+npm install                # install Playwright
+npx playwright install     # install browser binaries
+
 # Run local server (for manual testing)
 npm run serve              # python -m http.server 8000
 npm run serve:npx          # npx http-server -p 8000
@@ -21,6 +25,7 @@ npm run test:ui            # interactive UI mode
 npm run test:headed        # headed browser mode
 npm run test:debug         # debug mode with inspector
 npx playwright test tests/e2e/navigation.spec.js  # single file
+npx playwright test tests/e2e/navigation.spec.js --project=chromium  # single file, single browser
 ```
 
 **Why tests use localhost instead of file://:** The Playwright config auto-starts a Python http server. This is intentional because:
@@ -52,15 +57,18 @@ Single global `state` object persisted to `localStorage` under key `wemba-pathwa
 
 ```javascript
 state = {
-  selectedCohort,     // 'philadelphia' | 'san_francisco' | 'global'
-  plannedCourses,     // Array of course codes: ['FNCE-7050', 'MGMT-8010']
-  targetMajors,       // Array of major IDs: ['finance', 'management']
-  financeChoice,      // 'FNCE-6110' | 'FNCE-6210' (PHL/SF only)
-  currentView,        // 'dashboard' | 'explorer' | 'pathway' | 'graph'
-  explorerMode,       // 'majors' | 'departments'
+  selectedCohort,          // 'philadelphia' | 'san_francisco' | 'global'
+  plannedCourses,          // Array of course codes: ['FNCE-7050', 'MGMT-8010']
+  targetMajors,            // Array of major IDs: ['finance', 'management']
+  financeChoice,           // 'FNCE-6110' | 'FNCE-6210' (PHL/SF only)
+  currentView,             // 'dashboard' | 'explorer' | 'pathway' | 'graph'
+  explorerMode,            // 'majors' | 'departments'
   selectedMajor,
   selectedDepartment,
-  waivedCourses       // Not fully implemented
+  completedBlockCourses,   // Block courses completed during T1-T3
+  customCourses,           // User-created courses (independent study, etc.)
+  highlightedMajorCourses, // Course codes to highlight across all views
+  waivedCourses            // Not fully implemented
 }
 ```
 
@@ -91,6 +99,12 @@ COURSES['FNCE-7050'] = {
 
 - `weekends` array: 0-based indices into `SCHEDULE[cohort][term].weekends` for conflict detection
 - Block Week courses use `dates` string instead of `weekends` array
+
+**Block Week courses** have `isBlockWeek: true` and use special offering keys:
+- `all` key: single offering available to all cohorts
+- `all_phl`, `all_sf`, etc.: multiple location offerings for the same course
+- Use `getCourseOffering()` and `isCourseAvailableForCohort()` in app.js to handle these uniformly
+- Custom courses (user-created) use `lookupCourse()` which checks both `COURSES` and `state.customCourses`
 
 **Core curriculum (`CORE_CURRICULUM`) is organized by cohort and term (T1, T2, T3).**
 
