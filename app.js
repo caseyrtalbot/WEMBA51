@@ -26,6 +26,10 @@ function getTermLabel(offering) {
   return `Term ${offering.term.slice(1)}`;
 }
 
+function getCoreBaselineCreditAdjustment(cohort) {
+  return CORE_BASELINE_CREDIT_ADJUSTMENTS?.[cohort] || 0;
+}
+
 /**
  * Get course offering for a given cohort, handling Block Week courses.
  * Block Week courses (isBlockWeek: true) use 'all' key and are available to all cohorts.
@@ -553,6 +557,9 @@ function calculateCUBreakdown() {
   if (cohort !== 'global' && state.financeChoice === 'FNCE-6110') {
     coreCU += 1.0;
   }
+
+  // Cohort-specific baseline core credit adjustments
+  coreCU += getCoreBaselineCreditAdjustment(cohort);
 
   // Completed early block courses
   state.completedBlockCourses.forEach(code => {
@@ -2196,6 +2203,9 @@ function calculateTotalCU() {
   if (cohort !== 'global' && state.financeChoice === 'FNCE-6110') {
     total += 1.0; // Add full 1.0 CU for FNCE-6110 (we skipped FNCE-6210's 0.5 CU above)
   }
+
+  // Cohort-specific baseline core credit adjustments
+  total += getCoreBaselineCreditAdjustment(cohort);
 
   // Completed early block courses (T1-T3 supplemental)
   state.completedBlockCourses.forEach(code => {

@@ -163,6 +163,12 @@ const PROGRAM_RULES = {
   passFailMaxPerSemester: 1.0
 };
 
+// Cohort-specific baseline core credit adjustments.
+// Global receives +0.5 CU baseline credit for LGST 6110 already completed.
+const CORE_BASELINE_CREDIT_ADJUSTMENTS = {
+  global: 0.5
+};
+
 const DEPARTMENTS = {
   FNCE: { name: 'Finance', color: '#004785' },           // Wharton Blue
   MGMT: { name: 'Management', color: '#5B4B8A' },        // Muted purple
@@ -346,7 +352,7 @@ const CORE_CURRICULUM = {
     T3: [
       { code: 'FNCE-6110', title: 'Corporate Finance (Full)', credits: 1.0, professor: 'TBD', note: 'Required - no short option for Global' },
       { code: 'OIDD-6150', title: 'Operations Strategy', credits: 0.5, professor: 'TBD' },
-      { code: 'LGST-6110', title: 'Responsibility in Global Management', credits: 0.5, professor: 'TBD' },
+      { code: 'LGST-6110', title: 'Responsibility in Global Management', credits: 0.5, professor: 'Aryeh Friedman', dates: 'April 21-27' },
       { code: 'MKTG-6110', title: 'Marketing Management', credits: 0.5, professor: 'TBD' },
       { code: 'MKTG-6120', title: 'Dynamic Marketing Strategy', credits: 0.5, professor: 'TBD' }
     ]
