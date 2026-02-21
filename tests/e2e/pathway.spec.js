@@ -173,6 +173,7 @@ test.describe('My Pathway', () => {
 
     // Go back to Pathway
     await page.locator('.nav-tab[data-view="pathway"]').click();
+    await expect(page.locator('#pathway-view')).toHaveClass(/active/);
 
     // Check for highlighted courses (if any match)
     // This test validates the highlighting mechanism is in place

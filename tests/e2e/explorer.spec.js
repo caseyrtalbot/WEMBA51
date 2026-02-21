@@ -135,7 +135,7 @@ test.describe('Course Explorer', () => {
     await expect(page.locator('#course-modal')).toBeVisible();
 
     // Close modal
-    await page.locator('.modal-close').click();
+    await page.locator('#course-modal .modal-close').click();
 
     await expect(page.locator('#course-modal')).toHaveClass(/hidden/);
   });
