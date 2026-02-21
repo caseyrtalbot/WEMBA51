@@ -9,123 +9,123 @@ const EARLY_BLOCK_COURSES = {
   'LGST-8090': {
     code: 'LGST 8090',
     title: 'Sports Business Management',
-    professor: 'DiGisi',
+    professor: 'Rob DiGisi',
     credits: 0.5,
     department: 'LGST',
     term: 'T1',
-    dates: 'August 3 - 6, 2026',
-    location: 'SFO',
+    dates: 'Aug 3-6, 2026',
+    location: 'San Francisco',
     cohorts: ['philadelphia', 'san_francisco', 'global']
   },
   'MKTG-8500': {
     code: 'MKTG 8500',
     title: 'Sales 3.0 and the Future of Revenue Growth',
-    professor: 'Reed',
+    professor: 'Americus Reed',
     credits: 0.5,
     department: 'MKTG',
     term: 'T1',
-    dates: 'August 3 - 6, 2026',
-    location: 'SFO',
+    dates: 'Aug 3-6, 2026',
+    location: 'San Francisco',
     cohorts: ['philadelphia', 'san_francisco', 'global']
   },
   // Term 2 - Fall 2026
-  'MKTG-8510': {
+  'MKTG-XXXX': {
     code: 'MKTG XXXX',
     title: 'Designing and Deploying AI Agents',
-    professor: 'Karol',
+    professor: 'Sohiit Karol, Alex Norton',
     credits: 0.5,
     department: 'MKTG',
     term: 'T2',
-    dates: 'October 12 - 15, 2026',
-    location: 'PHL',
+    dates: 'Oct 12-15, 2026',
+    location: 'Philadelphia',
     cohorts: ['philadelphia', 'san_francisco', 'global']
   },
   'MKTG-7340': {
     code: 'MKTG 7340',
     title: 'Creativity',
-    professor: 'Nave',
+    professor: 'Gideon Nave',
     credits: 0.5,
     department: 'MKTG',
     term: 'T2',
-    dates: 'October 12 - 15, 2026',
-    location: 'SFO',
+    dates: 'Oct 12-15, 2026',
+    location: 'San Francisco',
     cohorts: ['philadelphia', 'san_francisco', 'global']
   },
   'LGST-7500': {
     code: 'LGST 7500',
     title: 'Global (Anti-) Money Laundering',
-    professor: 'Conti-Brown',
+    professor: 'Peter Conti-Brown',
     credits: 0.5,
     department: 'LGST',
     term: 'T2',
-    dates: 'October 12 - 15, 2026',
-    location: 'PHL',
+    dates: 'Oct 12-15, 2026',
+    location: 'Philadelphia',
     cohorts: ['philadelphia', 'san_francisco', 'global']
   },
   'OIDD-6530': {
     code: 'OIDD 6530',
     title: 'Mathematical Modeling and its Appl. in Finance',
-    professor: 'Katalan',
+    professor: 'Ziv Katalan',
     credits: 0.5,
     department: 'OIDD',
     term: 'T2',
-    dates: 'October 12 - 15, 2026',
-    location: 'SFO',
+    dates: 'Oct 12-15, 2026',
+    location: 'San Francisco',
     cohorts: ['philadelphia', 'san_francisco', 'global']
   },
   'HCMG-8600': {
     code: 'HCMG 8600',
-    title: 'Leading Healthcare Organizations',
-    professor: 'Nembhard',
+    title: 'Leading healthcare organizations',
+    professor: 'Ingrid Nembhard',
     credits: 0.5,
     department: 'HCMG',
     term: 'T2',
-    dates: 'November 30 - December 3, 2026',
-    location: 'PHL',
+    dates: 'Nov 30-Dec 3, 2026',
+    location: 'Philadelphia',
     cohorts: ['philadelphia', 'san_francisco', 'global']
   },
   'OIDD-6140': {
     code: 'OIDD 6140',
     title: 'Innovation',
-    professor: 'Netessine',
+    professor: 'Serguei Netessine',
     credits: 0.5,
     department: 'OIDD',
     term: 'T2',
-    dates: 'November 30 - December 3, 2025',
-    location: 'SFO',
+    dates: 'Nov 30-Dec 3, 2026',
+    location: 'San Francisco',
     cohorts: ['philadelphia', 'san_francisco', 'global']
   },
   'MGMT-8710': {
     code: 'MGMT 8710',
     title: 'Advanced Global Strategy',
-    professor: 'Hernandez',
+    professor: 'Zeke Hernandez',
     credits: 0.5,
     department: 'MGMT',
     term: 'T2',
-    dates: 'December 7 - 10, 2026',
-    location: 'Global',
+    dates: 'Dec 7-10, 2026',
+    location: 'Korea',
     cohorts: ['philadelphia', 'san_francisco', 'global']
   },
   'OIDD-6540': {
     code: 'OIDD 6540',
     title: 'Product Management',
-    professor: 'Ulrich',
+    professor: 'Karl Ulrich',
     credits: 0.5,
     department: 'OIDD',
     term: 'T2',
-    dates: 'December 7 - 10, 2026',
-    location: 'Global',
+    dates: 'Dec 7-10, 2026',
+    location: 'Korea',
     cohorts: ['philadelphia', 'san_francisco', 'global']
   },
   'LGST-6420': {
     code: 'LGST 6420',
     title: 'Big Data, Big Responsibilities, Toward Accountable AI',
-    professor: 'Werbach',
+    professor: 'Kevin Werbach',
     credits: 0.5,
     department: 'LGST',
     term: 'T2',
-    dates: 'December 17 - 20, 2025',
-    location: 'SFO',
+    dates: 'TBD',
+    location: 'San Francisco',
     cohorts: ['philadelphia', 'san_francisco', 'global']
   }
 };
@@ -867,7 +867,6 @@ const COURSES = {
     credits: 0.5,
     prerequisites: ['FNCE-6110'],
     offerings: {
-      philadelphia: { term: 'T4', category: 'GMC', professor: 'David Musto, Burcu Esmer', dates: 'Jan 5-9, 2026', location: 'UAE' },
       san_francisco: { term: 'T4', category: 'GMC', professor: 'David Musto, Burcu Esmer', dates: 'Jan 5-9, 2026', location: 'UAE' },
       global: { term: 'T4', category: 'GMC', professor: 'David Musto, Burcu Esmer', dates: 'Jan 5-9, 2026', location: 'UAE' }
     }
@@ -1573,6 +1572,7 @@ const COURSES = {
         term: 'T5',
         professor: 'Zeke Hernandez',
         dates: 'Dec 7-10, 2026',
+        location: 'Korea',
         evaluations: {
           instructorQuality: 3.69,
           courseQuality: 3.28,
@@ -1621,9 +1621,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' },
-      san_francisco: { term: 'T4', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' },
-      global: { term: 'T4', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' }
     }
   },
   'WH-2120': {
@@ -1634,9 +1632,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' },
-      san_francisco: { term: 'T4', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' },
-      global: { term: 'T4', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Rahul Kapoor, Harbir Singh', dates: 'Mar 9-13, 2026', location: 'India' }
     }
   },
   'MGMT-8970-GERMANY': {
@@ -1660,9 +1656,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' },
-      san_francisco: { term: 'T4', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' },
-      global: { term: 'T4', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' }
     }
   },
   'MGMT-XXX3-LONDON': {
@@ -1911,7 +1905,6 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', category: 'GMC', professor: 'Peter Fader', dates: 'Jan 4-8, 2026', location: 'Saudi Arabia' },
       san_francisco: { term: 'T4', category: 'GMC', professor: 'Peter Fader', dates: 'Jan 4-8, 2026', location: 'Saudi Arabia' },
       global: { term: 'T4', category: 'GMC', professor: 'Peter Fader', dates: 'Jan 4-8, 2026', location: 'Saudi Arabia' }
     }
@@ -1924,9 +1917,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', category: 'GMC', professor: 'Gideon Nave, Stefano Puntoni', dates: 'May 25-29, 2026', location: 'South Korea' },
-      san_francisco: { term: 'T4', category: 'GMC', professor: 'Gideon Nave, Stefano Puntoni', dates: 'May 25-29, 2026', location: 'South Korea' },
-      global: { term: 'T4', category: 'GMC', professor: 'Gideon Nave, Stefano Puntoni', dates: 'May 25-29, 2026', location: 'South Korea' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Gideon Nave, Stefano Puntoni', dates: 'May 25-29, 2026', location: 'South Korea' }
     }
   },
   'MKTG-8970': {
@@ -1938,7 +1929,8 @@ const COURSES = {
     prerequisites: ['MKTG-6110'],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T4', professor: 'Barbara Kahn', dates: 'May 3-8, 2026', location: 'Paris' }
+      all: { term: 'T4', professor: 'Barbara Kahn', dates: 'May 3-8, 2026', location: 'Paris' },
+      all_2027: { term: 'T6', professor: 'Barbara Kahn', dates: 'May 3-7, 2027', location: 'Paris' }
     }
   },
   'MKTG-XXXX': {
@@ -1950,7 +1942,7 @@ const COURSES = {
     prerequisites: [],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T5', professor: 'Sohiit Karol', dates: 'Oct 12-15, 2026', location: 'Philadelphia' }
+      all: { term: 'T5', professor: 'Sohiit Karol, Alex Norton', dates: 'Oct 12-15, 2026', location: 'Philadelphia' }
     }
   },
 
@@ -2069,7 +2061,7 @@ const COURSES = {
     isBlockWeek: true,
     offerings: {
       san_francisco: { term: 'T5', professor: 'Karl Ulrich', slot: 'A', weekends: [0, 1, 2, 3] },
-      all: { term: 'T5', professor: 'Karl Ulrich', dates: 'Dec 7-10, 2026', location: 'Global' }
+      all: { term: 'T5', professor: 'Karl Ulrich', dates: 'Dec 7-10, 2026', location: 'Korea' }
     }
   },
   'OIDD-6620': {
@@ -2136,7 +2128,8 @@ const COURSES = {
     prerequisites: [],
     isBlockWeek: true,
     offerings: {
-      all: { term: 'T3', professor: 'Serguei Netessine', dates: 'March 9-12, 2026', location: 'Seattle' }
+      all: { term: 'T3', professor: 'Serguei Netessine', dates: 'March 9-12, 2026', location: 'Seattle' },
+      all_2027: { term: 'T6', professor: 'Serguei Netessine', dates: 'Mar 8-11, 2027', location: 'Seattle' }
     }
   },
   'OIDD-8970-INDIA': {
@@ -2160,9 +2153,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', category: 'GMC', professor: 'Sergei Savin', dates: 'Jan 12-17, 2026', location: 'Indonesia' },
-      san_francisco: { term: 'T4', category: 'GMC', professor: 'Sergei Savin', dates: 'Jan 12-17, 2026', location: 'Indonesia' },
-      global: { term: 'T4', category: 'GMC', professor: 'Sergei Savin', dates: 'Jan 12-17, 2026', location: 'Indonesia' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Sergei Savin', dates: 'Jan 12-17, 2026', location: 'Indonesia' }
     }
   },
   'OIDD-8970-MEXICO': {
@@ -2173,9 +2164,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', category: 'GMC', professor: 'Santiago Gallino', dates: 'Mar 9-13, 2026', location: 'Mexico' },
-      san_francisco: { term: 'T4', category: 'GMC', professor: 'Santiago Gallino', dates: 'Mar 9-13, 2026', location: 'Mexico' },
-      global: { term: 'T4', category: 'GMC', professor: 'Santiago Gallino', dates: 'Mar 9-13, 2026', location: 'Mexico' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Santiago Gallino', dates: 'Mar 9-13, 2026', location: 'Mexico' }
     }
   },
   'OIDD-8970-TAIWAN-HK': {
@@ -2186,9 +2175,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', category: 'GMC', professor: 'Senthil Veeraraghavan, Edwin Keh', dates: 'Mar 9-13, 2026', location: 'Taiwan & Hong Kong' },
-      san_francisco: { term: 'T4', category: 'GMC', professor: 'Senthil Veeraraghavan, Edwin Keh', dates: 'Mar 9-13, 2026', location: 'Taiwan & Hong Kong' },
-      global: { term: 'T4', category: 'GMC', professor: 'Senthil Veeraraghavan, Edwin Keh', dates: 'Mar 9-13, 2026', location: 'Taiwan & Hong Kong' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Senthil Veeraraghavan, Edwin Keh', dates: 'Mar 9-13, 2026', location: 'Taiwan & Hong Kong' }
     }
   },
   'OIDD-8970-THAILAND': {
@@ -2199,9 +2186,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' },
-      san_francisco: { term: 'T4', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' },
-      global: { term: 'T4', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' }
     }
   },
   'OIDD-XXX2-NIGERIA': {
@@ -2337,9 +2322,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', category: 'GMC', professor: 'Peter Conti-Brown', dates: 'Jan 12-16, 2026', location: 'Brazil' },
-      san_francisco: { term: 'T4', category: 'GMC', professor: 'Peter Conti-Brown', dates: 'Jan 12-16, 2026', location: 'Brazil' },
-      global: { term: 'T4', category: 'GMC', professor: 'Peter Conti-Brown', dates: 'Jan 12-16, 2026', location: 'Brazil' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Peter Conti-Brown', dates: 'Jan 12-16, 2026', location: 'Brazil' }
     }
   },
   'LGST-8980-VIETNAM': {
@@ -2350,9 +2333,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', category: 'GMC', professor: 'Philip Nichols, Edwin Keh', dates: 'Jan 12-16, 2026', location: 'Vietnam' },
-      san_francisco: { term: 'T4', category: 'GMC', professor: 'Philip Nichols, Edwin Keh', dates: 'Jan 12-16, 2026', location: 'Vietnam' },
-      global: { term: 'T4', category: 'GMC', professor: 'Philip Nichols, Edwin Keh', dates: 'Jan 12-16, 2026', location: 'Vietnam' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Philip Nichols, Edwin Keh', dates: 'Jan 12-16, 2026', location: 'Vietnam' }
     }
   },
   'LGST-8980-THAILAND': {
@@ -2363,9 +2344,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' },
-      san_francisco: { term: 'T4', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' },
-      global: { term: 'T4', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Janice Bellace, Sergei Savin', dates: 'Mar 9-13, 2026', location: 'Thailand' }
     }
   },
   'LGST-8980-CHINA': {
@@ -2376,9 +2355,9 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', category: 'GMC', professor: 'Kevin Werbach', dates: 'May 4-8, 2026', location: 'China' },
-      san_francisco: { term: 'T4', category: 'GMC', professor: 'Kevin Werbach', dates: 'May 4-8, 2026', location: 'China' },
-      global: { term: 'T4', category: 'GMC', professor: 'Kevin Werbach', dates: 'May 4-8, 2026', location: 'China' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Kevin Werbach', dates: 'May 25-29, 2026', location: 'China' },
+      san_francisco: { term: 'T4', category: 'GMC', professor: 'Kevin Werbach', dates: 'May 25-29, 2026', location: 'China' },
+      global: { term: 'T4', category: 'GMC', professor: 'Kevin Werbach', dates: 'May 25-29, 2026', location: 'China' }
     }
   },
   'LGST-8980-SOUTH-AFRICA': {
@@ -2389,9 +2368,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' },
-      san_francisco: { term: 'T4', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' },
-      global: { term: 'T4', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Kenneth Shropshire, Eric Kacou', dates: 'Mar 9-13, 2026', location: 'South Africa' }
     }
   },
 
@@ -2486,9 +2463,7 @@ const COURSES = {
     credits: 0.5,
     prerequisites: [],
     offerings: {
-      philadelphia: { term: 'T4', category: 'GMC', professor: 'Guy David', dates: 'May 25-29, 2026', location: 'Sweden, Romania' },
-      san_francisco: { term: 'T4', category: 'GMC', professor: 'Guy David', dates: 'May 25-29, 2026', location: 'Sweden, Romania' },
-      global: { term: 'T4', category: 'GMC', professor: 'Guy David', dates: 'May 25-29, 2026', location: 'Sweden, Romania' }
+      philadelphia: { term: 'T4', category: 'GMC', professor: 'Guy David', dates: 'May 25-29, 2026', location: 'Sweden, Romania' }
     }
   },
 

@@ -2793,13 +2793,17 @@ function loadState() {
     try {
       const parsed = JSON.parse(saved);
       const courseAliases = {
-        'LGST-7820': 'LGST-XXXX'
+        // Legacy early-block placeholder code now normalized to catalog key.
+        'MKTG-8510': 'MKTG-XXXX'
       };
       if (parsed.plannedCourses) {
         parsed.plannedCourses = parsed.plannedCourses.map(code => courseAliases[code] || code);
       }
       if (parsed.waivedCourses) {
         parsed.waivedCourses = parsed.waivedCourses.map(code => courseAliases[code] || code);
+      }
+      if (parsed.completedBlockCourses) {
+        parsed.completedBlockCourses = parsed.completedBlockCourses.map(code => courseAliases[code] || code);
       }
       state = { ...state, ...parsed };
 
