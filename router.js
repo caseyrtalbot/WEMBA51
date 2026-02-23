@@ -68,6 +68,12 @@ class Router {
 
     this.currentRoute = hash;
 
+    // Mobile redirect: Graph Builder not supported on mobile
+    if (hash === '/graph' && window.matchMedia('(max-width: 768px)').matches) {
+      this.navigate('/pathway', { replace: true });
+      return;
+    }
+
     // Route guard: redirect to landing if accessing app without cohort
     if (route.screen === 'main-app' && typeof state !== 'undefined' && !state.selectedCohort) {
       this.navigate('/', { replace: true });

@@ -194,10 +194,21 @@ function initRouter() {
 
 // Activate a view without changing URL (internal use)
 function activateView(viewName) {
+  // Mobile redirect: Graph Builder not supported on mobile
+  if (viewName === 'graph' && window.matchMedia('(max-width: 768px)').matches) {
+    router.navigate('/pathway', { replace: true });
+    return;
+  }
+
   state.currentView = viewName;
 
   // Update nav tabs
   document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.view === viewName);
+  });
+
+  // Update mobile nav tabs
+  document.querySelectorAll('.mobile-nav-tab').forEach(tab => {
     tab.classList.toggle('active', tab.dataset.view === viewName);
   });
 
@@ -235,6 +246,14 @@ function initEventListeners() {
 
   // Navigation tabs - use router for URL-based navigation
   document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      e.preventDefault();
+      router.navigate('/' + tab.dataset.view);
+    });
+  });
+
+  // Mobile navigation tabs
+  document.querySelectorAll('.mobile-nav-tab').forEach(tab => {
     tab.addEventListener('click', (e) => {
       e.preventDefault();
       router.navigate('/' + tab.dataset.view);
@@ -1018,6 +1037,61 @@ function getScheduleConflicts() {
   return conflicts;
 }
 
+function buildConflictMap() {
+  const conflicts = getScheduleConflicts();
+  const map = new Map();
+  conflicts.forEach(({ course1, course2 }) => {
+    const c1 = course1.replace(/\s+/g, '-');
+    const c2 = course2.replace(/\s+/g, '-');
+    if (!map.has(c1)) map.set(c1, []);
+    if (!map.has(c2)) map.set(c2, []);
+    map.get(c1).push(course2);
+    map.get(c2).push(course1);
+  });
+  return map;
+}
+
+/**
+ * Get prerequisite status for a single course code.
+ * Returns { state: 'none'|'met'|'missing', missingCodes: string[], missingCount: number }
+ */
+function getCoursePrereqStatus(courseCode) {
+  const normalizedCode = courseCode.replace(/\s+/g, '-');
+  const course = COURSES[normalizedCode];
+  if (!course || !course.prerequisites || course.prerequisites.length === 0) {
+    return { state: 'none', missingCodes: [], missingCount: 0 };
+  }
+  const cohort = state.selectedCohort;
+  const plannedSet = new Set(state.plannedCourses.map(c => c.replace(/\s+/g, '-')));
+  const coreCurriculum = CORE_CURRICULUM[cohort];
+  ['T1', 'T2', 'T3'].forEach(term => {
+    (coreCurriculum[term] || []).forEach(c => plannedSet.add(c.code));
+  });
+  if (cohort !== 'global') {
+    plannedSet.add(state.financeChoice === 'FNCE-6110' ? 'FNCE-6110' : 'FNCE-6210');
+  } else {
+    plannedSet.add('FNCE-6110');
+  }
+  const missing = course.prerequisites.filter(p => !plannedSet.has(p));
+  if (missing.length === 0) return { state: 'met', missingCodes: [], missingCount: 0 };
+  const missingCodes = missing.map(p => {
+    const prereqCourse = COURSES[p];
+    return prereqCourse ? prereqCourse.code.replace('-', ' ') : p.replace('-', ' ');
+  });
+  return { state: 'missing', missingCodes, missingCount: missing.length };
+}
+
+function renderPrereqBadgeHTML(courseCode) {
+  const status = getCoursePrereqStatus(courseCode);
+  if (status.state === 'none') return '<span class="prereq-badge prereq-badge--none">No prereqs</span>';
+  if (status.state === 'met') return '<span class="prereq-badge prereq-badge--success">&#10003; Prereqs met</span>';
+  if (status.missingCount === 1) {
+    const code = status.missingCodes[0];
+    return `<span class="prereq-badge prereq-badge--warning">&#9888; Needs: ${code}</span>`;
+  }
+  return `<span class="prereq-badge prereq-badge--warning">&#9888; Needs: ${status.missingCount} courses</span>`;
+}
+
 // Prerequisites validation
 function getMissingPrerequisites() {
   const warnings = [];
@@ -1519,10 +1593,59 @@ function applyMajorHighlights() {
   });
 
   // Graph view highlighting is handled by pathway-graph.js
+
+  // Re-apply pathway filter when highlights change
+  if (typeof applyPathwayFilter === 'function') applyPathwayFilter();
 }
+
+let pathwayFilterMode = 'all';
+
+function setPathwayFilter(mode) {
+  pathwayFilterMode = mode;
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.filter === mode);
+  });
+  applyPathwayFilter();
+}
+
+function applyPathwayFilter() {
+  const filterBtn = document.getElementById('pathway-major-filter-btn');
+  const contextEl = document.getElementById('pathway-filter-context');
+  if (filterBtn) filterBtn.style.display = state.targetMajors.length > 0 ? '' : 'none';
+  if (contextEl) {
+    if (state.targetMajors.length > 0 && pathwayFilterMode === 'major') {
+      const names = state.targetMajors.map(id => MAJORS[id]?.name).filter(Boolean);
+      contextEl.textContent = `Showing: ${names.join(', ')}`;
+    } else {
+      contextEl.textContent = '';
+    }
+  }
+  if (state.targetMajors.length === 0) {
+    pathwayFilterMode = 'all';
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.filter === 'all');
+    });
+  }
+  const highlightSet = new Set(state.highlightedMajorCourses);
+  document.querySelectorAll('.term-courses li').forEach(item => {
+    if (pathwayFilterMode !== 'major') { item.classList.remove('major-hidden'); return; }
+    const nameEl = item.querySelector('.course-name');
+    if (!nameEl) return;
+    const codeMatch = nameEl.textContent.match(/^([A-Z]{2,4})\s+(\d{4})/);
+    if (codeMatch) {
+      const code = `${codeMatch[1]}-${codeMatch[2]}`;
+      item.classList.toggle('major-hidden', !highlightSet.has(code));
+    }
+  });
+}
+
+window.setPathwayFilter = setPathwayFilter;
 
 // Pathway
 function updatePathway() {
+  // Clean up any open inline catalogs before re-rendering
+  document.querySelectorAll('.inline-catalog').forEach(p => p.remove());
+
   const cohort = state.selectedCohort;
   const coreCurriculum = CORE_CURRICULUM[cohort];
 
@@ -1585,6 +1708,7 @@ function updatePathway() {
   });
 
   // Update Terms 4-6 and Block Weeks (electives)
+  const conflictMap = buildConflictMap();
   ['T4', 'T5', 'T6', 'BW'].forEach(term => {
     const courses = getPlannedCoursesForTerm(term);
     const coursesList = document.getElementById(`${term}-courses`);
@@ -1604,11 +1728,23 @@ function updatePathway() {
         const customBadge = course.isCustom ? '<span class="custom-course-badge">Custom</span>' : '';
         const displayCode = course.displayCode || course.code.replace('-', ' ');
 
+        const prereqBadge = !course.isCustom ? renderPrereqBadgeHTML(course.code) : '';
+        const conflictPartners = conflictMap.get(course.code) || [];
+        const hasConflict = conflictPartners.length > 0;
+        const conflictLabel = hasConflict ? `Conflicts with: ${conflictPartners.join(', ')}` : '';
         return `
-          <li class="${isBlockWeek ? 'block-week-course' : ''}">
-            <span class="course-name">${displayCode}: ${course.title}${dateInfo}${locationInfo}${customBadge}</span>
-            <span class="course-cu">${course.credits} CU</span>
-            <button class="remove-btn" onclick="removeCourse('${course.code}')">&times;</button>
+          <li class="${isBlockWeek ? 'block-week-course' : ''}${!course.isCustom ? ' has-prereq-badge' : ''}${hasConflict ? ' has-conflict' : ''}"
+              ${hasConflict ? `title="${conflictLabel}"` : ''}>
+            <div class="course-item-main">
+              <span class="course-name">${displayCode}: ${course.title}${dateInfo}${locationInfo}${customBadge}</span>
+              <div class="course-item-meta">
+                ${hasConflict ? '<span class="conflict-icon" aria-label="Schedule conflict">&#9889;</span>' : ''}
+                <span class="course-cu">${course.credits} CU</span>
+                <button class="remove-btn" onclick="removeCourse('${course.code}')">&times;</button>
+              </div>
+            </div>
+            ${prereqBadge ? `<div class="course-item-badges">${prereqBadge}</div>` : ''}
+            ${hasConflict ? `<div class="course-item-conflict">&#9889; ${conflictLabel}</div>` : ''}
           </li>
         `;
       }).join('');
@@ -1638,6 +1774,9 @@ function updatePathway() {
 
   // Apply major highlights to pathway courses
   applyMajorHighlights();
+
+  // Apply major filter if active
+  applyPathwayFilter();
 }
 
 function getPlannedCoursesForTerm(term) {
@@ -1762,6 +1901,100 @@ function addCourseToTerm(term) {
 
   modal.classList.remove('hidden');
 }
+
+function addCourseToTermAdaptive(term) {
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    toggleInlineCatalog(term);
+  } else {
+    addCourseToTerm(term);
+  }
+}
+
+function toggleInlineCatalog(term) {
+  const termCard = document.getElementById(`term-${term}`);
+  if (!termCard) return;
+  let panel = termCard.querySelector('.inline-catalog');
+  if (panel) {
+    const isOpen = !panel.classList.contains('hidden');
+    if (isOpen) {
+      panel.classList.add('hidden');
+      const addBtn = termCard.querySelector('.add-course-btn');
+      if (addBtn) addBtn.textContent = term === 'BW' ? '+ Add Block Week' : '+ Add Course';
+      return;
+    }
+    renderInlineCatalog(panel, term);
+    panel.classList.remove('hidden');
+  } else {
+    panel = document.createElement('div');
+    panel.className = 'inline-catalog';
+    const actionsDiv = termCard.querySelector('.term-actions');
+    termCard.insertBefore(panel, actionsDiv);
+    renderInlineCatalog(panel, term);
+  }
+  const addBtn = termCard.querySelector('.add-course-btn');
+  if (addBtn) addBtn.textContent = '− Close';
+  termCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function renderInlineCatalog(panel, term) {
+  const conflictMap = buildConflictMap();
+  const cohort = state.selectedCohort;
+  const highlightSet = new Set(state.highlightedMajorCourses);
+  const availableCourses = Object.entries(COURSES)
+    .filter(([code, course]) => {
+      const offering = getCourseOffering(course, cohort);
+      if (!offering || state.plannedCourses.includes(code)) return false;
+      if (term === 'BW') return course.isBlockWeek === true;
+      if (course.isBlockWeek) return false;
+      return offering.term === term;
+    })
+    .map(([code, course]) => ({ code, ...course, offering: getCourseOffering(course, cohort) }));
+
+  if (availableCourses.length === 0) {
+    panel.innerHTML = '<p class="inline-catalog-empty">No more courses available for this term.</p>';
+    return;
+  }
+
+  const byDept = {};
+  availableCourses.forEach(course => {
+    const dept = course.code.split('-')[0];
+    if (!byDept[dept]) byDept[dept] = [];
+    byDept[dept].push(course);
+  });
+
+  let html = '<div class="inline-catalog-inner">';
+  html += `<div class="inline-catalog-header"><span>Available Courses</span><button class="inline-catalog-close" onclick="toggleInlineCatalog('${term}')">&times;</button></div>`;
+  Object.entries(byDept).forEach(([dept, courses]) => {
+    html += `<div class="inline-catalog-dept"><span class="inline-dept-label">${dept}</span><div class="inline-catalog-courses">`;
+    courses.forEach(course => {
+      const prereqStatus = getCoursePrereqStatus(course.code);
+      const isLocked = prereqStatus.state === 'missing';
+      const isMajorCourse = highlightSet.has(course.code);
+      const hasConflict = conflictMap.has(course.code);
+      const locationInfo = course.isBlockWeek && course.offering?.location ? ` \u00b7 ${course.offering.location}` : '';
+      const dateInfo = course.isBlockWeek && course.offering?.dates ? ` \u00b7 ${course.offering.dates}` : '';
+      html += `
+        <button class="inline-course-item${isLocked ? ' locked' : ''}${isMajorCourse ? ' major-course' : ''}${hasConflict ? ' conflicted' : ''}"
+                onclick="addCourse('${course.code}'); renderInlineCatalog(this.closest('.inline-catalog'), '${term}')"
+                ${isLocked ? 'title="Prerequisites not met"' : ''}>
+          <div class="inline-course-main">
+            <span class="inline-course-code">${course.code.replace('-', ' ')}</span>
+            <span class="inline-course-cu">${course.credits} CU</span>
+          </div>
+          <div class="inline-course-title">${course.title}${dateInfo}${locationInfo}</div>
+          ${isLocked ? `<div class="inline-course-locked">&#128274; Needs: ${prereqStatus.missingCodes.join(', ')}</div>` : ''}
+          ${isMajorCourse ? '<div class="inline-course-major">\u2605 Major course</div>' : ''}
+        </button>`;
+    });
+    html += '</div></div>';
+  });
+  html += '</div>';
+  panel.innerHTML = html;
+}
+
+window.addCourseToTermAdaptive = addCourseToTermAdaptive;
+window.toggleInlineCatalog = toggleInlineCatalog;
+window.renderInlineCatalog = renderInlineCatalog;
 
 function addCourseAndClose(courseCode) {
   addCourse(courseCode);

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>WEMBA 51 Pathway Planner</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -468,6 +468,14 @@
         </div>
       </header>
       <div class="view-content">
+        <div class="pathway-filter-bar" id="pathway-filter-bar">
+          <div class="filter-toggle-group" role="group" aria-label="Course filter">
+            <button class="filter-btn active" data-filter="all" onclick="setPathwayFilter('all')">All Courses</button>
+            <button class="filter-btn" data-filter="major" id="pathway-major-filter-btn"
+                    onclick="setPathwayFilter('major')" style="display:none">Major Only</button>
+          </div>
+          <span class="filter-context" id="pathway-filter-context"></span>
+        </div>
 
       <div class="pathway-timeline">
         <!-- Year 1 -->
@@ -523,7 +531,7 @@
                 <li class="empty-slot">No courses planned</li>
               </ul>
               <div class="term-actions">
-                <button class="add-course-btn" onclick="addCourseToTerm('T4')">+ Add Course</button>
+                <button class="add-course-btn" onclick="addCourseToTermAdaptive('T4')">+ Add Course</button>
                 <button class="add-custom-btn" onclick="openCustomCourseModal('T4')">
                   <span class="plus-icon">+</span> Create Custom
                 </button>
@@ -540,7 +548,7 @@
                 <li class="empty-slot">No courses planned</li>
               </ul>
               <div class="term-actions">
-                <button class="add-course-btn" onclick="addCourseToTerm('T5')">+ Add Course</button>
+                <button class="add-course-btn" onclick="addCourseToTermAdaptive('T5')">+ Add Course</button>
                 <button class="add-custom-btn" onclick="openCustomCourseModal('T5')">
                   <span class="plus-icon">+</span> Create Custom
                 </button>
@@ -557,7 +565,7 @@
                 <li class="empty-slot">No courses planned</li>
               </ul>
               <div class="term-actions">
-                <button class="add-course-btn" onclick="addCourseToTerm('T6')">+ Add Course</button>
+                <button class="add-course-btn" onclick="addCourseToTermAdaptive('T6')">+ Add Course</button>
                 <button class="add-custom-btn" onclick="openCustomCourseModal('T6')">
                   <span class="plus-icon">+</span> Create Custom
                 </button>
@@ -580,7 +588,7 @@
                 <li class="empty-slot">No block weeks planned</li>
               </ul>
               <div class="term-actions">
-                <button class="add-course-btn" onclick="addCourseToTerm('BW')">+ Add Block Week</button>
+                <button class="add-course-btn" onclick="addCourseToTermAdaptive('BW')">+ Add Block Week</button>
                 <button class="add-custom-btn" onclick="openCustomCourseModal('BW')">
                   <span class="plus-icon">+</span> Create Custom
                 </button>
@@ -825,6 +833,30 @@
       </div>
     </main>
     </div><!-- End .app-main-content -->
+<!-- Mobile Bottom Navigation -->
+<nav class="mobile-nav" id="mobile-nav" aria-label="Main navigation">
+  <button class="mobile-nav-tab active" data-view="dashboard">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+      <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+    </svg>
+    <span>Dashboard</span>
+  </button>
+  <button class="mobile-nav-tab" data-view="explorer">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+    </svg>
+    <span>Explorer</span>
+  </button>
+  <button class="mobile-nav-tab" data-view="pathway">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+    </svg>
+    <span>My Pathway</span>
+  </button>
+</nav>
   </div>
 
   <!-- Course Detail Modal -->
