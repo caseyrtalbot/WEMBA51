@@ -2596,6 +2596,80 @@ const COURSES = {
         }
       }
     }
+  },
+
+  // GLOBAL BUSINESS WEEK (GBW) — September 2026
+  'LGST-GBW-LONDON': {
+    code: 'LGST GBW-LONDON',
+    title: 'AI and Emerging Technologies',
+    description: 'Global Business Week course exploring AI and emerging technologies, taught in London, United Kingdom.',
+    department: 'LGST',
+    credits: 0.5,
+    prerequisites: [],
+    isBlockWeek: true,
+    offerings: {
+      all: { term: 'T5', category: 'GBW', professor: 'Kevin Werbach', dates: 'Sep 14-18, 2026', location: 'London, United Kingdom' }
+    }
+  },
+  'MGMT-GBW-BUENOS-AIRES': {
+    code: 'MGMT GBW-BUENOS-AIRES',
+    title: 'Doing Business in Turbulent Environments',
+    description: 'Global Business Week course on doing business in turbulent environments: the case of Argentina. Taught in Buenos Aires, Argentina.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    isBlockWeek: true,
+    offerings: {
+      all: { term: 'T5', category: 'GBW', professor: 'Zeke Hernandez', dates: 'Sep 13-17, 2026', location: 'Buenos Aires, Argentina' }
+    }
+  },
+  'MKTG-GBW-STOCKHOLM': {
+    code: 'MKTG GBW-STOCKHOLM',
+    title: 'Customer Centricity at the Leading Edge of Analytics and Technology',
+    description: 'Global Business Week course on customer centricity at the leading edge of analytics and technology: learning from the Nordic countries. Taught in Stockholm, Sweden.',
+    department: 'MKTG',
+    credits: 0.5,
+    prerequisites: [],
+    isBlockWeek: true,
+    offerings: {
+      all: { term: 'T5', category: 'GBW', professor: 'Peter Fader', dates: 'Sep 13-17, 2026', location: 'Stockholm, Sweden' }
+    }
+  },
+  'LGST-GBW-MILAN': {
+    code: 'LGST GBW-MILAN',
+    title: 'ESG and the Management of Nonmarket Enterprise Risk',
+    description: 'Global Business Week course on ESG and the management of nonmarket enterprise risk. Taught in Milan, Italy.',
+    department: 'LGST',
+    credits: 0.5,
+    prerequisites: [],
+    isBlockWeek: true,
+    offerings: {
+      all: { term: 'T5', category: 'GBW', professor: 'Mary-Hunter McDonnell', dates: 'Sep 13-17, 2026', location: 'Milan, Italy' }
+    }
+  },
+  'FNCE-GBW-NEW-YORK': {
+    code: 'FNCE GBW-NEW-YORK',
+    title: 'Value Added and Performance in Private Equity',
+    description: 'Global Business Week course on value added and performance in private equity. Taught in New York, NY, USA.',
+    department: 'FNCE',
+    credits: 0.5,
+    prerequisites: [],
+    isBlockWeek: true,
+    offerings: {
+      all: { term: 'T5', category: 'GBW', professor: 'Jules van Binsbergen', dates: 'Sep 13-17, 2026', location: 'New York, NY, USA' }
+    }
+  },
+  'MGMT-GBW-SPAIN': {
+    code: 'MGMT GBW-SPAIN',
+    title: 'Competitive Advantage in the Leisure Industries',
+    description: 'Global Business Week course on competitive advantage in the leisure industries. Taught in Barcelona and Madrid, Spain.',
+    department: 'MGMT',
+    credits: 0.5,
+    prerequisites: [],
+    isBlockWeek: true,
+    offerings: {
+      all: { term: 'T5', category: 'GBW', professor: 'Martine Haas; Mireia Lizandra', dates: 'Sep 13-18, 2026', location: 'Barcelona and Madrid, Spain' }
+    }
   }
 };
 

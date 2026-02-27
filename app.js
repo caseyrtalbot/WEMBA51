@@ -20,6 +20,7 @@ function getTermLabel(offering) {
   if (!offering) return '';
   if (offering.term === 'BW') {
     if (offering.category === 'GMC') return 'Global Modular Course';
+    if (offering.category === 'GBW') return 'Global Business Week';
     if (offering.category === 'GIP') return 'Global Immersion Program';
     return 'Block Week';
   }
@@ -960,27 +961,32 @@ function getScheduleConflicts() {
         const c1 = courses[i];
         const c2 = courses[j];
 
-        // Check for GMC date conflicts (both have category: 'GMC' and same dates)
-        if (c1.offering.category === 'GMC' && c2.offering.category === 'GMC') {
-          if (c1.offering.dates && c2.offering.dates && c1.offering.dates === c2.offering.dates) {
+        // Check for GMC/GBW date conflicts (both have category 'GMC' or 'GBW' and overlapping dates)
+        const travelCategories = ['GMC', 'GBW'];
+        const c1IsTravel = travelCategories.includes(c1.offering.category);
+        const c2IsTravel = travelCategories.includes(c2.offering.category);
+
+        if (c1IsTravel && c2IsTravel) {
+          if (c1.offering.dates && c2.offering.dates && blockWeekDatesOverlap(c1.offering.dates, c2.offering.dates)) {
+            const label = c1.offering.category === c2.offering.category ? c1.offering.category : 'Travel';
             conflicts.push({
               course1: c1.course.code.replace('-', ' '),
               course2: c2.course.code.replace('-', ' '),
               term: SCHEDULE[cohort][term]?.name || term,
-              weekend: c1.offering.dates + ' (GMC)'
+              weekend: c1.offering.dates + ` (${label})`
             });
           }
-          continue; // GMC courses don't conflict with regular weekend courses
+          continue; // Travel courses don't conflict with regular weekend courses
         }
 
-        // Skip if either is a GMC course (they don't conflict with regular courses)
-        if (c1.offering.category === 'GMC' || c2.offering.category === 'GMC') {
+        // Skip if either is a GMC/GBW course (they don't conflict with regular courses)
+        if (c1IsTravel || c2IsTravel) {
           continue;
         }
 
-        // Block week date-based conflicts (non-GMC courses with dates)
+        // Block week date-based conflicts (non-travel courses with dates)
         if (c1.offering.dates && c2.offering.dates &&
-            c1.offering.category !== 'GMC' && c2.offering.category !== 'GMC') {
+            !c1IsTravel && !c2IsTravel) {
           if (blockWeekDatesOverlap(c1.offering.dates, c2.offering.dates)) {
             conflicts.push({
               course1: c1.course.code.replace('-', ' '),
